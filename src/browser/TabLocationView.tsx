@@ -37,7 +37,7 @@ class LockImageView extends React.Component<{ locked: boolean } & TouchableOpaci
 
         return (
             // <$Image/>
-            <ToolbarButton text={ locked ? "\uf023" : "\uf3c1" } {...rest}/>
+            <ToolbarButton name={ locked ? "lock" : "lock-open" } {...rest}/>
         );
     }
 }
@@ -118,7 +118,7 @@ class PageOptionsButton extends React.Component<{} & TouchableOpacityProps, {}> 
         const { ...rest } = this.props;
 
         return (
-            <ToolbarButton {...rest} text={"\uf141"}/>
+            <ToolbarButton {...rest} name={"ellipsis-h"}/>
         );
     }
 }

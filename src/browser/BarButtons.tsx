@@ -21,7 +21,7 @@ class BackButton extends React.Component<BackButtonProps & TouchableOpacityProps
             <ToolbarButton
                 {...rest}
                 onTap={this.onTap}
-                text={"\uf053"}
+                name={"chevron-left"}
             />
         );
     }
@@ -50,7 +50,7 @@ class ForwardButton extends React.Component<ForwardButtonProps & TouchableOpacit
             <ToolbarButton
                 {...rest}
                 onTap={this.onTap}
-                text={"\uf054"}
+                name={"chevron-right"}
             />
         );
     }
@@ -88,12 +88,12 @@ class StopReloadButton extends React.Component<StopReloadButtonProps & Touchable
             <ToolbarButton
                 {...rest}
                 onTap={this.onTap}
-                text={
+                name={
                     loading ?
                     // Stop (cross symbol)
-                    "\uf00d" :
+                    "times" :
                     // Reload (redo symbol)
-                    "\uf01e"
+                    "redo"
                 }
             />
         );
@@ -121,7 +121,7 @@ class MenuButton extends React.Component<{} & TouchableOpacityProps, {}> {
     render(){
         const { ...rest } = this.props;
         return (
-            <ToolbarButton {...rest} text={"\uf142"}/>
+            <ToolbarButton {...rest} name={"ellipsis-v"}/>
         );
     }
 }
@@ -137,7 +137,7 @@ class SearchButton extends React.Component<{} & TouchableOpacityProps, {}> {
     render(){
         const { ...rest } = this.props;
         return (
-            <ToolbarButton text={"\uf002"}/>
+            <ToolbarButton name={"search"}/>
         );
     }
 }
@@ -156,7 +156,7 @@ class TabsButton extends React.Component<{} & TouchableOpacityProps, {}>{
         const { ...rest } = this.props;
 
         return (
-            <ToolbarButton {...rest} text={"\uf009"}/>
+            <ToolbarButton {...rest} name={"th-large"}/>
         );
     }
 }

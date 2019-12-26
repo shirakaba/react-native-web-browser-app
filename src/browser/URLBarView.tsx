@@ -1,6 +1,5 @@
 import * as React from "react";
 import { GradientProgressBarConnected } from "../Widgets/GradientProgressBar";
-import { ToolbarButton } from "./ToolbarButton";
 import { AutocompleteTextField } from "~/Widgets/AutocompleteTextField";
 import { TabLocationView, TabLocationViewConnected } from "./TabLocationView";
 import { BackButtonConnected, ForwardButtonConnected, StopReloadButtonConnected, TabsButtonConnected, MenuButtonConnected, CancelButtonConnected } from "./BarButtons";
@@ -145,7 +144,7 @@ export class URLBarView extends React.Component<Props, State>{
             >
                 {stackContents}
                 <GradientProgressBarConnected
-                    width={{ value: 100, unit: "%" }}
+                    style={{ width: "100%" }}
                 />
             </View>
         );

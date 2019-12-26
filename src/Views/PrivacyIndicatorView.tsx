@@ -14,7 +14,7 @@ export class PrivacyIndicatorView extends React.Component<Props & TouchableOpaci
     render(){
         const { ...rest } = this.props;
         return (
-            <ToolbarButton text={"\uf1ce"} {...rest}/>
+            <ToolbarButton name={"circle-notch"} {...rest}/>
             // <$StackLayout>
             //     {/* stub for canvasView, which is that donut graph. */}
             //     <$ContentView/>

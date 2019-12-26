@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.1.0",
+    "@types/react-native-vector-icons": "^6.4.5",
     "expo": "~36.0.0",
     "react": "~16.9.0",
     "react-native": "~0.61.4",
