@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView } from "~/store/navigationState";
 import { setBarsRetraction, RetractionState } from "~/store/barsState";
-import { View, Text, ViewProps, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView } from "react-native";
+import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView } from "react-native";
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -41,7 +41,9 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
         const { orientation, retraction, urlBarText, percentRevealed, style, children, ...rest } = this.props;
 
         /* Dimensions based on: https://github.com/taisukeh/ScrollingBars */
-        const revealedHeight: number = orientation === "portrait" || Device.deviceType === "Tablet" ? 64 : 44;
+        // TODO: detect tablet vs. mobile on React Native.
+        // const revealedHeight: number = orientation === "portrait" || Device.deviceType === "Tablet" ? 64 : 44;
+        const revealedHeight: number = orientation === "portrait" ? 64 : 44;
         const retractedHeight: number = orientation === "portrait" ? 30 : 0;
 
         const heightDiff: number = revealedHeight - retractedHeight;
