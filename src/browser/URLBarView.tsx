@@ -9,6 +9,7 @@ import { ButtonComponentProps } from "react-nativescript/dist/components/Button"
 import { BackButtonConnected, ForwardButtonConnected, StopReloadButtonConnected, TabsButtonConnected, MenuButtonConnected, CancelButtonConnected } from "./BarButtons";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
+import { View } from "react-native";
 
 /* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/URLBarView.swift */
 
@@ -40,9 +41,9 @@ class ToolbarTextField extends React.Component<{}, {}>{
 class TabLocationContainerView extends React.Component<{}, {}>{
     render(){
         return (
-            <$StackLayout>
+            <View>
 
-            </$StackLayout>
+            </View>
         );
     }
 }
@@ -74,61 +75,82 @@ export class URLBarView extends React.Component<Props, State>{
         if(inOverlayMode){
             // i.e. URL bar's text field has been focused and the browser displays an overlay over the webpage.
             stackContents = (
-                <$FlexboxLayout
-                    flexDirection={"row"}
-                    justifyContent={"space-around"}
-                    alignItems={"center"}
-                    height={"auto"}
-                    width={{ value: 100, unit: "%" }}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        alignItems: "center",
+                        height: "auto",
+                        width: "100%"
+                    }}
                 >
                     {/* AKA locationTextField */}
                     <ToolbarTextField/>
-                    <CancelButtonConnected backgroundColor={buttonBackgroundColor}/>
-                </$FlexboxLayout>
+                    <CancelButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
+                </View>
             );
         } else if(toolbarIsShowing){
             // i.e. landscape (so show all the items that the footer would normally handle)
             stackContents = (
-                <$FlexboxLayout
-                    flexDirection={"row"}
-                    justifyContent={"space-around"}
-                    alignItems={"center"}
-                    height={"auto"}
-                    width={{ value: 100, unit: "%" }}
-                    // flexWrap={"nowrap"}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        alignItems: "center",
+                        height: "auto",
+                        width: "100%"
+                    }}
                 >
-                    <BackButtonConnected backgroundColor={buttonBackgroundColor}/>
-                    <ForwardButtonConnected backgroundColor={buttonBackgroundColor}/>
-                    <StopReloadButtonConnected backgroundColor={buttonBackgroundColor}/>
+                    <BackButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
+                    <ForwardButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
+                    <StopReloadButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
                     {/* AKA locationView. */}
-                    <TabLocationViewConnected slotBackgroundColor={slotBackgroundColor} buttonBackgroundColor={buttonBackgroundColor} textFieldBackgroundColor={textFieldBackgroundColor} flexGrow={1}/>
-                    <TabsButtonConnected backgroundColor={buttonBackgroundColor}/>
-                    <MenuButtonConnected backgroundColor={buttonBackgroundColor}/>
-                </$FlexboxLayout>
+                    <TabLocationViewConnected
+                        style={{
+                            flexGrow: 1,
+                        }}
+                        slotBackgroundColor={slotBackgroundColor} buttonBackgroundColor={buttonBackgroundColor} textFieldBackgroundColor={textFieldBackgroundColor}
+                    />
+                    <TabsButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
+                    <MenuButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
+                </View>
             );
         } else {
             // i.e. portrait (so hide all the items that the footer will be handling)
             stackContents = (
-                <$FlexboxLayout
-                    flexDirection={"row"}
-                    justifyContent={"space-around"}
-                    alignItems={"center"}
-                    height={"auto"}
-                    width={{ value: 100, unit: "%" }}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        alignItems: "center",
+                        height: "auto",
+                        width: "100%"
+                    }}
                 >
                     {/* AKA locationView. */}
-                    <TabLocationViewConnected slotBackgroundColor={slotBackgroundColor} buttonBackgroundColor={buttonBackgroundColor} textFieldBackgroundColor={textFieldBackgroundColor} flexGrow={1}/>
-                </$FlexboxLayout>
+                    <TabLocationViewConnected
+                        style={{
+                            flexGrow: 1,
+                        }}
+                        slotBackgroundColor={slotBackgroundColor}
+                        buttonBackgroundColor={buttonBackgroundColor}
+                        textFieldBackgroundColor={textFieldBackgroundColor}
+                    />
+                </View>
             );
         }
 
         return (
-            <$StackLayout orientation={"vertical"}>
+            <View
+                style={{
+                    flexDirection: "column",
+                }}
+            >
                 {stackContents}
                 <GradientProgressBarConnected
                     width={{ value: 100, unit: "%" }}
                 />
-            </$StackLayout>
+            </View>
         );
     }
 }

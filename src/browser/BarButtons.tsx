@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, TouchableOpacityProps, ButtonProps } from "react-native";
+import { Text, TouchableOpacityProps, TouchableOpacity } from "react-native";
 import { ToolbarButton } from "./ToolbarButton";
 import { goBackOnWebView, goForwardOnWebView, reloadWebView, stopWebView } from "~/store/navigationState";
 import { connect } from "react-redux";
@@ -170,11 +170,13 @@ export const TabsButtonConnected = connect(
 )(TabsButton);
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/URLBarView.swift#L136
-class CancelButton extends React.Component<{} & ButtonProps, {}>{
+class CancelButton extends React.Component<{} & TouchableOpacityProps, {}>{
     render(){
         const { ...rest } = this.props;
         return (
-            <Button {...rest}/>
+            <TouchableOpacity {...rest}>
+                <Text>Cancel</Text>
+            </TouchableOpacity>
         );
     }
 }
