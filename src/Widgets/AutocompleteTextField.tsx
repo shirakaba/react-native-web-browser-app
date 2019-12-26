@@ -1,6 +1,5 @@
 import * as React from "react";
-import { TextField } from "@nativescript/core";
-import { $TextField } from "react-nativescript";
+import { TextInput } from "react-native";
 
 interface Props {
 
@@ -14,7 +13,7 @@ interface State {
 export class AutocompleteTextField extends React.Component<Props, State>{
     render(){
         return (
-            <$TextField/>
+            <TextInput/>
         );
     }
 }
