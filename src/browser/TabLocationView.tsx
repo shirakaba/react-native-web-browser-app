@@ -1,10 +1,9 @@
 import * as React from "react";
-import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, TouchableOpacityProps, StyleProp, TextStyle, processColor } from "react-native";
+import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, TouchableOpacityProps, StyleSheet, StyleProp, TextStyle, processColor } from "react-native";
 // import { WebView, ActionBar, StackLayout, EventData, TextField, Color } from "@nativescript/core";
 // import { $WebView, $ActionBar, $StackLayout, $FlexboxLayout, $ContentView, $Image, $TextField, $GridLayout, $TextView } from "react-nativescript";
 import { ToolbarButton } from "./ToolbarButton";
 import { PrivacyIndicatorView } from "~/Views/PrivacyIndicatorView";
-import { ButtonComponentProps } from "react-nativescript/dist/components/Button";
 import { connect } from 'react-redux';
 import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationState";
 import { WholeStoreState } from "~/store/store";
@@ -32,7 +31,7 @@ const TabLocationViewUX = {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L83
-class LockImageView extends React.Component<{ locked: boolean } & ButtonComponentProps, {}> {
+class LockImageView extends React.Component<{ locked: boolean } & TouchableOpacityProps, {}> {
     render(){
         const { locked, ...rest } = this.props;
 
@@ -140,7 +139,7 @@ class PrivacyIndicator extends React.Component<{} & TouchableOpacityProps, {}> {
 export class TabLocationView extends React.Component<Props & ViewProps, State>{
 
     render(){
-        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, percentRevealed, ...rest } = this.props;
+        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, percentRevealed, style, ...rest } = this.props;
 
         const factor: number = percentRevealed / 100;
 
@@ -174,6 +173,12 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
             /* self.view */
             <View
                 // iosOverflowSafeArea={false}
+                style={StyleSheet.compose(
+                    {
+                        flexDirection: 'column'
+                    },
+                    style
+                )}
                 {...rest}
             >
                 {/* self.contentView */}

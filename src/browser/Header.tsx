@@ -1,9 +1,7 @@
 import * as React from "react";
-import { WebView, ActionBar } from "@nativescript/core";
-import { $WebView, $ActionBar, $StackLayout } from "react-nativescript";
 import { URLBarView } from "./URLBarView";
 import { TopTabsViewController } from "./TopTabsViewController";
-import { StackLayoutComponentProps } from "react-nativescript/dist/components/StackLayout";
+import { ViewProps, View, StyleSheet } from "react-native";
 
 interface Props {
     slotBackgroundColor?: string,
@@ -21,9 +19,9 @@ class TopTabsContainer extends React.Component<{}, {}>{
 
     render(){
         return (
-            <$StackLayout>
+            <View style={{ flexDirection: 'column' }}>
                 <TopTabsViewController/>
-            </$StackLayout>
+            </View>
         );
     }
 }
@@ -37,7 +35,7 @@ interface UrlBarTopTabsContainerProps {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L105
-class UrlBarTopTabsContainer extends React.Component<UrlBarTopTabsContainerProps & StackLayoutComponentProps, {}> {
+class UrlBarTopTabsContainer extends React.Component<UrlBarTopTabsContainerProps & ViewProps, {}> {
     render(){
         const {
             slotBackgroundColor,
@@ -45,13 +43,23 @@ class UrlBarTopTabsContainer extends React.Component<UrlBarTopTabsContainerProps
             buttonBackgroundColor,
             toolbarIsShowing,
             inOverlayMode,
+            style,
             children,
             ...rest
         } = this.props;
 
         return (
             // UIView(frame: CGRect.zero)
-            <$StackLayout {...rest}>
+            
+            <View
+                style={StyleSheet.compose(
+                    {
+                        flexDirection: 'column'
+                    },
+                    style
+                )}
+                {...rest}
+            >
                 {/* urlBar */}
                 <URLBarView
                     inOverlayMode={inOverlayMode}
@@ -62,12 +70,12 @@ class UrlBarTopTabsContainer extends React.Component<UrlBarTopTabsContainerProps
                 />
                 {/* topTabsContainer */}
                 <TopTabsContainer/>
-            </$StackLayout>
+            </View>
         );
     }
 }
 
-export class Header extends React.Component<Props & StackLayoutComponentProps, State>{
+export class Header extends React.Component<Props & ViewProps, State>{
 
     render(){
         const {

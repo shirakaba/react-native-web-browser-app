@@ -2,7 +2,7 @@ import * as React from "react";
 import { Text, ViewStyle, StyleSheet, TouchableOpacity, TouchableOpacityProps, StyleProp } from "react-native";
 
 interface Props {
-    style?: ViewStyle,
+    style?: StyleProp<ViewStyle>,
     text?: string,
     onTap?: () => void,
 }
@@ -17,26 +17,28 @@ export class ToolbarButton extends React.Component<Props & TouchableOpacityProps
         
         const textColour: string = "white";
 
-        // TODO: check whether backgroundColor is working as intended
-        // const { backgroundColor = "transparent" } = StyleSheet.flatten(style);
+        // TODO: check whether backgroundColor is working as intended, then simplify
+        const { backgroundColor = "transparent", ...styleRest } = StyleSheet.flatten(style);
 
         return (
             <TouchableOpacity
                 onPress={onTap}
-                style={[
+                style={StyleSheet.compose(
                     {
                         width: 40,
                         height: 40,
-                        // backgroundColor,
+                        backgroundColor,
                     },
-                    style,
-                ]}
+                    {
+                        ...styleRest
+                    }
+                )}
                 {...rest}
             >
                 <Text
                     style={{
                         color: textColour,
-                        // backgroundColor,
+                        backgroundColor,
                         fontFamily: "Font Awesome 5 Free",
                     }}
                 >
