@@ -47,12 +47,12 @@ class AppContainer extends React.Component<Props, State> {
         const { orientation } = this.state;
 
         return (
-            // <Provider store={store}>
+            <Provider store={store}>
                 <View style={styles.container}>
                     {/* <BrowserViewController orientation={orientation}/> */}
                     <Text>AppContainer</Text>
                 </View>
-            // </Provider>
+            </Provider>
         );
     }
 }

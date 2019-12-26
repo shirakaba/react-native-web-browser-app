@@ -1,18 +1,15 @@
-import * as React from "react";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ThunkAction } from "redux-thunk";
 import { Action } from 'redux';
 import { WholeStoreState, AppThunk } from "./store";
-import { RetractionState } from "~/nativeElements/BarAwareWebView/bar-aware-web-view-interfaces";
 import { select, take, put, call, fork, cancel, cancelled, delay, takeLatest } from 'redux-saga/effects';
-import { View } from "tns-core-modules/ui/core/view/view";
-import { Animation } from "../NativeScriptCoreUIForks/animation/animation";
 
-export const headerBar: Record<string, React.RefObject<View>> = {
-    tabLocationViewContentView: React.createRef(),
-    privacyIndicator: React.createRef(),
-    pageOptionsButton: React.createRef(),
-};
+export enum RetractionState {
+    revealed = "revealed",
+    retracting = "retracting",
+    retracted = "retracted",
+    revealing = "revealing",
+}
 
 type RetractionTarget = RetractionState.retracted|RetractionState.revealed;
 type AnimatedArg = { animated: boolean };
@@ -124,11 +121,7 @@ const FOOTER_REVEALED = "FOOTER_REVEALED" as const;
 const REVEAL_FOOTER = "REVEAL_FOOTER" as const;
 
 // worker Saga: will be fired on RETRACT_HEADER actions
-function* advanceBarAnimation(
-    type: "RETRACT_HEADER"|"REVEAL_HEADER"|"RETRACT_FOOTER"|"REVEAL_FOOTER",
-    view: View,
-    animationSpec: any,
-) {
+function* advanceBarAnimation(type: "RETRACT_HEADER"|"REVEAL_HEADER"|"RETRACT_FOOTER"|"REVEAL_FOOTER") {
     const durationMs: number = 500;
     const fps: number = 60;
     const startTime: number = Date.now();
@@ -137,8 +130,6 @@ function* advanceBarAnimation(
     let bar: "header"|"footer";
     let completedActionType: "HEADER_RETRACTED"|"HEADER_REVEALED"|"FOOTER_RETRACTED"|"FOOTER_REVEALED";
     let targetRetractionState: RetractionState.retracted|RetractionState.revealed;
-
-    
     
     switch(type){
         case "RETRACT_HEADER":
@@ -208,12 +199,12 @@ export function* watchForHeaderRetract() {
     // console.log(`watchForHeaderRetract 1`);
     // takeLatest() seems more appropriate... And not sure about the while loop at all.
     while (true){
-        const { type: requestType, payload: { view, animationSpec } } = yield take([RETRACT_HEADER, REVEAL_HEADER]);
+        const { type: requestType } = yield take([RETRACT_HEADER, REVEAL_HEADER]);
         const oppositeType = requestType === "RETRACT_HEADER" ? REVEAL_HEADER : RETRACT_HEADER;
         const completedActionType = requestType === "RETRACT_HEADER" ? HEADER_RETRACTED : HEADER_REVEALED;
         // console.log(`watchForHeaderRetract 2`, requestType);
         // Starts the task in the background ("'fork' effects are non-blocking").
-        const advanceHeaderAnimationTask = yield fork(advanceBarAnimation.bind(null, requestType, view));
+        const advanceHeaderAnimationTask = yield fork(advanceBarAnimation.bind(null, requestType));
 
         // console.log(`watchForHeaderRetract 3`);
         /* Or: https://redux-saga.js.org/docs/advanced/RacingEffects.html */
@@ -236,12 +227,12 @@ export function* watchForFooterRetract() {
     // console.log(`watchForRetract 1`);
     // takeLatest() seems more appropriate... And not sure about the while loop at all.
     while (true){
-        const { type: requestType, payload: { view, animationSpec } } = yield take([RETRACT_FOOTER, REVEAL_FOOTER]);
-        const oppositeType = requestType === "RETRACT_FOOTER" ? REVEAL_FOOTER : RETRACT_FOOTER;
-        const completedActionType = requestType === "RETRACT_FOOTER" ? FOOTER_RETRACTED : FOOTER_REVEALED;
+        const { type } = yield take([RETRACT_FOOTER, REVEAL_FOOTER]);
+        const oppositeType = type === "RETRACT_FOOTER" ? REVEAL_FOOTER : RETRACT_FOOTER;
+        const completedActionType = type === "RETRACT_FOOTER" ? FOOTER_RETRACTED : FOOTER_REVEALED;
         // console.log(`watchForRetract 2`, type);
         // Starts the task in the background ("'fork' effects are non-blocking").
-        const advanceFooterAnimationTask = yield fork(advanceBarAnimation.bind(null, requestType, view));
+        const advanceFooterAnimationTask = yield fork(advanceBarAnimation.bind(null, type));
 
         // console.log(`watchForRetract 3`);
         /* Or: https://redux-saga.js.org/docs/advanced/RacingEffects.html */

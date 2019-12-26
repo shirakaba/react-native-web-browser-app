@@ -3,11 +3,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ThunkAction } from "redux-thunk";
 import { Action } from 'redux';
 import { WholeStoreState, AppThunk } from "./store";
-import { BarAwareWebView } from "~/nativeElements/BarAwareWebView/bar-aware-web-view";
 
+type WebView = any;
 type WebViewId = string;
-export const webViews = new Map<WebViewId, React.RefObject<BarAwareWebView>>([
-    ["tab0", React.createRef<BarAwareWebView>()]
+export const webViews = new Map<WebViewId, React.RefObject<WebView>>([
+    ["tab0", React.createRef<WebView>()]
 ]);
 export type TabStateRecord = Record<string, { url: string, loadProgress: number }>;
 
