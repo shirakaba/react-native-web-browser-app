@@ -393,6 +393,7 @@ export class BrowserViewController extends React.Component<Props, State> {
             <View
                 // stretchLastChild={true}
                 style={{
+                    flex: 1,
                     flexDirection: "column",
                     width: "100%",
                     height: "100%",
@@ -406,16 +407,23 @@ export class BrowserViewController extends React.Component<Props, State> {
                     // dock={"bottom"}
                     // stretchLastChild={true}
                     style={{
+                        flex: 1,
                         width: "100%",
                         height: "100%",
                         flexGrow: 1,
+                        alignItems:"center",
+                        // justifyContent: "flex-start",
+                        backgroundColor:"green",
+                        flexDirection: "column",
                     }}
                 >
                     <View
                         style={{
+                            flex: 1,
+                            flexDirection: "column",
                             width: "100%",
-                            height: "100%",
-                            flexGrow: 1,
+                            // height: "100%",
+                            // flexGrow: 1,
                         }}
                     >
                         <WebViewContainerBackdrop
@@ -427,20 +435,25 @@ export class BrowserViewController extends React.Component<Props, State> {
                         <WebViewContainerConnected
                             style={{
                                 position: "absolute",
+                                flexGrow: 1,
                             }}
                         />
                     </View>
 
-                    <FooterConnected
+                    <SafeAreaView
                         style={{
-                            flexGrow: 0,
-                            backgroundColor: "gray",
-                            display: orientation === "landscape" ? "none" : "flex",
                         }}
-                    
-                        orientation={orientation}
-                        showToolbar={true}
-                    />
+                    >
+                        <FooterConnected
+                            style={{
+                                backgroundColor: "gray",
+                                display: orientation === "landscape" ? "none" : "flex",
+                            }}
+                        
+                            orientation={orientation}
+                            showToolbar={true}
+                        />
+                    </SafeAreaView>
                 </View>
             </View>
         );
