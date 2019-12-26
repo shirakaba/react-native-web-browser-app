@@ -1,16 +1,15 @@
 import * as React from "react";
-import { WebView, ActionBar, StackLayout, EventData, TextField, Color } from "@nativescript/core";
-import { $WebView, $ActionBar, $StackLayout, $FlexboxLayout, $ContentView, $Image, $TextField, $GridLayout, $TextView } from "react-nativescript";
+import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, TouchableOpacityProps, StyleProp, TextStyle, processColor } from "react-native";
+// import { WebView, ActionBar, StackLayout, EventData, TextField, Color } from "@nativescript/core";
+// import { $WebView, $ActionBar, $StackLayout, $FlexboxLayout, $ContentView, $Image, $TextField, $GridLayout, $TextView } from "react-nativescript";
 import { ToolbarButton } from "./ToolbarButton";
 import { PrivacyIndicatorView } from "~/Views/PrivacyIndicatorView";
-import { TextFieldComponentProps } from "react-nativescript/dist/components/TextField";
-import { ItemSpec } from "tns-core-modules/ui/layouts/grid-layout/grid-layout";
 import { ButtonComponentProps } from "react-nativescript/dist/components/Button";
-import { FlexboxLayoutComponentProps } from "react-nativescript/dist/components/FlexboxLayout";
 import { connect } from 'react-redux';
 import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationState";
 import { WholeStoreState } from "~/store/store";
-import { RetractionState } from "~/nativeElements/BarAwareWebView/bar-aware-web-view.ios";
+import { RetractionState } from "~/store/barsState";
+import normalizeColorToObj, { ColorObj } from "~/utils/normalizeColorToObj";
 
 interface Props {
     percentRevealed: number,
@@ -45,6 +44,8 @@ class LockImageView extends React.Component<{ locked: boolean } & ButtonComponen
 }
 
 interface DisplayTextFieldProps {
+    style?: StyleProp<TextStyle>,
+
     activeTab: string,
     urlBarText: string,
 
@@ -54,36 +55,31 @@ interface DisplayTextFieldProps {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L319
-class DisplayTextField extends React.Component<DisplayTextFieldProps & TextFieldComponentProps, {}> {
-    private readonly onTextChange = (args: EventData) => {
-        const textField: TextField = args.object as TextField;
-        // console.log(`[onTextChange] ${textField.text}`);
-
-        this.props.updateUrlBarText(textField.text);
+class DisplayTextField extends React.Component<DisplayTextFieldProps & TextInputProps, {}> {
+    private readonly onChangeText = (text: string) => {
+        this.props.updateUrlBarText(text);
     };
 
-    private readonly onReturnPress = (args: EventData) => {
-        const textField: TextField = args.object as TextField;
-        // console.log(`[onReturnPress] ${textField.text}`);
-
-        this.props.submitUrlBarTextToWebView(textField.text, this.props.activeTab);
+    private readonly onSubmitEditing = (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
+        this.props.submitUrlBarTextToWebView(e.nativeEvent.text, this.props.activeTab);
     };
 
     render(){
-        const { urlBarText, ...rest } = this.props;
+        const { urlBarText, style, ...rest } = this.props;
         const {} = this.state;
 
         return (
-            <$TextField
+            <TextInput
+                style={style}
                 {...rest}
-                text={urlBarText}
-                autocorrect={false}
-                autocapitalizationType={"none"}
+                value={urlBarText}
+                autoCorrect={false}
+                autoCapitalize={"none"}
                 keyboardType={"url"}
                 returnKeyType={"go"}
-                onTextChange={this.onTextChange}
-                hint={"Search or enter address"}
-                onReturnPress={this.onReturnPress}
+                onChangeText={this.onChangeText}
+                placeholder={"Search or enter address"}
+                onSubmitEditing={this.onSubmitEditing}
             />
         );
     }
@@ -107,7 +103,7 @@ const DisplayTextFieldConnected = connect(
 )(DisplayTextField);
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L62
-class UrlTextField extends React.Component<TextFieldComponentProps, {}> {
+class UrlTextField extends React.Component<TextInputProps, {}> {
     render(){
         const { ...rest } = this.props;
 
@@ -119,7 +115,7 @@ class UrlTextField extends React.Component<TextFieldComponentProps, {}> {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L111
-class PageOptionsButton extends React.Component<{} & ButtonComponentProps, {}> {
+class PageOptionsButton extends React.Component<{} & TouchableOpacityProps, {}> {
     render(){
         const { ...rest } = this.props;
 
@@ -130,7 +126,7 @@ class PageOptionsButton extends React.Component<{} & ButtonComponentProps, {}> {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L105
-class PrivacyIndicator extends React.Component<{} & ButtonComponentProps, {}> {
+class PrivacyIndicator extends React.Component<{} & TouchableOpacityProps, {}> {
     render(){
         const { ...rest } = this.props;
 
@@ -141,7 +137,7 @@ class PrivacyIndicator extends React.Component<{} & ButtonComponentProps, {}> {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift
-export class TabLocationView extends React.Component<Props & FlexboxLayoutComponentProps, State>{
+export class TabLocationView extends React.Component<Props & ViewProps, State>{
 
     render(){
         const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, percentRevealed, ...rest } = this.props;
@@ -154,55 +150,75 @@ export class TabLocationView extends React.Component<Props & FlexboxLayoutCompon
         const animatedScale: number = (factor * scaleDiff) + retractedScale;
         // console.log(`animatedScale`, animatedScale);
 
-        const slotBackgroundColorObj: Color = new Color(slotBackgroundColor);
+        // const colorFromString = processColor('rgba(10, 20, 30, 0.4)');
+        //                           aarrggbb
+        // const expectedInt     = 0x660a141e;
+        const slotBackgroundColorInt: number = processColor(slotBackgroundColor ? slotBackgroundColor : 0x00000000);
+
+        const slotBackgroundColorObj: ColorObj = normalizeColorToObj(slotBackgroundColorInt);
         
         const revealedSlotBackgroundColorAlpha: number = 1;
         const retractedSlotBackgroundColorAlpha: number = 0;
         const slotBackgroundColorAlphaDiff: number = revealedSlotBackgroundColorAlpha - retractedSlotBackgroundColorAlpha;
         const animatedSlotBackgroundColorAlpha: number = (factor * 255 * slotBackgroundColorAlphaDiff) + retractedSlotBackgroundColorAlpha;
-        const animatedSlotBackgroundColor: Color = new Color(
-            animatedSlotBackgroundColorAlpha,
-            slotBackgroundColorObj.r,
-            slotBackgroundColorObj.g,
-            slotBackgroundColorObj.b,
-        );
+        const animatedSlotBackgroundColor: ColorObj = {
+            a: animatedSlotBackgroundColorAlpha,
+            r: slotBackgroundColorObj.r,
+            g: slotBackgroundColorObj.g,
+            b: slotBackgroundColorObj.b,
+        };
+        const animatedSlotBackgroundColorString: string = `rgba(${animatedSlotBackgroundColor.r},${animatedSlotBackgroundColor.g},${animatedSlotBackgroundColor.b},${animatedSlotBackgroundColor.a})`;
         // console.log(`animatedSlotBackgroundColor`, animatedSlotBackgroundColor);
 
         return (
             /* self.view */
-            <$FlexboxLayout
-                iosOverflowSafeArea={false}
+            <View
+                // iosOverflowSafeArea={false}
                 {...rest}
             >
                 {/* self.contentView */}
                 {/* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L149 */}
                 {/* https://developer.apple.com/documentation/uikit/uistackview */}
-                <$FlexboxLayout
-                    flexDirection={"row"}
-                    alignItems={"center"}
-                    justifyContent={"space-around"}
-                    backgroundColor={animatedSlotBackgroundColor}
-                    borderRadius={30}
-                    margin={8}
-                    flexGrow={1}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-around",
+                        backgroundColor: animatedSlotBackgroundColorString,
+                        borderRadius: 30,
+                        margin: 8,
+                        flexGrow: 1,
+                    }}
                 >
                     {/* frontSpaceView */}
-                    <$ContentView width={{ value: TabLocationViewUX.Spacing, unit: "dip" }}/>
+                    <View style={{ width: TabLocationViewUX.Spacing }}/>
 
                     {/* privacyIndicator */}
-                    <PrivacyIndicator scaleX={animatedScale} scaleY={animatedScale}/>
+                    <PrivacyIndicator
+                        style={{
+                            scaleX: animatedScale,
+                            scaleY: animatedScale,
+                        }}
+                    />
                     
                     {/* privacyIndicatorSeparator */}
-                    <$ContentView width={{ value: 3, unit: "dip" }}/>
+                    <View style={{ width: 3 }}/>
                     <LockImageView locked={true}/>
-                    <UrlTextField backgroundColor={textFieldBackgroundColor} flexGrow={1}/>
-                    <PageOptionsButton
-                        backgroundColor={buttonBackgroundColor}
-                        scaleX={animatedScale}
-                        scaleY={animatedScale}
+                    <UrlTextField
+                        style={{
+                            backgroundColor: textFieldBackgroundColor,
+                            flexGrow: 1,
+                        }}
                     />
-                </$FlexboxLayout>
-            </$FlexboxLayout>
+                    <PageOptionsButton
+                        style={{
+                            backgroundColor: buttonBackgroundColor,
+                            scaleX: animatedScale,
+                            scaleY: animatedScale,
+                        }}
+                    />
+                </View>
+            </View>
         );
     }
 }
