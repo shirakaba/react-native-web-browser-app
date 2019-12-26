@@ -1,23 +1,13 @@
 import * as React from "react";
-import { WebView, ActionBar, PanGestureEventData, isIOS, isAndroid, Device } from "@nativescript/core";
-import { $WebView, $ActionBar, $StackLayout, $Button, $AbsoluteLayout, $ContentView, $GridLayout, $DockLayout, $FlexboxLayout, $Label } from "react-nativescript";
-import { StackLayoutProps, ButtonProps } from "react-nativescript/dist/shared/NativeScriptComponentTypings";
 import { URLBarView } from "./URLBarView";
 import { TopTabsViewController } from "./TopTabsViewController";
 import { Header } from "./Header";
 import { TabToolbar } from "./TabToolbar";
-import { ItemSpec } from "tns-core-modules/ui/layouts/grid-layout/grid-layout";
-import { StackLayoutComponentProps } from "react-nativescript/dist/components/StackLayout";
-import { ButtonComponentProps } from "react-nativescript/dist/components/Button";
-import { LoadEventData } from "tns-core-modules/ui/web-view/web-view";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView } from "~/store/navigationState";
-import { BetterWebView } from "~/components/BetterWebView";
-import { ProgressEventData } from "~/NativeScriptCoreUIForks/WebView/web-view";
-import { setBarsRetraction } from "~/store/barsState";
-import { BarRetractionRecommendationEventData } from "~/nativeElements/BarAwareWebView/bar-aware-web-view";
-import { RetractionState } from "~/nativeElements/BarAwareWebView/bar-aware-web-view-interfaces";
+import { setBarsRetraction, RetractionState } from "~/store/barsState";
+import { View, Text, ViewProps, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView } from "react-native";
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -30,10 +20,10 @@ class TopTabsContainer extends React.Component<{}, {}> {
     render(){
         return (
             // UIView()
-            <$StackLayout>
+            <View style={{ flexDirection: "column" }}>
                 {/* topTabsViewController.view */}
                 <TopTabsViewController/>
-            </$StackLayout>
+            </View>
         );
     }
 }
@@ -46,9 +36,9 @@ interface NotchAreaCoverProps {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L61
-class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<StackLayoutComponentProps, "orientation">, {}> {
+class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProps, "orientation">, {}> {
     render(){
-        const { orientation, retraction, urlBarText, percentRevealed, children, ...rest } = this.props;
+        const { orientation, retraction, urlBarText, percentRevealed, style, children, ...rest } = this.props;
 
         /* Dimensions based on: https://github.com/taisukeh/ScrollingBars */
         const revealedHeight: number = orientation === "portrait" || Device.deviceType === "Tablet" ? 64 : 44;
@@ -61,14 +51,20 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<StackLay
         // console.log(`[NotchAreaCover] animatedHeight: ${animatedHeight}; ${factor} * ${heightDiff} + ${retractedHeight}; retraction ${retraction}`);
 
         return (
-            <$FlexboxLayout
-                flexDirection={"column"}
-                // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
-                justifyContent={"flex-end"}
-                alignItems={"center"}
-                height={{ value: animatedHeight, unit: "dip" }}
-                width={{ value: 100, unit: "%"}}
-                backgroundColor={"gray"}
+            <View
+                style={StyleSheet.compose(
+                    {
+                        flexDirection: "column",
+                        // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                        width: "100%",
+                        height: animatedHeight,
+                        backgroundColor: "gray",
+                    },
+                    style
+                )}
+                // height={{ value: animatedHeight, unit: "dip" }}
                 {...rest}
             >
                 <Header
@@ -78,7 +74,7 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<StackLay
                     textFieldBackgroundColor={"transparent"}
                     buttonBackgroundColor={"transparent"}
                 />
-            </$FlexboxLayout>
+            </View>
         );
     }
 }
@@ -99,17 +95,23 @@ const NotchAreaCoverConnected = connect(
 
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L110
-class WebViewContainerBackdrop extends React.Component<StackLayoutComponentProps, {}> {
+class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {
     render(){
-        const { children, ...rest } = this.props;
+        const { style, children, ...rest } = this.props;
 
         return (
             // UIView()
-            <$StackLayout
+            <View
+                style={StyleSheet.compose(
+                    {
+                        flexDirection: "column",
+                        width: "100%",
+                        height: "100%",
+                    },
+                    style
+                )}
                 // opacity={0.5}
                 // backgroundColor={"purple"}
-                width={{ value: 100, unit: "%" }}
-                height={{ value: 100, unit: "%" }}
                 {...rest}
             />
         );
@@ -127,10 +129,11 @@ interface WebViewContainerProps {
     setBarsRetraction: typeof setBarsRetraction,
 }
 
-class WebViewContainer extends React.Component<WebViewContainerProps & StackLayoutComponentProps, { }> {
-    // private readonly onPan = (e: PanGestureEventData) => {
-    //     console.log(`WebView panned type ${e.type} - deltaX ${e.deltaX} deltaY ${e.deltaY}`);
-    //     if(e.deltaY < 0){
+class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps, { }> {
+    // private readonly onBarRetractionRecommendation = (e: BarRetractionRecommendationEventData) => {
+    //     // console.log(`WebView barsShouldRetract ${e.barsShouldRetract}`);
+        
+    //     if(e.barsShouldRetract){
     //         // Gesture flings the scrollView upwards (scrolls downwards)
     //         this.props.setBarsRetraction({ bars: "both", animated: true, retraction: RetractionState.retracted });
     //     } else {
@@ -138,71 +141,66 @@ class WebViewContainer extends React.Component<WebViewContainerProps & StackLayo
     //     }
     // };
 
-    private readonly onBarRetractionRecommendation = (e: BarRetractionRecommendationEventData) => {
-        // console.log(`WebView barsShouldRetract ${e.barsShouldRetract}`);
+    // private readonly onLoadStarted = (args: LoadEventData) => {
+    //     const { error, eventName, url, navigationType, object } = args;
+    //     const wv: WebView = object as WebView;
+    //     console.log(`[WebView onLoadStarted] error ${error}, eventName ${eventName}, url ${url} (vs. src ${wv.src}), navigationType ${navigationType}`);
         
-        if(e.barsShouldRetract){
-            // Gesture flings the scrollView upwards (scrolls downwards)
-            this.props.setBarsRetraction({ bars: "both", animated: true, retraction: RetractionState.retracted });
-        } else {
-            this.props.setBarsRetraction({ bars: "both", animated: true, retraction: RetractionState.revealed });
-        }
-    };
+    //     // TODO: handle errors
+    // };
 
-    private readonly onLoadStarted = (args: LoadEventData) => {
-        const { error, eventName, url, navigationType, object } = args;
-        const wv: WebView = object as WebView;
-        console.log(`[WebView onLoadStarted] error ${error}, eventName ${eventName}, url ${url} (vs. src ${wv.src}), navigationType ${navigationType}`);
-        
-        // TODO: handle errors
-    };
+    // private readonly onLoadCommitted = (args: LoadEventData) => {
+    //     const { error, eventName, url, navigationType, object } = args;
+    //     const wv: WebView = object as WebView;
+    //     console.log(`[WebView onLoadCommitted] error ${error}, eventName ${eventName}, url ${url} (vs. src ${wv.src}), navigationType ${navigationType}`);
 
-    private readonly onLoadCommitted = (args: LoadEventData) => {
-        const { error, eventName, url, navigationType, object } = args;
-        const wv: WebView = object as WebView;
-        console.log(`[WebView onLoadCommitted] error ${error}, eventName ${eventName}, url ${url} (vs. src ${wv.src}), navigationType ${navigationType}`);
+    //     // TODO: handle errors
 
-        // TODO: handle errors
+    //     if(!error && isIOS){
+    //         /* iOS seems to fire loading events on the non-main frame, so onLoadCommitted event is the best one on which to update the main-frame URL.
+    //          * This event doesn't exist on Android to my knowledge, so I haven't hooked it up in BetterWebView. */
+    //         this.props.updateUrlBarText(url);
+    //     }
+    // };
 
-        if(!error && isIOS){
-            /* iOS seems to fire loading events on the non-main frame, so onLoadCommitted event is the best one on which to update the main-frame URL.
-             * This event doesn't exist on Android to my knowledge, so I haven't hooked it up in BetterWebView. */
-            this.props.updateUrlBarText(url);
-        }
-    };
+    // private readonly onLoadFinished = (args: LoadEventData) => {
+    //     const { error, eventName, url, navigationType, object } = args;
+    //     const wv: WebView = object as WebView;
+    //     console.log(`[WebView onLoadFinished] error ${error}, eventName ${eventName}, url ${url} (vs. src ${wv.src}), navigationType ${navigationType}`);
 
-    private readonly onLoadFinished = (args: LoadEventData) => {
-        const { error, eventName, url, navigationType, object } = args;
-        const wv: WebView = object as WebView;
-        console.log(`[WebView onLoadFinished] error ${error}, eventName ${eventName}, url ${url} (vs. src ${wv.src}), navigationType ${navigationType}`);
+    //     // TODO: handle errors
 
-        // TODO: handle errors
+    //     if(!error && isAndroid){
+    //         /* TODO: check whether Android fires onLoadFinished at sensible moments for updating the URL bar text. */
+    //         this.props.updateUrlBarText(url);
+    //     }
+    // };
 
-        if(!error && isAndroid){
-            /* TODO: check whether Android fires onLoadFinished at sensible moments for updating the URL bar text. */
-            this.props.updateUrlBarText(url);
-        }
-    };
+    // private readonly onProgress = (args: ProgressEventData) => {
+    //     const { eventName, progress, object } = args;
+    //     const wv: WebView = object as WebView;
+    //     console.log(`[WebView onLoadFinished] eventName ${eventName}, progress ${progress}`);
 
-    private readonly onProgress = (args: ProgressEventData) => {
-        const { eventName, progress, object } = args;
-        const wv: WebView = object as WebView;
-        console.log(`[WebView onLoadFinished] eventName ${eventName}, progress ${progress}`);
-
-        this.props.setProgressOnWebView({ progress, tab: this.props.activeTab });
-    };
+    //     this.props.setProgressOnWebView({ progress, tab: this.props.activeTab });
+    // };
 
     render(){
-        const { activeTab, tabs, barsState, children, ...rest } = this.props;
+        const { activeTab, tabs, barsState, style, children, ...rest } = this.props;
 
         return (
             // UIView()
-            <$StackLayout
-                width={{ value: 100, unit: "%" }}
-                height={{ value: 100, unit: "%" }}
+            <View
+                style={StyleSheet.compose(
+                    {
+                        flexDirection: "column",
+                        width: "100%",
+                        height: "100%",
+                    },
+                    style
+                )}
                 {...rest}
             >
-                <BetterWebView
+                {/* <BetterWebView
                     // TODO: will have to solve how best to build one webView for each tab, give it a unique ref, and allow animation between tabs.
                     ref={webViews.get(activeTab)}
                     // onPan={this.onPan}
@@ -216,8 +214,14 @@ class WebViewContainer extends React.Component<WebViewContainerProps & StackLayo
                     width={{ value: 100, unit: "%" }}
                     height={{ value: 100, unit: "%" }}
                     src={tabs[activeTab].url}
-                />
-            </$StackLayout>
+                /> */}
+
+                <ScrollView>
+                    <View>
+                        <Text>Placeholder for BetterWebView</Text>
+                    </View>
+                </ScrollView>
+            </View>
         );
     }
 }
@@ -245,8 +249,8 @@ const WebViewContainerConnected = connect(
  * TopTouchArea serves as an opaque status bar that can be tapped to scroll
  * back to the top of any scrollview that is made its subordinate in some way.
  */
-class TopTouchArea extends React.Component<ButtonComponentProps, {}> {
-    private readonly onTap = (e) => {
+class TopTouchArea extends React.Component<TouchableWithoutFeedbackProps, {}> {
+    private readonly onPress = (e) => {
         console.log(`[TopTouchArea.onTap]`);
     };
     
@@ -256,27 +260,36 @@ class TopTouchArea extends React.Component<ButtonComponentProps, {}> {
         // A Button would be more semantic, but is restricted to the Safe Area.
 
         return (
-            <$ContentView
+            <TouchableWithoutFeedback
+                style={{
+                    backgroundColor: "red",
+                    // The trick here is that this background colour overflows beyond the safe area.
+                    width: "100%",
+                    height: 0,
+                }}
                 {...rest}
-                onTap={this.onTap}
-                row={0}
-                // The trick here is that this background colour overflows beyond the safe area.
-                backgroundColor={"red"}
-                className=""
-                width={{ value: 100, unit: "%"}}
-                height={{ value: 0, unit: "dip" }}
+                onPress={this.onPress}
+                // row={0}
             />
         );
     }
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L70
-class AlertStackView extends React.Component<StackLayoutComponentProps, {}> {
+class AlertStackView extends React.Component<ViewProps, {}> {
     render(){
-        const { children, ...rest } = this.props;
+        const { style, children, ...rest } = this.props;
 
         return (
-            <$StackLayout {...rest}/>
+            <View
+                style={StyleSheet.compose(
+                    {
+                        flexDirection: "column",
+                    },
+                    style
+                )}
+                {...rest}
+            />
         );
     }
 }
@@ -289,9 +302,9 @@ interface FooterProps {
 };
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L103
-class Footer extends React.Component<FooterProps & Omit<StackLayoutComponentProps, "orientation">, {}> {
+class Footer extends React.Component<FooterProps & Omit<ViewProps, "orientation">, {}> {
     render(){
-        const { retraction, showToolbar, orientation, percentRevealed, children, ...rest } = this.props;
+        const { retraction, showToolbar, orientation, percentRevealed, style, children, ...rest } = this.props;
 
         const revealedHeight: number = 44;
         const retractedHeight: number = 0;
@@ -304,20 +317,27 @@ class Footer extends React.Component<FooterProps & Omit<StackLayoutComponentProp
             /* Warning: I've tried other layouts (StackLayout and FlexboxLayout) here, but they shift
              * horizontally after rotation. Only ContentView seems to escape this bug. */
             return (
-                <$ContentView
-                    height={{ value: animatedHeight, unit: "dip" }}
-                    width={{ value: 100, unit: "%" }}
+                <View
+                    style={StyleSheet.compose(
+                        {
+                            flexDirection: "column",
+                            height: animatedHeight,
+                            width: "100%",
+                        },
+                        style
+                    )}
+                    // height={{ value: animatedHeight, unit: "dip" }}
                     {...rest}
                 >
                     <TabToolbar/>
-                </$ContentView>
+                </View>
             );
         }
 
         // Unclear what footer should do when not showing toolbar...
         return (
-            <$ContentView>
-            </$ContentView>
+            <View>
+            </View>
         );
     }
 }
@@ -334,13 +354,20 @@ const FooterConnected = connect(
 )(Footer);
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L65
-class OverlayBackground extends React.Component<{}, {}> {
+class OverlayBackground extends React.Component<ViewProps, {}> {
     render(){
-        const {} = this.props;
+        const { style, ...rest } = this.props;
 
         return (
             // UIVisualEffectView()
-            <$StackLayout/>
+            <View
+                style={StyleSheet.compose(
+                    {
+                        flexDirection: "column",
+                    },
+                    style
+                )}
+            />
         );
     }
 }
@@ -361,32 +388,57 @@ export class BrowserViewController extends React.Component<Props, State> {
         // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L343
 
         return (
-            <$DockLayout
-                stretchLastChild={true}
-                width={{ value: 100, unit: "%"}}
-                height={{ value: 100, unit: "%"}}
+            <View
+                // stretchLastChild={true}
+                style={{
+                    flexDirection: "column",
+                    width: "100%",
+                    height: "100%",
+                }}
             >
-                <NotchAreaCoverConnected dock={"top"} orientation={orientation}/>
+                <NotchAreaCoverConnected orientation={orientation}/>
 
-                <$DockLayout
-                    dock={"bottom"}
-                    stretchLastChild={true}
-                    width={{ value: 100, unit: "%"}}
-                    height={{ value: 100, unit: "%"}}
+                <View
+                    // dock={"bottom"}
+                    // stretchLastChild={true}
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        flexGrow: 1,
+                    }}
                 >
-                    <FooterConnected dock={"bottom"} orientation={orientation} showToolbar={true} backgroundColor={"gray"} visibility={orientation === "landscape" ? "collapse" : "visible"}/>
-                    <$GridLayout
-                        dock={"top"}
-                        width={{ value: 100, unit: "%"}}
-                        height={{ value: 100, unit: "%" }}
-                        rows={[new ItemSpec(1, "star")]}
-                        columns={[new ItemSpec(1, "star")]}
+                    <View
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                            flexGrow: 1,
+                        }}
                     >
-                        <WebViewContainerBackdrop row={0} col={0} backgroundColor={"gold"}/>
-                        <WebViewContainerConnected row={0} col={0}/>
-                    </$GridLayout>
-                </$DockLayout>
-            </$DockLayout>
+                        <WebViewContainerBackdrop
+                            style={{
+                                backgroundColor: "gold",
+                                position: "absolute",
+                            }}
+                        />
+                        <WebViewContainerConnected
+                            style={{
+                                position: "absolute",
+                            }}
+                        />
+                    </View>
+
+                    <FooterConnected
+                        style={{
+                            flexGrow: 0,
+                            backgroundColor: "gray",
+                            display: orientation === "landscape" ? "none" : "flex",
+                        }}
+                    
+                        orientation={orientation}
+                        showToolbar={true}
+                    />
+                </View>
+            </View>
         );
     }
 }
