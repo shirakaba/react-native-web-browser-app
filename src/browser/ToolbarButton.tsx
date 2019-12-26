@@ -13,7 +13,7 @@ interface State {
 // https://github.com/cliqz/user-agent-ios/blob/7a91b5ea3e2fbb8b95dadd4f0cfd71b334e73449/Client/Frontend/Browser/TabToolbar.swift#L146
 export class ToolbarButton extends React.Component<Props & TouchableOpacityProps, State>{
     render(){
-        const { style, onTap, text = "", children, ...rest } = this.props;
+        const { style = {}, onTap, text = "", children, ...rest } = this.props;
         
         const textColour: string = "white";
 

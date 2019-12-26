@@ -65,7 +65,6 @@ class DisplayTextField extends React.Component<DisplayTextFieldProps & TextInput
 
     render(){
         const { urlBarText, style, ...rest } = this.props;
-        const {} = this.state;
 
         return (
             <TextInput

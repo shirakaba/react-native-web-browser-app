@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Dimensions, Platform } from 'react-native';
 // import { BrowserViewController } from '~/browser/BrowserViewController';
 import { Provider } from 'react-redux';
 import { store } from '~/store/store';
+import { BrowserViewController } from "~/browser/BrowserViewController";
 
 function isPortrait(): boolean {
     const { width, height } = Dimensions.get('screen');
@@ -49,8 +50,8 @@ class AppContainer extends React.Component<Props, State> {
         return (
             <Provider store={store}>
                 <View style={styles.container}>
-                    {/* <BrowserViewController orientation={orientation}/> */}
-                    <Text>AppContainer</Text>
+                    <BrowserViewController orientation={orientation}/>
+                    {/* <Text>AppContainer</Text> */}
                 </View>
             </Provider>
         );
