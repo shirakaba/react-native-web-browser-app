@@ -1,10 +1,9 @@
 import * as React from "react";
-import { $FlexboxLayout } from "react-nativescript";
+import { View, ViewProps, StyleProp, ViewStyle } from "react-native";
 import { BackButtonConnected, ForwardButtonConnected, MenuButtonConnected, SearchButtonConnected, TabsButtonConnected, } from "./BarButtons";
-import { FlexboxLayoutComponentProps } from "react-nativescript/dist/components/FlexboxLayout";
 
 interface Props {
-
+    style?: ViewStyle,
 }
 
 interface State {
@@ -12,17 +11,22 @@ interface State {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabToolbar.swift#L199
-export class TabToolbar extends React.Component<Props & FlexboxLayoutComponentProps, State>{
+export class TabToolbar extends React.Component<Props & ViewProps, State>{
 
     render(){
-        const { ...rest } = this.props;
+        const { style, ...rest } = this.props;
         return (
-            <$FlexboxLayout
-                flexDirection={"row"}
-                justifyContent={"space-around"}
-                alignItems={"center"}
-                width={{ value: 100, unit: "%" }}
-                // paddingTop={16}
+            <View
+                style={[
+                    {
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        alignItems: "center",
+                        width: "100%",
+                    },
+                    style
+                ]}
+                // FIXME: 
                 {...rest}
             >
                 {/* actionButtons */}
@@ -31,7 +35,7 @@ export class TabToolbar extends React.Component<Props & FlexboxLayoutComponentPr
                 <MenuButtonConnected/>
                 <SearchButtonConnected/>
                 <TabsButtonConnected/>
-            </$FlexboxLayout>
+            </View>
         );
     }
 }

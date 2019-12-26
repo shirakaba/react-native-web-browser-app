@@ -1,18 +1,16 @@
 import * as React from "react";
-import { WebView, ActionBar } from "@nativescript/core";
-import { $WebView, $ActionBar, $StackLayout, $FlexboxLayout, $Button } from "react-nativescript";
+import { Button, TouchableOpacityProps } from "react-native";
 import { ToolbarButton } from "./ToolbarButton";
 import { goBackOnWebView, goForwardOnWebView, reloadWebView, stopWebView } from "~/store/navigationState";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
-import { ButtonComponentProps } from "react-nativescript/dist/components/Button";
 
 // From URLBarView
 
 interface BackButtonProps {
     goBackOnWebView: typeof goBackOnWebView,
 }
-class BackButton extends React.Component<BackButtonProps & ButtonComponentProps, {}> {
+class BackButton extends React.Component<BackButtonProps & TouchableOpacityProps, {}> {
     private readonly onTap = () => {
         this.props.goBackOnWebView();
     };
@@ -41,7 +39,7 @@ export const BackButtonConnected = connect(
 interface ForwardButtonProps {
     goForwardOnWebView: typeof goForwardOnWebView,
 }
-class ForwardButton extends React.Component<ForwardButtonProps & ButtonComponentProps, {}> {
+class ForwardButton extends React.Component<ForwardButtonProps & TouchableOpacityProps, {}> {
     private readonly onTap = () => {
         this.props.goForwardOnWebView();
     };
@@ -74,7 +72,7 @@ interface StopReloadButtonProps {
     reloadWebView: typeof reloadWebView,
 }
 
-class StopReloadButton extends React.Component<StopReloadButtonProps & ButtonComponentProps, {}> {
+class StopReloadButton extends React.Component<StopReloadButtonProps & TouchableOpacityProps, {}> {
     private readonly onTap = () => {
         if(this.props.loading){
             this.props.stopWebView();
@@ -119,7 +117,7 @@ export const StopReloadButtonConnected = connect(
 /**
  * Menu refers to the app menu, not a page-specific menu.
  */
-class MenuButton extends React.Component<{} & ButtonComponentProps, {}> {
+class MenuButton extends React.Component<{} & TouchableOpacityProps, {}> {
     render(){
         const { ...rest } = this.props;
         return (
@@ -135,7 +133,7 @@ export const MenuButtonConnected = connect(
         // TODO
     },
 )(MenuButton);
-class SearchButton extends React.Component<{} & ButtonComponentProps, {}> {
+class SearchButton extends React.Component<{} & TouchableOpacityProps, {}> {
     render(){
         const { ...rest } = this.props;
         return (
@@ -152,7 +150,7 @@ export const SearchButtonConnected = connect(
     },
 )(SearchButton);
 // https://github.com/cliqz/user-agent-ios/blob/7a91b5ea3e2fbb8b95dadd4f0cfd71b334e73449/Client/Frontend/Browser/TabToolbar.swift#L146
-class TabsButton extends React.Component<{} & ButtonComponentProps, {}>{
+class TabsButton extends React.Component<{} & TouchableOpacityProps, {}>{
 
     render(){
         const { ...rest } = this.props;
@@ -172,11 +170,11 @@ export const TabsButtonConnected = connect(
 )(TabsButton);
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/URLBarView.swift#L136
-class CancelButton extends React.Component<{} & ButtonComponentProps, {}>{
+class CancelButton extends React.Component<{} & TouchableOpacityProps, {}>{
     render(){
         const { ...rest } = this.props;
         return (
-            <$Button {...rest}/>
+            <Button {...rest}/>
         );
     }
 }
