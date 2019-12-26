@@ -1,11 +1,8 @@
 import * as React from "react";
-import { WebView, ActionBar, StackLayout } from "@nativescript/core";
-import { $WebView, $ActionBar, $StackLayout, $Button, $FlexboxLayout } from "react-nativescript";
 import { GradientProgressBarConnected } from "../Widgets/GradientProgressBar";
 import { ToolbarButton } from "./ToolbarButton";
 import { AutocompleteTextField } from "~/Widgets/AutocompleteTextField";
 import { TabLocationView, TabLocationViewConnected } from "./TabLocationView";
-import { ButtonComponentProps } from "react-nativescript/dist/components/Button";
 import { BackButtonConnected, ForwardButtonConnected, StopReloadButtonConnected, TabsButtonConnected, MenuButtonConnected, CancelButtonConnected } from "./BarButtons";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";

@@ -37,6 +37,10 @@ target 'linguabrowse' do
   pod 'Folly', :podspec => "#{rnPrefix}/third-party-podspecs/Folly.podspec"
 
   # Other native modules
+  pod 'RNGestureHandler', :podspec => '../node_modules/react-native-gesture-handler/RNGestureHandler.podspec'
+  pod 'RNReanimated', :podspec => '../node_modules/react-native-reanimated/RNReanimated.podspec'
+  pod 'RNScreens', :path => '../node_modules/react-native-screens'
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
   # Automatically detect installed unimodules
   use_unimodules!
