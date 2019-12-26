@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView } from "~/store/navigationState";
 import { setBarsRetraction, RetractionState } from "~/store/barsState";
-import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView } from "react-native";
+import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView } from "react-native";
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -43,7 +43,7 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
         /* Dimensions based on: https://github.com/taisukeh/ScrollingBars */
         // TODO: detect tablet vs. mobile on React Native.
         // const revealedHeight: number = orientation === "portrait" || Device.deviceType === "Tablet" ? 64 : 44;
-        const revealedHeight: number = orientation === "portrait" ? 64 : 44;
+        const revealedHeight: number = orientation === "portrait" ? 64 : 64;
         const retractedHeight: number = orientation === "portrait" ? 30 : 0;
 
         const heightDiff: number = revealedHeight - retractedHeight;
@@ -398,7 +398,9 @@ export class BrowserViewController extends React.Component<Props, State> {
                     height: "100%",
                 }}
             >
-                <NotchAreaCoverConnected orientation={orientation}/>
+                <SafeAreaView>
+                    <NotchAreaCoverConnected orientation={orientation}/>
+                </SafeAreaView>
 
                 <View
                     // dock={"bottom"}

@@ -127,6 +127,7 @@ export class URLBarView extends React.Component<Props, State>{
                     <TabLocationViewConnected
                         style={{
                             flexGrow: 1,
+                            width: "100%",
                         }}
                         slotBackgroundColor={slotBackgroundColor}
                         buttonBackgroundColor={buttonBackgroundColor}

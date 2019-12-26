@@ -18,9 +18,6 @@ export class ToolbarButton extends React.Component<Props & TouchableOpacityProps
         
         const textColour: string = "white";
 
-        // TODO: check whether backgroundColor is working as intended, then simplify
-        const { backgroundColor = "transparent", ...styleRest } = StyleSheet.flatten(style);
-
         return (
             <TouchableOpacity
                 onPress={onTap}
@@ -28,21 +25,23 @@ export class ToolbarButton extends React.Component<Props & TouchableOpacityProps
                     {
                         width: 40,
                         height: 40,
-                        backgroundColor,
+                        backgroundColor: "transparent",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        // margin: 10
                     },
-                    {
-                        ...styleRest
-                    }
+                    style
                 )}
                 {...rest}
             >
                 <Icon
                     style={{
-                        backgroundColor,
+                        // padding: 9,
                         // fontFamily: "Font Awesome 5 Free",
                     }}
                     color={textColour}
-                    size={20}
+                    size={22}
+                    
                     name={name}
                 >
                 </Icon>

@@ -151,9 +151,8 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
         // const colorFromString = processColor('rgba(10, 20, 30, 0.4)');
         //                           aarrggbb
         // const expectedInt     = 0x660a141e;
-        const slotBackgroundColorInt: number = processColor(slotBackgroundColor ? slotBackgroundColor : 0x00000000);
-
-        const slotBackgroundColorObj: ColorObj = normalizeColorToObj(slotBackgroundColorInt);
+        const slotBackgroundColorObj: ColorObj = normalizeColorToObj(slotBackgroundColor);
+        // console.log(`slotBackgroundColor ${slotBackgroundColor} -> slotBackgroundColorObj`, slotBackgroundColorObj);
         
         const revealedSlotBackgroundColorAlpha: number = 1;
         const retractedSlotBackgroundColorAlpha: number = 0;
