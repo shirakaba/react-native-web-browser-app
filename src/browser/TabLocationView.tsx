@@ -68,7 +68,12 @@ class DisplayTextField extends React.Component<DisplayTextFieldProps & TextInput
 
         return (
             <TextInput
-                style={style}
+                style={StyleSheet.compose(
+                    {
+                        fontSize: 16,
+                    },
+                    style
+                )}
                 {...rest}
                 value={urlBarText}
                 autoCorrect={false}
@@ -195,6 +200,7 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                         flexGrow: 1,
                         
                         marginHorizontal: 8,
+                        // paddingVertical: 4,
                         // backgroundColor: "indigo",
                     }}
                 >

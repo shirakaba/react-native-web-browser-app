@@ -45,7 +45,7 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
         /* Dimensions based on: https://github.com/taisukeh/ScrollingBars */
         // TODO: detect tablet vs. mobile on React Native.
         // const revealedHeight: number = orientation === "portrait" || Device.deviceType === "Tablet" ? 64 : 44;
-        const revealedHeight: number = orientation === "portrait" ? 64 : 64;
+        const revealedHeight: number = orientation === "portrait" ? 44 : 44;
         const retractedHeight: number = orientation === "portrait" ? 30 : 0;
 
         const heightDiff: number = revealedHeight - retractedHeight;

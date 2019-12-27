@@ -29,8 +29,8 @@ export class ToolbarButton extends React.Component<Props & TouchableOpacityProps
                 onPress={onTap}
                 style={StyleSheet.compose(
                     {
-                        width: compact ? 24 : 28,
-                        height: compact ? 24 : 28,
+                        width: compact ? 24 : 30,
+                        height: compact ? 24 : 30,
                         backgroundColor: "transparent",
                         alignItems: "center",
                         justifyContent: "center",
@@ -46,7 +46,7 @@ export class ToolbarButton extends React.Component<Props & TouchableOpacityProps
                         // fontFamily: "Font Awesome 5 Free",
                     }}
                     color={textColour}
-                    size={compact ? 12 : 24}
+                    size={compact ? 12 : 20}
                     
                     name={name}
                 >
