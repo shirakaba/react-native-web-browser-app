@@ -199,8 +199,10 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                     {/* privacyIndicator */}
                     <PrivacyIndicator
                         style={{
-                            scaleX: animatedScale,
-                            scaleY: animatedScale,
+                            transform: [
+                                { scaleX: animatedScale },
+                                { scaleY: animatedScale },
+                            ],
                         }}
                     />
                     
@@ -216,8 +218,10 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                     <PageOptionsButton
                         style={{
                             backgroundColor: buttonBackgroundColor,
-                            scaleX: animatedScale,
-                            scaleY: animatedScale,
+                            transform: [
+                                { scaleX: animatedScale },
+                                { scaleY: animatedScale },
+                            ],
                         }}
                     />
                 </View>
