@@ -37,7 +37,7 @@ class LockImageView extends React.Component<{ locked: boolean } & TouchableOpaci
 
         return (
             // <$Image/>
-            <ToolbarButton name={ locked ? "lock" : "lock-open" } {...rest}/>
+            <ToolbarButton name={locked ? "lock" : "lock-open"} compact={true} {...rest}/>
         );
     }
 }
@@ -173,7 +173,7 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                 // iosOverflowSafeArea={false}
                 style={StyleSheet.compose(
                     {
-                        flexDirection: 'column'
+                        flexDirection: 'column',
                     },
                     style
                 )}

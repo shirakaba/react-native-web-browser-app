@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 interface Props {
     style?: StyleProp<ViewStyle>,
     name?: string,
+    compact?: boolean,
     onTap?: () => void,
 }
 
@@ -14,17 +15,21 @@ interface State {
 // https://github.com/cliqz/user-agent-ios/blob/7a91b5ea3e2fbb8b95dadd4f0cfd71b334e73449/Client/Frontend/Browser/TabToolbar.swift#L146
 export class ToolbarButton extends React.Component<Props & TouchableOpacityProps, State>{
     render(){
-        const { style = {}, onTap, name = "", children, ...rest } = this.props;
+        const { style = {}, onTap, compact, name = "", children, ...rest } = this.props;
         
         const textColour: string = "white";
+
+        console.log(`[ToolbarButton] compact: ${compact}`);
+
+        /* iOS HIG for "Navigation Bar and Toolbar Icon Size" gives 24pt target size, 28pt max size. */
 
         return (
             <TouchableOpacity
                 onPress={onTap}
                 style={StyleSheet.compose(
                     {
-                        width: 40,
-                        height: 40,
+                        width: compact ? 24 : 28,
+                        height: compact ? 24 : 28,
                         backgroundColor: "transparent",
                         alignItems: "center",
                         justifyContent: "center",
@@ -40,7 +45,7 @@ export class ToolbarButton extends React.Component<Props & TouchableOpacityProps
                         // fontFamily: "Font Awesome 5 Free",
                     }}
                     color={textColour}
-                    size={22}
+                    size={compact ? 12 : 24}
                     
                     name={name}
                 >

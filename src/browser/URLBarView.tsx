@@ -120,7 +120,7 @@ export class URLBarView extends React.Component<Props, State>{
                         justifyContent: "space-around",
                         alignItems: "center",
                         height: "auto",
-                        width: "100%"
+                        width: "100%",
                     }}
                 >
                     {/* AKA locationView. */}
