@@ -7,7 +7,9 @@ import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView } from "~/store/navigationState";
 import { setBarsRetraction, RetractionState } from "~/store/barsState";
-import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView } from "react-native";
+import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform } from "react-native";
+import { WebView } from 'react-native-webview';
+import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -131,6 +133,8 @@ interface WebViewContainerProps {
     setBarsRetraction: typeof setBarsRetraction,
 }
 
+const IosWebView = WebView as React.ComponentClass<IOSWebViewProps>;
+
 class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps, { }> {
     // private readonly onBarRetractionRecommendation = (e: BarRetractionRecommendationEventData) => {
     //     // console.log(`WebView barsShouldRetract ${e.barsShouldRetract}`);
@@ -143,48 +147,47 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
     //     }
     // };
 
-    // private readonly onLoadStarted = (args: LoadEventData) => {
-    //     const { error, eventName, url, navigationType, object } = args;
-    //     const wv: WebView = object as WebView;
-    //     console.log(`[WebView onLoadStarted] error ${error}, eventName ${eventName}, url ${url} (vs. src ${wv.src}), navigationType ${navigationType}`);
+    private readonly onLoadStarted = (event: WebViewNavigationEvent) => {
+        const { url, navigationType } = event.nativeEvent;
+
+        console.log(`[WebView onLoadStarted] url ${url} navigationType ${navigationType}`);
         
-    //     // TODO: handle errors
-    // };
+        // TODO: handle errors
+    };
 
-    // private readonly onLoadCommitted = (args: LoadEventData) => {
-    //     const { error, eventName, url, navigationType, object } = args;
-    //     const wv: WebView = object as WebView;
-    //     console.log(`[WebView onLoadCommitted] error ${error}, eventName ${eventName}, url ${url} (vs. src ${wv.src}), navigationType ${navigationType}`);
+    private readonly onLoadCommitted = (event: WebViewNavigationEvent) => {
+        const { url, navigationType } = event.nativeEvent;
 
-    //     // TODO: handle errors
+        console.log(`[WebView onLoadCommitted] url ${url} navigationType ${navigationType}`);
 
-    //     if(!error && isIOS){
-    //         /* iOS seems to fire loading events on the non-main frame, so onLoadCommitted event is the best one on which to update the main-frame URL.
-    //          * This event doesn't exist on Android to my knowledge, so I haven't hooked it up in BetterWebView. */
-    //         this.props.updateUrlBarText(url);
-    //     }
-    // };
+        if(Platform.OS === "ios" || Platform.OS === "macos"){
+            /* iOS seems to fire loading events on the non-main frame, so onLoadCommitted event is the best one on which to update the main-frame URL.
+             * This event doesn't exist on Android to my knowledge, so I haven't hooked it up in BetterWebView. */
+            this.props.updateUrlBarText(url);
+        }
+    };
 
-    // private readonly onLoadFinished = (args: LoadEventData) => {
-    //     const { error, eventName, url, navigationType, object } = args;
-    //     const wv: WebView = object as WebView;
-    //     console.log(`[WebView onLoadFinished] error ${error}, eventName ${eventName}, url ${url} (vs. src ${wv.src}), navigationType ${navigationType}`);
+    private readonly onLoadFinished = (event: WebViewNavigationEvent) => {
+        const { url, navigationType } = event.nativeEvent;
 
-    //     // TODO: handle errors
+        console.log(`[WebView onLoadFinished] url ${url} navigationType ${navigationType}`);
 
-    //     if(!error && isAndroid){
-    //         /* TODO: check whether Android fires onLoadFinished at sensible moments for updating the URL bar text. */
-    //         this.props.updateUrlBarText(url);
-    //     }
-    // };
+        // TODO: handle errors
 
-    // private readonly onProgress = (args: ProgressEventData) => {
-    //     const { eventName, progress, object } = args;
-    //     const wv: WebView = object as WebView;
-    //     console.log(`[WebView onLoadFinished] eventName ${eventName}, progress ${progress}`);
+        if(Platform.OS === "android"){
+            /* TODO: check whether Android fires onLoadFinished at sensible moments for updating the URL bar text. */
+            this.props.updateUrlBarText(url);
+        }
+    };
 
-    //     this.props.setProgressOnWebView({ progress, tab: this.props.activeTab });
-    // };
+    private readonly onProgress = (event: WebViewProgressEvent) => {
+        const { url, progress } = event.nativeEvent;
+        console.log(`[WebView onLoadProgress] progress ${progress}`);
+
+        this.props.setProgressOnWebView({ progress, tab: this.props.activeTab });
+    };
+
+    // const MyWebView = ({ children, ...rest }) => React.createElement(WebView, props, children);
 
     render(){
         const { activeTab, tabs, barsState, style, children, ...rest } = this.props;
@@ -202,27 +205,25 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                 )}
                 {...rest}
             >
-                {/* <BetterWebView
+                <IosWebView
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                    }}
+                    source={{
+                        uri: tabs[activeTab].url,
+                    }}
                     // TODO: will have to solve how best to build one webView for each tab, give it a unique ref, and allow animation between tabs.
                     ref={webViews.get(activeTab)}
                     // onPan={this.onPan}
-                    onBarRetractionRecommendation={this.onBarRetractionRecommendation}
-                    onLoadStarted={this.onLoadStarted}
-                    onLoadCommitted={this.onLoadCommitted}
-                    onLoadFinished={this.onLoadFinished}
-                    onProgress={this.onProgress}
+                    // onBarRetractionRecommendation={this.onBarRetractionRecommendation}
+                    onLoadStart={this.onLoadStarted}
+                    onLoadCommit={this.onLoadCommitted}
+                    onLoadEnd={this.onLoadFinished}
+                    onLoadProgress={this.onProgress}
                     // Feeding in either bar's state is sufficient for now, unless we find a reason to start retracting them independently.
-                    barRetractionState={barsState.footer.retraction}
-                    width={{ value: 100, unit: "%" }}
-                    height={{ value: 100, unit: "%" }}
-                    src={tabs[activeTab].url}
-                /> */}
-
-                <ScrollView>
-                    <View>
-                        <Text>Placeholder for BetterWebView</Text>
-                    </View>
-                </ScrollView>
+                    // barRetractionState={barsState.footer.retraction}
+                />
             </View>
         );
     }

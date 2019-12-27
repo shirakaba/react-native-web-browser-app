@@ -41,6 +41,7 @@ target 'linguabrowse' do
   pod 'RNReanimated', :podspec => '../node_modules/react-native-reanimated/RNReanimated.podspec'
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
   # Automatically detect installed unimodules
   use_unimodules!
