@@ -136,16 +136,16 @@ interface WebViewContainerProps {
 const IosWebView = WebView as React.ComponentClass<IOSWebViewProps>;
 
 class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps, { }> {
-    // private readonly onBarRetractionRecommendation = (e: BarRetractionRecommendationEventData) => {
-    //     // console.log(`WebView barsShouldRetract ${e.barsShouldRetract}`);
+    private readonly onBarRetractionRecommendation = (e) => {
+        console.log(`WebView onBarRetractionRecommendation ${Object.keys(e)}`);
         
-    //     if(e.barsShouldRetract){
-    //         // Gesture flings the scrollView upwards (scrolls downwards)
-    //         this.props.setBarsRetraction({ bars: "both", animated: true, retraction: RetractionState.retracted });
-    //     } else {
-    //         this.props.setBarsRetraction({ bars: "both", animated: true, retraction: RetractionState.revealed });
-    //     }
-    // };
+        if(e.nativeEvent.recommendation === "retract"){
+            // Gesture flings the scrollView upwards (scrolls downwards)
+            this.props.setBarsRetraction({ bars: "both", animated: true, retraction: RetractionState.retracted });
+        } else {
+            this.props.setBarsRetraction({ bars: "both", animated: true, retraction: RetractionState.revealed });
+        }
+    };
 
     private readonly onLoadStarted = (event: WebViewNavigationEvent) => {
         const { url, navigationType } = event.nativeEvent;
@@ -216,7 +216,7 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                     // TODO: will have to solve how best to build one webView for each tab, give it a unique ref, and allow animation between tabs.
                     ref={webViews.get(activeTab)}
                     // onPan={this.onPan}
-                    // onBarRetractionRecommendation={this.onBarRetractionRecommendation}
+                    onRetractBarsRecommendation={this.onBarRetractionRecommendation}
                     onLoadStart={this.onLoadStarted}
                     onLoadCommit={this.onLoadCommitted}
                     onLoadEnd={this.onLoadFinished}

@@ -5375,7 +5375,7 @@ react-native-view-shot@3.0.2:
 
 "react-native-webview@git+https://github.com/shirakaba/react-native-webview.git#shirakaba/main":
   version "8.0.2"
-  resolved "git+https://github.com/shirakaba/react-native-webview.git#2aa0c35e20cb3a0aae67f39f89b1df60a0b6e3f0"
+  resolved "git+https://github.com/shirakaba/react-native-webview.git#1a504e4e88b8a090bc9b995c2153810a44435c6a"
   dependencies:
     escape-string-regexp "2.0.0"
     invariant "2.2.4"
