@@ -137,7 +137,7 @@ const IosWebView = WebView as React.ComponentClass<IOSWebViewProps>;
 
 class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps, { }> {
     private readonly onBarRetractionRecommendation = (e) => {
-        console.log(`WebView onBarRetractionRecommendation ${Object.keys(e)}`);
+        // console.log(`WebView onBarRetractionRecommendation ${Object.keys(e)}`);
         
         if(e.nativeEvent.recommendation === "retract"){
             // Gesture flings the scrollView upwards (scrolls downwards)
