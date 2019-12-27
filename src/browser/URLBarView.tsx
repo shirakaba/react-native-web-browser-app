@@ -117,6 +117,9 @@ export class URLBarView extends React.Component<Props, State>{
             <View
                 style={{
                     flexDirection: "column",
+                    justifyContent: "space-around",
+
+                    // backgroundColor: "yellow",
                 }}
             >
                 <View
@@ -125,13 +128,21 @@ export class URLBarView extends React.Component<Props, State>{
                         justifyContent: "space-around",
                         alignItems: "center",
                         height: "auto",
-                        width: "100%"
+                        width: "100%",
+
+                        // backgroundColor: "green",
                     }}
                 >
                     {stackContents}
                 </View>
+
+                {/* Just a spacer view. */}
+                <View style={{ height: 8 }}/>
+
                 <GradientProgressBarConnected
-                    style={{ width: "100%" }}
+                    style={{
+                        width: "100%",
+                    }}
                 />
             </View>
         );

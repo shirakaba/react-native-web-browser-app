@@ -61,10 +61,12 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
                         flexDirection: "column",
                         // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
                         justifyContent: "flex-end",
-                        alignItems: "center",
+                        // alignItems: "center",
                         width: "100%",
                         height: animatedHeight,
                         backgroundColor: "gray",
+
+                        // backgroundColor: "red",
                     },
                     style
                 )}

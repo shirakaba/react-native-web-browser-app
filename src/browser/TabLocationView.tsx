@@ -174,6 +174,8 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                 style={StyleSheet.compose(
                     {
                         flexDirection: 'column',
+
+                        // backgroundColor: "blue",
                     },
                     style
                 )}
@@ -189,8 +191,11 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                         justifyContent: "space-around",
                         backgroundColor: animatedSlotBackgroundColorString,
                         borderRadius: 30,
-                        margin: 8,
+                        // margin: 8,
                         flexGrow: 1,
+                        
+                        marginHorizontal: 8,
+                        // backgroundColor: "indigo",
                     }}
                 >
                     {/* frontSpaceView */}
