@@ -27,25 +27,35 @@ class GradientProgressBar extends React.Component<GradientProgressBarProps, Stat
     }
 
     shouldComponentUpdate(nextProps: Readonly<GradientProgressBarProps>, nextState: Readonly<State>, nextContext: any): boolean {
+        console.log(`[GradientProgressBar] shouldComponentUpdate with this.props.progress ${this.props.progress}, nextProps.progress ${nextProps.progress},`);
         if(this.props.progress !== nextProps.progress){
-            if(this.props.progress === 1){
-                this.state.barOpacity.stopAnimation(
+            if(nextProps.progress === 1){
+                nextState.barOpacity.stopAnimation(
                     () => {
-                        Animated.timing(this.state.barOpacity, {
-                            toValue: 1,
-                            duration: 1000
+                        Animated.timing(nextState.barOpacity, {
+                            toValue: 0,
+                            duration: 500
                         })
-                        .start();
+                        .start(() => {
+                            console.log(`[GradientProgressBar] Fade out callback!`);
+                        });
                     }
                 );
             }
-            this.state.barWidth.stopAnimation(() => {
-                Animated.timing(this.state.barWidth, {
-                    toValue: this.props.progress,
-                    duration: 500,
-                })
-                .start();
-            });
+            if(nextProps.progress < this.props.progress){
+                nextState.barWidth.stopAnimation(() => {
+                    nextState.barWidth.setValue(nextProps.progress);
+                    nextState.barOpacity.setValue(1);
+                });
+            } else {
+                nextState.barWidth.stopAnimation(() => {
+                    Animated.timing(nextState.barWidth, {
+                        toValue: nextProps.progress,
+                        duration: 10,
+                    })
+                    .start();
+                });
+            }
         }
 
         return true;
@@ -53,6 +63,8 @@ class GradientProgressBar extends React.Component<GradientProgressBarProps, Stat
 
     render(){
         const { progress, ...rest } = this.props;
+
+        console.log(`[GradientProgressBar] rendering with progress ${progress}`);
 
         return (
             <Animated.View
@@ -63,10 +75,6 @@ class GradientProgressBar extends React.Component<GradientProgressBarProps, Stat
                     width: "100%",
                     height: "auto",
                     backgroundColor: "transparent",
-                    opacity: this.state.barOpacity.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, 1],
-                    }),
                 }}
 
                 // This is declared in app/components/AppContainer.scss
@@ -80,6 +88,10 @@ class GradientProgressBar extends React.Component<GradientProgressBarProps, Stat
                         width: this.state.barWidth.interpolate({
                             inputRange: [0, 1],
                             outputRange: ['0%', '100%'],
+                        }),
+                        opacity: this.state.barOpacity.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0, 1],
                         }),
                         // opacity: progress === 1 ? 0 : 1,
                     }}
