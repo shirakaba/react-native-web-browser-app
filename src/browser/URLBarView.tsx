@@ -71,32 +71,16 @@ export class URLBarView extends React.Component<Props, State>{
         if(inOverlayMode){
             // i.e. URL bar's text field has been focused and the browser displays an overlay over the webpage.
             stackContents = (
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-around",
-                        alignItems: "center",
-                        height: "auto",
-                        width: "100%"
-                    }}
-                >
+                <>
                     {/* AKA locationTextField */}
                     <ToolbarTextField/>
                     <CancelButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
-                </View>
+                </>
             );
         } else if(toolbarIsShowing){
             // i.e. landscape (so show all the items that the footer would normally handle)
             stackContents = (
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-around",
-                        alignItems: "center",
-                        height: "auto",
-                        width: "100%"
-                    }}
-                >
+                <>
                     <BackButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
                     <ForwardButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
                     <StopReloadButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
@@ -109,20 +93,12 @@ export class URLBarView extends React.Component<Props, State>{
                     />
                     <TabsButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
                     <MenuButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
-                </View>
+                </>
             );
         } else {
             // i.e. portrait (so hide all the items that the footer will be handling)
             stackContents = (
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-around",
-                        alignItems: "center",
-                        height: "auto",
-                        width: "100%",
-                    }}
-                >
+                <>
                     {/* AKA locationView. */}
                     <TabLocationViewConnected
                         style={{
@@ -133,7 +109,7 @@ export class URLBarView extends React.Component<Props, State>{
                         buttonBackgroundColor={buttonBackgroundColor}
                         textFieldBackgroundColor={textFieldBackgroundColor}
                     />
-                </View>
+                </>
             );
         }
 
@@ -143,7 +119,17 @@ export class URLBarView extends React.Component<Props, State>{
                     flexDirection: "column",
                 }}
             >
-                {stackContents}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-around",
+                        alignItems: "center",
+                        height: "auto",
+                        width: "100%"
+                    }}
+                >
+                    {stackContents}
+                </View>
                 <GradientProgressBarConnected
                     style={{ width: "100%" }}
                 />
