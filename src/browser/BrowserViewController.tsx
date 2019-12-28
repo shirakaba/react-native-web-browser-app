@@ -352,9 +352,10 @@ class Footer extends React.Component<FooterProps & Omit<ViewProps, "orientation"
                                 style={StyleSheet.compose(
                                     {
                                         flexDirection: "column",
-                                        height: animatedHeight + unsafeAreaCoverHeight,
+                                        // height: animatedHeight + unsafeAreaCoverHeight,
                                         width: "100%",
                                         backgroundColor: "gray",
+                                        paddingBottom: unsafeAreaCoverHeight,
                                     },
                                     style
                                 )}
@@ -362,12 +363,6 @@ class Footer extends React.Component<FooterProps & Omit<ViewProps, "orientation"
                                 {...rest}
                             >
                                 <TabToolbar/>
-                                <View
-                                    style={{
-                                        height: unsafeAreaCoverHeight,
-                                        backgroundColor: "gray",
-                                    }}
-                                />
                             </View>
                         );
                     }}    
