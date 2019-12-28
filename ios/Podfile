@@ -42,6 +42,7 @@ target 'linguabrowse' do
   pod 'RNScreens', :path => '../node_modules/react-native-screens'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
 
   # Automatically detect installed unimodules
   use_unimodules!
