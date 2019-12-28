@@ -58,6 +58,8 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
         return (
             <SafeAreaConsumer>
                 {(edgeInsets: EdgeInsets) => {
+                    const unsafeAreaCoverHeight: number = edgeInsets.top;
+
                     return (
                         <View
                             style={StyleSheet.compose(
@@ -67,17 +69,21 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
                                     justifyContent: "flex-end",
                                     // alignItems: "center",
                                     width: "100%",
-                                    height: animatedHeight,
+                                    height: animatedHeight + unsafeAreaCoverHeight,
                                     backgroundColor: "gray",
-
-                                    marginTop: edgeInsets.top,
-                                    // backgroundColor: "red",
                                 },
                                 style
                             )}
                             // height={{ value: animatedHeight, unit: "dip" }}
                             {...rest}
                         >
+                            <View
+                                style={{
+                                    height: unsafeAreaCoverHeight,
+                                    backgroundColor: "gray",
+                                }}
+                            />
+                            {/* TODO: ensure that the header sits within the safe area horizontally. */}
                             <Header
                                 toolbarIsShowing={orientation === "landscape"}
                                 inOverlayMode={false}
@@ -332,14 +338,16 @@ class Footer extends React.Component<FooterProps & Omit<ViewProps, "orientation"
             return (
                 <SafeAreaConsumer>
                     {(edgeInsets: EdgeInsets) => {
+                        const unsafeAreaCoverHeight: number = edgeInsets.bottom;
+
                         return (
                             <View
                                 style={StyleSheet.compose(
                                     {
                                         flexDirection: "column",
-                                        height: animatedHeight,
+                                        height: animatedHeight + unsafeAreaCoverHeight,
                                         width: "100%",
-                                        marginBottom: edgeInsets.bottom,
+                                        backgroundColor: "gray",
                                     },
                                     style
                                 )}
@@ -347,6 +355,12 @@ class Footer extends React.Component<FooterProps & Omit<ViewProps, "orientation"
                                 {...rest}
                             >
                                 <TabToolbar/>
+                                <View
+                                    style={{
+                                        height: unsafeAreaCoverHeight,
+                                        backgroundColor: "gray",
+                                    }}
+                                />
                             </View>
                         );
                     }}    
