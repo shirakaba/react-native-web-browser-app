@@ -356,6 +356,8 @@ class Footer extends React.Component<FooterProps & Omit<ViewProps, "orientation"
                                         width: "100%",
                                         backgroundColor: "gray",
                                         paddingBottom: unsafeAreaCoverHeight,
+                                        paddingLeft: edgeInsets.left,
+                                        paddingRight: edgeInsets.right,
                                     },
                                     style
                                 )}

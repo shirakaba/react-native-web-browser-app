@@ -23,7 +23,7 @@ export class TabToolbar extends React.Component<Props & ViewProps, State>{
                         justifyContent: "space-around",
                         alignItems: "center",
                         width: "100%",
-                        paddingTop: 8,
+                        paddingTop: 16,
                     },
                     style
                 ]}
