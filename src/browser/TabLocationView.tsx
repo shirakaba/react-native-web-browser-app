@@ -70,7 +70,7 @@ class DisplayTextField extends React.Component<DisplayTextFieldProps & TextInput
             <TextInput
                 style={StyleSheet.compose(
                     {
-                        fontSize: 16,
+                        fontSize: 18,
                     },
                     style
                 )}
@@ -195,12 +195,13 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                         alignItems: "center",
                         justifyContent: "space-around",
                         backgroundColor: animatedSlotBackgroundColorString,
-                        borderRadius: 30,
+                        borderRadius: 10,
                         // margin: 8,
                         flexGrow: 1,
-                        
+
                         marginHorizontal: 8,
-                        // paddingVertical: 4,
+                        paddingVertical: 4,
+
                         // backgroundColor: "indigo",
                     }}
                 >
@@ -235,6 +236,9 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                             ],
                         }}
                     />
+
+                    {/* Another spacer view */}
+                    <View style={{ width: TabLocationViewUX.Spacing }}/>
                 </View>
             </View>
         );

@@ -48,6 +48,7 @@ export class Header extends React.Component<Props & ViewProps, State>{
                         flexDirection: 'column',
                         
                         justifyContent: "flex-start",
+                        marginHorizontal: 4,
                         // flex: 1,
                         // backgroundColor: "orange",
                     },
