@@ -10,6 +10,7 @@ import { setBarsRetraction, RetractionState } from "~/store/barsState";
 import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform } from "react-native";
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
+import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -55,32 +56,39 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
         // console.log(`[NotchAreaCover] animatedHeight: ${animatedHeight}; ${factor} * ${heightDiff} + ${retractedHeight}; retraction ${retraction}`);
 
         return (
-            <View
-                style={StyleSheet.compose(
-                    {
-                        flexDirection: "column",
-                        // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
-                        justifyContent: "flex-end",
-                        // alignItems: "center",
-                        width: "100%",
-                        height: animatedHeight,
-                        backgroundColor: "gray",
+            <SafeAreaConsumer>
+                {(edgeInsets: EdgeInsets) => {
+                    return (
+                        <View
+                            style={StyleSheet.compose(
+                                {
+                                    flexDirection: "column",
+                                    // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
+                                    justifyContent: "flex-end",
+                                    // alignItems: "center",
+                                    width: "100%",
+                                    height: animatedHeight,
+                                    backgroundColor: "gray",
 
-                        // backgroundColor: "red",
-                    },
-                    style
-                )}
-                // height={{ value: animatedHeight, unit: "dip" }}
-                {...rest}
-            >
-                <Header
-                    toolbarIsShowing={orientation === "landscape"}
-                    inOverlayMode={false}
-                    slotBackgroundColor={"darkgray"}
-                    textFieldBackgroundColor={"transparent"}
-                    buttonBackgroundColor={"transparent"}
-                />
-            </View>
+                                    marginTop: edgeInsets.top,
+                                    // backgroundColor: "red",
+                                },
+                                style
+                            )}
+                            // height={{ value: animatedHeight, unit: "dip" }}
+                            {...rest}
+                        >
+                            <Header
+                                toolbarIsShowing={orientation === "landscape"}
+                                inOverlayMode={false}
+                                slotBackgroundColor={"darkgray"}
+                                textFieldBackgroundColor={"transparent"}
+                                buttonBackgroundColor={"transparent"}
+                            />
+                        </View>
+                    );
+                }}
+            </SafeAreaConsumer>
         );
     }
 }
@@ -322,20 +330,27 @@ class Footer extends React.Component<FooterProps & Omit<ViewProps, "orientation"
             /* Warning: I've tried other layouts (StackLayout and FlexboxLayout) here, but they shift
              * horizontally after rotation. Only ContentView seems to escape this bug. */
             return (
-                <View
-                    style={StyleSheet.compose(
-                        {
-                            flexDirection: "column",
-                            height: animatedHeight,
-                            width: "100%",
-                        },
-                        style
-                    )}
-                    // height={{ value: animatedHeight, unit: "dip" }}
-                    {...rest}
-                >
-                    <TabToolbar/>
-                </View>
+                <SafeAreaConsumer>
+                    {(edgeInsets: EdgeInsets) => {
+                        return (
+                            <View
+                                style={StyleSheet.compose(
+                                    {
+                                        flexDirection: "column",
+                                        height: animatedHeight,
+                                        width: "100%",
+                                        marginBottom: edgeInsets.bottom,
+                                    },
+                                    style
+                                )}
+                                // height={{ value: animatedHeight, unit: "dip" }}
+                                {...rest}
+                            >
+                                <TabToolbar/>
+                            </View>
+                        );
+                    }}    
+                </SafeAreaConsumer>
             );
         }
 
@@ -402,9 +417,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                     height: "100%",
                 }}
             >
-                <SafeAreaView>
-                    <NotchAreaCoverConnected orientation={orientation}/>
-                </SafeAreaView>
+                <NotchAreaCoverConnected orientation={orientation}/>
 
                 <View
                     // dock={"bottom"}
@@ -443,20 +456,15 @@ export class BrowserViewController extends React.Component<Props, State> {
                         />
                     </View>
 
-                    <SafeAreaView
+                    <FooterConnected
                         style={{
+                            backgroundColor: "gray",
+                            display: orientation === "landscape" ? "none" : "flex",
                         }}
-                    >
-                        <FooterConnected
-                            style={{
-                                backgroundColor: "gray",
-                                display: orientation === "landscape" ? "none" : "flex",
-                            }}
-                        
-                            orientation={orientation}
-                            showToolbar={true}
-                        />
-                    </SafeAreaView>
+                    
+                        orientation={orientation}
+                        showToolbar={true}
+                    />
                 </View>
             </View>
         );

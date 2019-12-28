@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Dimensions, Platform } from 'react-native';
 import { Provider } from 'react-redux';
 import { store } from '~/store/store';
 import { BrowserViewController } from "~/browser/BrowserViewController";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 function isPortrait(): boolean {
     const { width, height } = Dimensions.get('screen');
@@ -48,12 +49,14 @@ class AppContainer extends React.Component<Props, State> {
         const { orientation } = this.state;
 
         return (
-            <Provider store={store}>
-                <View style={styles.container}>
-                    <BrowserViewController orientation={orientation}/>
-                    {/* <Text>AppContainer</Text> */}
-                </View>
-            </Provider>
+            <SafeAreaProvider>
+                <Provider store={store}>
+                    <View style={styles.container}>
+                        <BrowserViewController orientation={orientation}/>
+                        {/* <Text>AppContainer</Text> */}
+                    </View>
+                </Provider>
+            </SafeAreaProvider>
         );
     }
 }
