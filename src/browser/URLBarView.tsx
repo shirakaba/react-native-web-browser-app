@@ -116,28 +116,17 @@ export class URLBarView extends React.Component<Props, State>{
         return (
             <View
                 style={{
-                    flexDirection: "column",
+                    flexDirection: "row",
                     justifyContent: "space-around",
+                    alignItems: "center",
+                    height: "auto",
+                    width: "100%",
+                    paddingVertical: 8,
 
-                    // backgroundColor: "yellow",
+                    // backgroundColor: "green",
                 }}
             >
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-around",
-                        alignItems: "center",
-                        height: "auto",
-                        width: "100%",
-
-                        // backgroundColor: "green",
-                    }}
-                >
-                    {stackContents}
-                </View>
-
-                {/* Just a spacer view. */}
-                <View style={{ height: 8 }}/>
+                {stackContents}
             </View>
         );
     }

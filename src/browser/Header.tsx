@@ -3,6 +3,17 @@ import { URLBarView } from "./URLBarView";
 import { TopTabsViewController } from "./TopTabsViewController";
 import { ViewProps, View, StyleSheet } from "react-native";
 
+class TopTabsContainer extends React.Component<{}, {}>{
+
+    render(){
+        return (
+            <View style={{ flexDirection: 'column' }}>
+                <TopTabsViewController/>
+            </View>
+        );
+    }
+}
+
 interface Props {
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
@@ -15,27 +26,10 @@ interface State {
 
 }
 
-class TopTabsContainer extends React.Component<{}, {}>{
-
-    render(){
-        return (
-            <View style={{ flexDirection: 'column' }}>
-                <TopTabsViewController/>
-            </View>
-        );
-    }
-}
-
-interface UrlBarTopTabsContainerProps {
-    slotBackgroundColor?: string,
-    textFieldBackgroundColor?: string,
-    buttonBackgroundColor?: string,
-    inOverlayMode: boolean,
-    toolbarIsShowing: boolean,
-}
-
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L105
-class UrlBarTopTabsContainer extends React.Component<UrlBarTopTabsContainerProps & ViewProps, {}> {
+// Header used to have a subchild, "UrlBarTopTabsContainer", but that has now been flattened.
+export class Header extends React.Component<Props & ViewProps, State>{
+
     render(){
         const {
             slotBackgroundColor,
@@ -47,10 +41,7 @@ class UrlBarTopTabsContainer extends React.Component<UrlBarTopTabsContainerProps
             children,
             ...rest
         } = this.props;
-
         return (
-            // UIView(frame: CGRect.zero)
-            
             <View
                 style={StyleSheet.compose(
                     {
@@ -75,31 +66,6 @@ class UrlBarTopTabsContainer extends React.Component<UrlBarTopTabsContainerProps
                 {/* topTabsContainer */}
                 <TopTabsContainer/>
             </View>
-        );
-    }
-}
-
-export class Header extends React.Component<Props & ViewProps, State>{
-
-    render(){
-        const {
-            slotBackgroundColor,
-            textFieldBackgroundColor,
-            buttonBackgroundColor,
-            toolbarIsShowing,
-            inOverlayMode,
-            children,
-            ...rest
-        } = this.props;
-        return (
-            <UrlBarTopTabsContainer
-                inOverlayMode={inOverlayMode}
-                toolbarIsShowing={toolbarIsShowing}
-                slotBackgroundColor={slotBackgroundColor}
-                textFieldBackgroundColor={textFieldBackgroundColor}
-                buttonBackgroundColor={buttonBackgroundColor}
-                {...rest}
-            />
         );
     }
 }

@@ -32,7 +32,7 @@ class TopTabsContainer extends React.Component<{}, {}> {
     }
 }
 
-interface NotchAreaCoverProps {
+interface RetractibleHeaderProps {
     percentRevealed: number,
     urlBarText: string,
     orientation: "portrait"|"landscape"|"unknown",
@@ -40,7 +40,8 @@ interface NotchAreaCoverProps {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L61
-class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProps, "orientation">, {}> {
+// Formerly named "NotchAreaCover".
+class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<ViewProps, "orientation">, {}> {
     render(){
         const { orientation, retraction, urlBarText, percentRevealed, style, children, ...rest } = this.props;
 
@@ -54,7 +55,7 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
         const factor: number = percentRevealed / 100;
         const animatedHeight: number = (factor * heightDiff) + retractedHeight;
 
-        // console.log(`[NotchAreaCover] animatedHeight: ${animatedHeight}; ${factor} * ${heightDiff} + ${retractedHeight}; retraction ${retraction}`);
+        // console.log(`[RetractibleHeader] animatedHeight: ${animatedHeight}; ${factor} * ${heightDiff} + ${retractedHeight}; retraction ${retraction}`);
 
         return (
             <SafeAreaConsumer>
@@ -106,7 +107,7 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
 }
 
 
-const NotchAreaCoverConnected = connect(
+const RetractibleHeaderConnected = connect(
     (wholeStoreState: WholeStoreState) => {
         // console.log(`wholeStoreState`, wholeStoreState);
         // console.log(`percentRevealed: ${wholeStoreState.bars.header.percentRevealed}`);
@@ -117,7 +118,7 @@ const NotchAreaCoverConnected = connect(
         };
     },
     {},
-)(NotchAreaCover);
+)(RetractibleHeader);
 
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L110
@@ -437,7 +438,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                     height: "100%",
                 }}
             >
-                <NotchAreaCoverConnected orientation={orientation}/>
+                <RetractibleHeaderConnected orientation={orientation}/>
 
                 <View
                     // dock={"bottom"}
