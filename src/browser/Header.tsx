@@ -56,10 +56,10 @@ class UrlBarTopTabsContainer extends React.Component<UrlBarTopTabsContainerProps
                     {
                         flexDirection: 'column',
                         
-                        // justifyContent: "flex-end",
+                        justifyContent: "flex-start",
                         // flex: 1,
-                        justifyContent: "center",
                         // backgroundColor: "orange",
+                        backgroundColor: "gray",
                     },
                     style
                 )}

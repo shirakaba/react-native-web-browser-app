@@ -69,21 +69,20 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
                                     justifyContent: "flex-end",
                                     // alignItems: "center",
                                     width: "100%",
-                                    height: animatedHeight + unsafeAreaCoverHeight,
+                                    // height: animatedHeight + unsafeAreaCoverHeight,
                                     backgroundColor: "gray",
+
+                                    paddingTop: edgeInsets.top,
+                                    paddingLeft: edgeInsets.left,
+                                    paddingRight: edgeInsets.right,
                                 },
                                 style
                             )}
                             // height={{ value: animatedHeight, unit: "dip" }}
                             {...rest}
                         >
-                            <View
-                                style={{
-                                    height: unsafeAreaCoverHeight,
-                                    backgroundColor: "gray",
-                                }}
-                            />
                             {/* TODO: ensure that the header sits within the safe area horizontally. */}
+                            {/* TODO: make Header height shrink to new dynamic height */}
                             <Header
                                 toolbarIsShowing={orientation === "landscape"}
                                 inOverlayMode={false}
