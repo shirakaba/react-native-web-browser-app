@@ -138,12 +138,6 @@ export class URLBarView extends React.Component<Props, State>{
 
                 {/* Just a spacer view. */}
                 <View style={{ height: 8 }}/>
-
-                <GradientProgressBarConnected
-                    style={{
-                        width: "100%",
-                    }}
-                />
             </View>
         );
     }

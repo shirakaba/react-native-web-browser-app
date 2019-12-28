@@ -11,6 +11,7 @@ import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableW
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
 import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
+import { GradientProgressBarConnected } from "~/Widgets/GradientProgressBar";
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -73,15 +74,12 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
                                     backgroundColor: "gray",
 
                                     paddingTop: edgeInsets.top,
-                                    paddingLeft: edgeInsets.left,
-                                    paddingRight: edgeInsets.right,
                                 },
                                 style
                             )}
                             // height={{ value: animatedHeight, unit: "dip" }}
                             {...rest}
                         >
-                            {/* TODO: ensure that the header sits within the safe area horizontally. */}
                             {/* TODO: make Header height shrink to new dynamic height */}
                             <Header
                                 toolbarIsShowing={orientation === "landscape"}
@@ -89,6 +87,15 @@ class NotchAreaCover extends React.Component<NotchAreaCoverProps & Omit<ViewProp
                                 slotBackgroundColor={"darkgray"}
                                 textFieldBackgroundColor={"transparent"}
                                 buttonBackgroundColor={"transparent"}
+                                style={{
+                                    paddingLeft: edgeInsets.left,
+                                    paddingRight: edgeInsets.right,
+                                }}
+                            />
+                            <GradientProgressBarConnected
+                                style={{
+                                    width: "100%",
+                                }}
                             />
                         </View>
                     );
