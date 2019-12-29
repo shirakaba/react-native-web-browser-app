@@ -35,6 +35,8 @@ class TopTabsContainer extends React.Component<{}, {}> {
 }
 
 interface RetractibleHeaderProps {
+    animatedNavBarTranslateY: Animated.Node<number>,
+
     percentRevealed: number,
     urlBarText: string,
     orientation: "portrait"|"landscape"|"unknown",
@@ -65,26 +67,32 @@ class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<Vi
                     const unsafeAreaCoverHeight: number = edgeInsets.top;
 
                     return (
-                        <View
-                            style={StyleSheet.compose(
+                        <Animated.View
+                            // @ts-ignore
+                            style={[
                                 {
-                                    flexDirection: "column",
-                                    // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
-                                    justifyContent: "flex-end",
-                                    // alignItems: "center",
-                                    width: "100%",
-                                    // height: animatedHeight + unsafeAreaCoverHeight,
-                                    backgroundColor: "gray",
+                                flexDirection: "column",
+                                // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
+                                justifyContent: "flex-end",
+                                // alignItems: "center",
+                                width: "100%",
+                                // height: animatedHeight + unsafeAreaCoverHeight,
+                                backgroundColor: "gray",
 
-                                    paddingTop: edgeInsets.top,
-                                },
-                                style
-                            )}
+                                paddingTop: edgeInsets.top,
+
+                                transform: [
+                                    {
+                                        translateY: this.props.animatedNavBarTranslateY,
+                                    },
+                                ]
+                            }]}
                             // height={{ value: animatedHeight, unit: "dip" }}
                             {...rest}
                         >
                             {/* TODO: make Header height shrink to new dynamic height */}
                             <Header
+                                animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                                 toolbarIsShowing={orientation === "landscape"}
                                 inOverlayMode={false}
                                 slotBackgroundColor={"darkgray"}
@@ -100,7 +108,7 @@ class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<Vi
                                     width: "100%",
                                 }}
                             />
-                        </View>
+                        </Animated.View>
                     );
                 }}
             </SafeAreaConsumer>
@@ -148,6 +156,12 @@ class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {
 }
 
 interface WebViewContainerProps {
+    scrollY: Animated.Value<number>,
+    scrollEndDragVelocity: Animated.Value<number>,
+    snapOffset: Animated.Value<number>,
+    animatedNavBarTranslateY: Animated.Node<number>,
+    animatedTitleOpacity: Animated.Node<number>,
+
     barsState: WholeStoreState["bars"],
     activeTab: string,
     tabs: TabStateRecord,
@@ -218,52 +232,6 @@ function runSpring({
 }
 
 class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps, { }> {
-    private readonly scrollY = new Animated.Value(0);
-    private readonly scrollEndDragVelocity = new Animated.Value(DRAG_END_INITIAL);
-    private readonly snapOffset = new Animated.Value(0);
-    private readonly animatedNavBarTranslateY: Animated.Node<number>;
-    private readonly animatedTitleOpacity: Animated.Node<number>;
-
-    constructor(props: WebViewContainerProps & ViewProps){
-        super(props);
-
-        const diffClampNode = diffClamp(
-            add(this.scrollY, this.snapOffset),
-            0,
-            NAV_BAR_HEIGHT,
-        );
-        const inverseDiffClampNode = multiply(diffClampNode, -1);
-
-        const clock = new Clock();
-
-        const snapPoint = cond(
-            lessThan(diffClampNode, NAV_BAR_HEIGHT / 2),
-            0,
-            -NAV_BAR_HEIGHT,
-        );
-
-        this.animatedNavBarTranslateY = cond(
-            // Condition to detect if we stopped scrolling
-            neq(this.scrollEndDragVelocity, DRAG_END_INITIAL),
-            runSpring({
-                clock,
-                from: inverseDiffClampNode,
-                velocity: 0,
-                toValue: snapPoint,
-                scrollEndDragVelocity: this.scrollEndDragVelocity,
-                snapOffset: this.snapOffset,
-                diffClampNode,
-            }),
-            inverseDiffClampNode,
-        );
-
-        this.animatedTitleOpacity = interpolate(this.animatedNavBarTranslateY, {
-            inputRange: [-NAV_BAR_HEIGHT, 0],
-            outputRange: [0, 1],
-            extrapolate: Extrapolate.CLAMP,
-        });
-    }
-
     private readonly onBarRetractionRecommendation = (e) => {
         // console.log(`WebView onBarRetractionRecommendation ${Object.keys(e)}`);
         
@@ -350,7 +318,7 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                             {
                                 nativeEvent: {
                                     contentOffset: {
-                                        y: this.scrollY
+                                        y: this.props.scrollY
                                     }
                                 }
                             }
@@ -364,7 +332,7 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                             {
                                 nativeEvent: {
                                     velocity: {
-                                        y: this.scrollEndDragVelocity
+                                        y: this.props.scrollEndDragVelocity
                                     }
                                 }
                             }
@@ -552,6 +520,51 @@ interface State {
 }
 
 export class BrowserViewController extends React.Component<Props, State> {
+    private readonly scrollY = new Animated.Value(0);
+    private readonly scrollEndDragVelocity = new Animated.Value(DRAG_END_INITIAL);
+    private readonly snapOffset = new Animated.Value(0);
+    private readonly animatedNavBarTranslateY: Animated.Node<number>;
+    private readonly animatedTitleOpacity: Animated.Node<number>;
+
+    constructor(props: Props){
+        super(props);
+
+        const diffClampNode = diffClamp(
+            add(this.scrollY, this.snapOffset),
+            0,
+            NAV_BAR_HEIGHT,
+        );
+        const inverseDiffClampNode = multiply(diffClampNode, -1);
+
+        const clock = new Clock();
+
+        const snapPoint = cond(
+            lessThan(diffClampNode, NAV_BAR_HEIGHT / 2),
+            0,
+            -NAV_BAR_HEIGHT,
+        );
+
+        this.animatedNavBarTranslateY = cond(
+            // Condition to detect if we stopped scrolling
+            neq(this.scrollEndDragVelocity, DRAG_END_INITIAL),
+            runSpring({
+                clock,
+                from: inverseDiffClampNode,
+                velocity: 0,
+                toValue: snapPoint,
+                scrollEndDragVelocity: this.scrollEndDragVelocity,
+                snapOffset: this.snapOffset,
+                diffClampNode,
+            }),
+            inverseDiffClampNode,
+        );
+
+        this.animatedTitleOpacity = interpolate(this.animatedNavBarTranslateY, {
+            inputRange: [-NAV_BAR_HEIGHT, 0],
+            outputRange: [0, 1],
+            extrapolate: Extrapolate.CLAMP,
+        });
+    }
 
     render(){
         const { orientation } = this.props;
@@ -568,7 +581,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                     height: "100%",
                 }}
             >
-                <RetractibleHeaderConnected orientation={orientation}/>
+                <RetractibleHeaderConnected animatedNavBarTranslateY={this.animatedNavBarTranslateY} orientation={orientation} />
 
                 <View
                     // dock={"bottom"}
@@ -604,6 +617,11 @@ export class BrowserViewController extends React.Component<Props, State> {
                                 position: "absolute",
                                 flexGrow: 1,
                             }}
+                            scrollY={this.scrollY}
+                            scrollEndDragVelocity={this.scrollEndDragVelocity}
+                            snapOffset={this.snapOffset}
+                            animatedNavBarTranslateY={this.animatedNavBarTranslateY}
+                            animatedTitleOpacity={this.animatedTitleOpacity}
                         />
                     </View>
 

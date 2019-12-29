@@ -9,8 +9,10 @@ import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationS
 import { WholeStoreState } from "~/store/store";
 import { RetractionState } from "~/store/barsState";
 import normalizeColorToObj, { ColorObj } from "~/utils/normalizeColorToObj";
+import Animated from "react-native-reanimated";
 
 interface Props {
+    animatedNavBarTranslateY: Animated.Node<number>,
     percentRevealed: number,
     retraction: RetractionState,
     slotBackgroundColor?: string,

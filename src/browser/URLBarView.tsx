@@ -6,10 +6,12 @@ import { BackButtonConnected, ForwardButtonConnected, StopReloadButtonConnected,
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { View } from "react-native";
+import Animated from "react-native-reanimated";
 
 /* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/URLBarView.swift */
 
 interface Props {
+    animatedNavBarTranslateY: Animated.Node<number>,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
     buttonBackgroundColor?: string,
@@ -89,6 +91,7 @@ export class URLBarView extends React.Component<Props, State>{
                         style={{
                             flexGrow: 1,
                         }}
+                        animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                         slotBackgroundColor={slotBackgroundColor} buttonBackgroundColor={buttonBackgroundColor} textFieldBackgroundColor={textFieldBackgroundColor}
                     />
                     <TabsButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
@@ -105,6 +108,7 @@ export class URLBarView extends React.Component<Props, State>{
                             flexGrow: 1,
                             width: "100%",
                         }}
+                        animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                         slotBackgroundColor={slotBackgroundColor}
                         buttonBackgroundColor={buttonBackgroundColor}
                         textFieldBackgroundColor={textFieldBackgroundColor}

@@ -2,6 +2,7 @@ import * as React from "react";
 import { URLBarView } from "./URLBarView";
 import { TopTabsViewController } from "./TopTabsViewController";
 import { ViewProps, View, StyleSheet } from "react-native";
+import Animated from "react-native-reanimated";
 
 class TopTabsContainer extends React.Component<{}, {}>{
 
@@ -15,6 +16,7 @@ class TopTabsContainer extends React.Component<{}, {}>{
 }
 
 interface Props {
+    animatedNavBarTranslateY: Animated.Node<number>,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
     buttonBackgroundColor?: string,
@@ -58,6 +60,7 @@ export class Header extends React.Component<Props & ViewProps, State>{
             >
                 {/* urlBar */}
                 <URLBarView
+                    animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                     inOverlayMode={inOverlayMode}
                     toolbarIsShowing={toolbarIsShowing}
                     slotBackgroundColor={slotBackgroundColor}
