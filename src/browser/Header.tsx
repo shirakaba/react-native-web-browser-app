@@ -1,8 +1,7 @@
 import * as React from "react";
 import { URLBarView } from "./URLBarView";
 import { TopTabsViewController } from "./TopTabsViewController";
-import { ViewProps, View, StyleSheet } from "react-native";
-import Animated from "react-native-reanimated";
+import { ViewProps, View, StyleSheet, Animated } from "react-native";
 
 class TopTabsContainer extends React.Component<{}, {}>{
 
@@ -16,7 +15,7 @@ class TopTabsContainer extends React.Component<{}, {}>{
 }
 
 interface Props {
-    animatedNavBarTranslateY: Animated.Node<number>,
+    animatedNavBarTranslateY: Animated.AnimatedInterpolation,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
     buttonBackgroundColor?: string,
@@ -44,7 +43,7 @@ export class Header extends React.Component<Props & ViewProps, State>{
             ...rest
         } = this.props;
         return (
-            <View
+            <Animated.View
                 style={StyleSheet.compose(
                     {
                         flexDirection: 'column',
@@ -69,7 +68,7 @@ export class Header extends React.Component<Props & ViewProps, State>{
                 />
                 {/* topTabsContainer */}
                 <TopTabsContainer/>
-            </View>
+            </Animated.View>
         );
     }
 }

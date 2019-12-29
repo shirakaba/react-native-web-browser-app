@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, TouchableOpacityProps, StyleSheet, StyleProp, TextStyle, processColor } from "react-native";
+import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, TouchableOpacityProps, StyleSheet, StyleProp, TextStyle, processColor, Animated } from "react-native";
 // import { WebView, ActionBar, StackLayout, EventData, TextField, Color } from "@nativescript/core";
 // import { $WebView, $ActionBar, $StackLayout, $FlexboxLayout, $ContentView, $Image, $TextField, $GridLayout, $TextView } from "react-nativescript";
 import { ToolbarButton } from "./ToolbarButton";
@@ -9,10 +9,9 @@ import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationS
 import { WholeStoreState } from "~/store/store";
 import { RetractionState } from "~/store/barsState";
 import normalizeColorToObj, { ColorObj } from "~/utils/normalizeColorToObj";
-import Animated from "react-native-reanimated";
 
 interface Props {
-    animatedNavBarTranslateY: Animated.Node<number>,
+    animatedNavBarTranslateY: Animated.AnimatedInterpolation,
     percentRevealed: number,
     retraction: RetractionState,
     slotBackgroundColor?: string,
@@ -176,22 +175,25 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
 
         return (
             /* self.view */
-            <View
+            <Animated.View
                 // iosOverflowSafeArea={false}
-                style={StyleSheet.compose(
-                    {
-                        flexDirection: 'column',
+                style={{
+                    flexDirection: 'column',
+                    flexGrow: 1,
+                    width: "100%",
+                    // backgroundColor: "blue",
 
-                        // backgroundColor: "blue",
-                    },
-                    style
-                )}
+                    transform: [
+                        { scaleX: this.props.animatedNavBarTranslateY },
+                        { scaleY: this.props.animatedNavBarTranslateY },
+                    ],
+                }}
                 {...rest}
             >
                 {/* self.contentView */}
                 {/* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L149 */}
                 {/* https://developer.apple.com/documentation/uikit/uistackview */}
-                <View
+                <Animated.View
                     style={{
                         flexDirection: "row",
                         alignItems: "center",
@@ -241,8 +243,8 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
 
                     {/* Another spacer view */}
                     <View style={{ width: TabLocationViewUX.Spacing }}/>
-                </View>
-            </View>
+                </Animated.View>
+            </Animated.View>
         );
     }
 }

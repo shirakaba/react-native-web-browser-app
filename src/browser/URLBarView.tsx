@@ -5,13 +5,12 @@ import { TabLocationView, TabLocationViewConnected } from "./TabLocationView";
 import { BackButtonConnected, ForwardButtonConnected, StopReloadButtonConnected, TabsButtonConnected, MenuButtonConnected, CancelButtonConnected } from "./BarButtons";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
-import { View } from "react-native";
-import Animated from "react-native-reanimated";
+import { View, Animated } from "react-native";
 
 /* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/URLBarView.swift */
 
 interface Props {
-    animatedNavBarTranslateY: Animated.Node<number>,
+    animatedNavBarTranslateY: Animated.AnimatedInterpolation,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
     buttonBackgroundColor?: string,
@@ -88,9 +87,6 @@ export class URLBarView extends React.Component<Props, State>{
                     <StopReloadButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
                     {/* AKA locationView. */}
                     <TabLocationViewConnected
-                        style={{
-                            flexGrow: 1,
-                        }}
                         animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                         slotBackgroundColor={slotBackgroundColor} buttonBackgroundColor={buttonBackgroundColor} textFieldBackgroundColor={textFieldBackgroundColor}
                     />
@@ -104,10 +100,6 @@ export class URLBarView extends React.Component<Props, State>{
                 <>
                     {/* AKA locationView. */}
                     <TabLocationViewConnected
-                        style={{
-                            flexGrow: 1,
-                            width: "100%",
-                        }}
                         animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                         slotBackgroundColor={slotBackgroundColor}
                         buttonBackgroundColor={buttonBackgroundColor}
@@ -118,7 +110,7 @@ export class URLBarView extends React.Component<Props, State>{
         }
 
         return (
-            <View
+            <Animated.View
                 style={{
                     flexDirection: "row",
                     justifyContent: "space-around",
@@ -131,7 +123,7 @@ export class URLBarView extends React.Component<Props, State>{
                 }}
             >
                 {stackContents}
-            </View>
+            </Animated.View>
         );
     }
 }
