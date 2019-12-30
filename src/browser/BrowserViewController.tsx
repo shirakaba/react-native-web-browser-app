@@ -35,6 +35,7 @@ class TopTabsContainer extends React.Component<{}, {}> {
 }
 
 interface RetractibleHeaderProps {
+    scrollY: Animated.Value<number>,
     animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateY: Animated.Node<number>,
 
@@ -91,6 +92,7 @@ class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<Vi
                         >
                             {/* TODO: make Header height shrink to new dynamic height */}
                             <Header
+                                scrollY={this.props.scrollY}
                                 animatedTitleOpacity={this.props.animatedTitleOpacity}
                                 animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                                 toolbarIsShowing={orientation === "landscape"}
@@ -599,6 +601,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                 }}
             >
                 <RetractibleHeaderConnected
+                    scrollY={this.scrollY}
                     animatedTitleOpacity={this.animatedTitleOpacity}
                     animatedNavBarTranslateY={this.animatedNavBarTranslateY}
                     orientation={orientation}
