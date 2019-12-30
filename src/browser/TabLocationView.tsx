@@ -192,7 +192,7 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                 {/* self.contentView */}
                 {/* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L149 */}
                 {/* https://developer.apple.com/documentation/uikit/uistackview */}
-                <View
+                <Animated.View
                     style={{
                         flexDirection: "row",
                         alignItems: "center",
@@ -201,6 +201,11 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                         borderRadius: 10,
                         // margin: 8,
                         flexGrow: 1,
+
+                        // transform: [
+                        //     { opacity: this.props.animatedTitleOpacity, },
+                        // ],
+                        opacity: this.props.animatedTitleOpacity,
 
                         marginHorizontal: 8,
                         paddingVertical: 4,
@@ -242,7 +247,7 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
 
                     {/* Another spacer view */}
                     <View style={{ width: TabLocationViewUX.Spacing }}/>
-                </View>
+                </Animated.View>
             </View>
         );
     }
