@@ -11,6 +11,7 @@ import Animated from "react-native-reanimated";
 /* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/URLBarView.swift */
 
 interface Props {
+    animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateY: Animated.Node<number>,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
@@ -91,6 +92,7 @@ export class URLBarView extends React.Component<Props, State>{
                         style={{
                             flexGrow: 1,
                         }}
+                        animatedTitleOpacity={this.props.animatedTitleOpacity}
                         animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                         slotBackgroundColor={slotBackgroundColor} buttonBackgroundColor={buttonBackgroundColor} textFieldBackgroundColor={textFieldBackgroundColor}
                     />
@@ -108,6 +110,7 @@ export class URLBarView extends React.Component<Props, State>{
                             flexGrow: 1,
                             width: "100%",
                         }}
+                        animatedTitleOpacity={this.props.animatedTitleOpacity}
                         animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                         slotBackgroundColor={slotBackgroundColor}
                         buttonBackgroundColor={buttonBackgroundColor}

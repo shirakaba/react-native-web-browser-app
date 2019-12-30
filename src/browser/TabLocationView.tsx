@@ -12,6 +12,7 @@ import normalizeColorToObj, { ColorObj } from "~/utils/normalizeColorToObj";
 import Animated from "react-native-reanimated";
 
 interface Props {
+    animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateY: Animated.Node<number>,
     percentRevealed: number,
     retraction: RetractionState,

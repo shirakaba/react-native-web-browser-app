@@ -35,6 +35,7 @@ class TopTabsContainer extends React.Component<{}, {}> {
 }
 
 interface RetractibleHeaderProps {
+    animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateY: Animated.Node<number>,
 
     percentRevealed: number,
@@ -92,6 +93,7 @@ class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<Vi
                         >
                             {/* TODO: make Header height shrink to new dynamic height */}
                             <Header
+                                animatedTitleOpacity={this.props.animatedTitleOpacity}
                                 animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                                 toolbarIsShowing={orientation === "landscape"}
                                 inOverlayMode={false}
@@ -581,7 +583,11 @@ export class BrowserViewController extends React.Component<Props, State> {
                     height: "100%",
                 }}
             >
-                <RetractibleHeaderConnected animatedNavBarTranslateY={this.animatedNavBarTranslateY} orientation={orientation} />
+                <RetractibleHeaderConnected
+                    animatedTitleOpacity={this.animatedTitleOpacity}
+                    animatedNavBarTranslateY={this.animatedNavBarTranslateY}
+                    orientation={orientation}
+                />
 
                 <View
                     // dock={"bottom"}

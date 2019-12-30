@@ -16,6 +16,7 @@ class TopTabsContainer extends React.Component<{}, {}>{
 }
 
 interface Props {
+    animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateY: Animated.Node<number>,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
@@ -60,6 +61,7 @@ export class Header extends React.Component<Props & ViewProps, State>{
             >
                 {/* urlBar */}
                 <URLBarView
+                    animatedTitleOpacity={this.props.animatedTitleOpacity}
                     animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                     inOverlayMode={inOverlayMode}
                     toolbarIsShowing={toolbarIsShowing}
