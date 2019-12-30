@@ -69,9 +69,7 @@ class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<Vi
 
                     return (
                         <Animated.View
-                            // @ts-ignore
-                            style={[
-                                {
+                            style={{
                                 flexDirection: "column",
                                 // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
                                 justifyContent: "flex-end",
@@ -82,12 +80,12 @@ class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<Vi
 
                                 paddingTop: edgeInsets.top,
 
-                                transform: [
-                                    {
-                                        translateY: this.props.animatedNavBarTranslateY,
-                                    },
-                                ]
-                            }]}
+                                // transform: [
+                                //     {
+                                //         translateY: this.props.animatedNavBarTranslateY as any,
+                                //     },
+                                // ]
+                            }}
                             // height={{ value: animatedHeight, unit: "dip" }}
                             {...rest}
                         >
