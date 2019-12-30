@@ -19,8 +19,6 @@ export class ToolbarButton extends React.Component<Props & TouchableOpacityProps
         
         const textColour: string = "white";
 
-        console.log(`[ToolbarButton] compact: ${compact}`);
-
         /** For what it's worth: iOS HIG for "Navigation Bar and Toolbar Icon Size" gives 24pt target size, 28pt max size.
           * @see: https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/custom-icons/ */
 
