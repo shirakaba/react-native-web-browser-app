@@ -320,7 +320,19 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                             {
                                 nativeEvent: {
                                     contentOffset: {
-                                        y: this.props.scrollY
+                                        // y: this.props.scrollY,
+                                        y: (y) => {
+                                            console.log(`I'm alive:`, y._value);
+                                            return Animated.block([
+                                                Animated.set(this.props.scrollY, y),
+                                                Animated.call(
+                                                    [y],
+                                                    (r) => {
+                                                        console.log(`Reanimated got arg`, r[0]);
+                                                    }
+                                                )
+                                            ]);
+                                        }
                                     }
                                 }
                             }
