@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView } from "~/store/navigationState";
 import { setBarsRetraction, RetractionState } from "~/store/barsState";
-import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform } from "react-native";
+import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform, findNodeHandle } from "react-native";
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
 import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
@@ -284,6 +284,11 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
 
         this.props.setProgressOnWebView({ progress, tab: this.props.activeTab });
     };
+
+    componentDidMount(){
+        console.log(`WebView ref:`, webViews.get(this.props.activeTab).current);
+        console.log(`WebView node handle:`, findNodeHandle(webViews.get(this.props.activeTab).current));
+    }
 
     // const MyWebView = ({ children, ...rest }) => React.createElement(WebView, props, children);
 
