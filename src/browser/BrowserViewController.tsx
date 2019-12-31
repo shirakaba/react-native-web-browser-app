@@ -580,9 +580,9 @@ export class BrowserViewController extends React.Component<Props, State> {
             extrapolate: Extrapolate.CLAMP,
         });
 
-        this.animatedTitleOpacity = interpolate(this.animatedNavBarTranslateY, {
-            inputRange: [-NAV_BAR_HEIGHT, 0],
-            outputRange: [0, 1],
+        this.animatedTitleOpacity = interpolate(this.scrollY, {
+            inputRange: [0, HEADER_RETRACTED_HEIGHT],
+            outputRange: [1, 0],
             extrapolate: Extrapolate.CLAMP,
         });
     }

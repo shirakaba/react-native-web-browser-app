@@ -9,7 +9,7 @@ import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationS
 import { WholeStoreState } from "~/store/store";
 import { RetractionState } from "~/store/barsState";
 import normalizeColorToObj, { ColorObj } from "~/utils/normalizeColorToObj";
-import Animated from "react-native-reanimated";
+import Animated, { Extrapolate } from "react-native-reanimated";
 
 interface Props {
     scrollY: Animated.Value<number>,
@@ -190,10 +190,11 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "space-around",
-                    backgroundColor: animatedSlotBackgroundColorString,
-                    borderRadius: 10,
                     // margin: 8,
                     flexGrow: 1,
+
+                    /* Mirrors that of the round-cornered backdrop view. */
+                    borderRadius: 10,
 
                     // transform: [
                     //     { scaleY: this.props.animatedTitleOpacity as any, },
@@ -207,6 +208,18 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     // backgroundColor: "indigo",
                 }}
             >
+                {/* Simplest way to animate a backgroundColor fade-out with nativeDriver: introduce a backdrop view. */}
+                <Animated.View
+                    style={{
+                        position: "absolute",
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: 10,
+                        backgroundColor: animatedSlotBackgroundColorString,
+                        opacity: this.props.animatedTitleOpacity,
+                    }}
+                />
+
                 {/* frontSpaceView */}
                 <View style={{ width: TabLocationViewUX.Spacing }}/>
 
