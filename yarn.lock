@@ -5323,10 +5323,9 @@ react-native-gesture-handler@~1.5.0:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
-react-native-reanimated@~1.4.0:
+"react-native-reanimated@git+https://github.com/software-mansion/react-native-reanimated.git#master":
   version "1.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.4.0.tgz#7f1acbf9be08492d834f512700570978052be2f9"
-  integrity sha512-tO7nSNNP+iRLVbkcSS5GXyDBb7tSI02+XuRL3/S39EAr35rnvUy2JfeLUQG+fWSObJjnMVhasUDEUwlENk8IXw==
+  resolved "git+https://github.com/software-mansion/react-native-reanimated.git#bdc7b5962a8fec49230446a21c1f739c98b8effa"
 
 react-native-safe-area-context@^0.6.1:
   version "0.6.1"
