@@ -436,17 +436,23 @@ class AlertStackView extends React.Component<ViewProps, {}> {
     }
 }
 
-interface FooterProps {
+interface FooterOwnProps {
+    scrollY: Animated.Value<number>,
     percentRevealed: number,
     orientation: "portrait"|"landscape"|"unknown",
     retraction: RetractionState,
     showToolbar: boolean,
 };
 
+type FooterProps = FooterOwnProps & Omit<ViewProps, "orientation"|"style">;
+
+export const FOOTER_RETRACTED_HEIGHT: number = 0;
+export const FOOTER_REVEALED_HEIGHT: number = 44;
+
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L103
-class Footer extends React.Component<FooterProps & Omit<ViewProps, "orientation">, {}> {
+class Footer extends React.Component<FooterProps, {}> {
     render(){
-        const { retraction, showToolbar, orientation, percentRevealed, style, children, ...rest } = this.props;
+        const { retraction, showToolbar, orientation, percentRevealed, children, ...rest } = this.props;
 
         const revealedHeight: number = 44;
         const retractedHeight: number = 0;
@@ -464,24 +470,31 @@ class Footer extends React.Component<FooterProps & Omit<ViewProps, "orientation"
                         const unsafeAreaCoverHeight: number = edgeInsets.bottom;
 
                         return (
-                            <View
-                                style={StyleSheet.compose(
-                                    {
+                            <Animated.View
+                                style={{
                                         flexDirection: "column",
-                                        // height: animatedHeight + unsafeAreaCoverHeight,
                                         width: "100%",
                                         backgroundColor: "gray",
-                                        paddingBottom: unsafeAreaCoverHeight,
+                                        display: orientation === "landscape" ? "none" : "flex",
+                                        /* Combine this with auto height. */
+                                        // paddingBottom: unsafeAreaCoverHeight,
                                         paddingLeft: edgeInsets.left,
                                         paddingRight: edgeInsets.right,
-                                    },
-                                    style
-                                )}
+                                        
+                                        // height: FOOTER_REVEALED_HEIGHT + unsafeAreaCoverHeight,
+                                        height: interpolate(this.props.scrollY, {
+                                            // We'll keep the footer retraction in sync with that of the header retraction.
+                                            inputRange: [0, HEADER_RETRACTED_HEIGHT],
+                                            outputRange: [add(FOOTER_REVEALED_HEIGHT, unsafeAreaCoverHeight), FOOTER_RETRACTED_HEIGHT],
+                                            extrapolate: Extrapolate.CLAMP,
+                                        }),
+                                    }
+                                }
                                 // height={{ value: animatedHeight, unit: "dip" }}
                                 {...rest}
                             >
                                 <TabToolbar/>
-                            </View>
+                            </Animated.View>
                         );
                     }}    
                 </SafeAreaConsumer>
@@ -577,6 +590,10 @@ export class BrowserViewController extends React.Component<Props, State> {
         this.animatedNavBarTranslateY = interpolate(this.scrollY, {
             inputRange: [0, HEADER_RETRACTED_HEIGHT],
             outputRange: [HEADER_REVEALED_HEIGHT, HEADER_RETRACTED_HEIGHT],
+
+            /* To disable header retraction */
+            // outputRange: [HEADER_REVEALED_HEIGHT, HEADER_REVEALED_HEIGHT],
+            
             extrapolate: Extrapolate.CLAMP,
         });
 
@@ -652,11 +669,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                     </View>
 
                     <FooterConnected
-                        style={{
-                            backgroundColor: "gray",
-                            display: orientation === "landscape" ? "none" : "flex",
-                        }}
-                    
+                        scrollY={this.scrollY}
                         orientation={orientation}
                         showToolbar={true}
                     />
