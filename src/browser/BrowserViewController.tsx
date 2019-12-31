@@ -320,7 +320,7 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                         [
                             {
                                 nativeEvent: {
-                                    contentOffset: {
+                                    panGestureTranslation: {
                                         // y: this.props.scrollY,
                                         y: (y) => {
                                             // console.log(`I'm alive:`, y._value);
