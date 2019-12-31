@@ -2,7 +2,7 @@ import * as React from "react";
 import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, TouchableOpacityProps, StyleSheet, StyleProp, TextStyle, processColor } from "react-native";
 // import { WebView, ActionBar, StackLayout, EventData, TextField, Color } from "@nativescript/core";
 // import { $WebView, $ActionBar, $StackLayout, $FlexboxLayout, $ContentView, $Image, $TextField, $GridLayout, $TextView } from "react-nativescript";
-import { ToolbarButton } from "./ToolbarButton";
+import { ToolbarButton, ToolbarButtonContainerStyle, ToolbarButtonContainerStyleProp, ToolbarButtonProps } from "./ToolbarButton";
 import { PrivacyIndicatorView } from "~/Views/PrivacyIndicatorView";
 import { connect } from 'react-redux';
 import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationState";
@@ -35,7 +35,7 @@ const TabLocationViewUX = {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L83
-class LockImageView extends React.Component<{ locked: boolean } & TouchableOpacityProps, {}> {
+class LockImageView extends React.Component<{ locked: boolean } & ToolbarButtonProps, {}> {
     render(){
         const { locked, ...rest } = this.props;
 
@@ -122,7 +122,7 @@ class UrlTextField extends React.Component<TextInputProps, {}> {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L111
-class PageOptionsButton extends React.Component<{} & TouchableOpacityProps, {}> {
+class PageOptionsButton extends React.Component<{} & ToolbarButtonProps, {}> {
     render(){
         const { ...rest } = this.props;
 
@@ -133,7 +133,7 @@ class PageOptionsButton extends React.Component<{} & TouchableOpacityProps, {}> 
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L105
-class PrivacyIndicator extends React.Component<{} & TouchableOpacityProps, {}> {
+class PrivacyIndicator extends React.Component<{} & ToolbarButtonProps, {}> {
     render(){
         const { ...rest } = this.props;
 
@@ -225,10 +225,10 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
 
                 {/* privacyIndicator */}
                 <PrivacyIndicator
-                    style={{
+                    containerStyle={{
                         transform: [
-                            { scaleX: animatedScale },
-                            { scaleY: animatedScale },
+                            { scaleX: this.props.animatedTitleOpacity as any },
+                            { scaleY: this.props.animatedTitleOpacity as any },
                         ],
                     }}
                 />
@@ -243,11 +243,11 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     }}
                 />
                 <PageOptionsButton
-                    style={{
+                    containerStyle={{
                         backgroundColor: buttonBackgroundColor,
                         transform: [
-                            { scaleX: animatedScale },
-                            { scaleY: animatedScale },
+                            { scaleX: this.props.animatedTitleOpacity as any },
+                            { scaleY: this.props.animatedTitleOpacity as any },
                         ],
                     }}
                 />

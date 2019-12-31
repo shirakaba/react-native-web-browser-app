@@ -1,9 +1,12 @@
 import * as React from "react";
-import { Text, ViewStyle, StyleSheet, TouchableOpacity, TouchableOpacityProps, StyleProp } from "react-native";
+import { Text, ViewStyle, StyleSheet, TouchableOpacity, TouchableOpacityProps, StyleProp, RegisteredStyle } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Animated from "react-native-reanimated";
+
+type ToolbarButtonContainerStyle = RegisteredStyle<Animated.AnimateStyle<ViewStyle>> | Animated.AnimateStyle<ViewStyle>;
+export type ToolbarButtonContainerStyleProp = { containerStyle?: ToolbarButtonContainerStyle };
 
 interface Props {
-    style?: StyleProp<ViewStyle>,
     name?: string,
     compact?: boolean,
     onTap?: () => void,
@@ -12,10 +15,15 @@ interface Props {
 interface State {
 }
 
+// AnimateProps<ViewStyle, TouchableOpacityProps>
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity) as React.ComponentClass<Animated.AnimateProps<ViewStyle, TouchableOpacityProps>>;
+
+export type ToolbarButtonProps = Props & Omit<TouchableOpacityProps & ToolbarButtonContainerStyleProp, "style">;
+
 // https://github.com/cliqz/user-agent-ios/blob/7a91b5ea3e2fbb8b95dadd4f0cfd71b334e73449/Client/Frontend/Browser/TabToolbar.swift#L146
-export class ToolbarButton extends React.Component<Props & TouchableOpacityProps, State>{
+export class ToolbarButton extends React.Component<ToolbarButtonProps, State>{
     render(){
-        const { style = {}, onTap, compact, name = "", children, ...rest } = this.props;
+        const { onTap, containerStyle, compact, name = "", children, ...rest } = this.props;
         
         const textColour: string = "white";
 
@@ -23,9 +31,9 @@ export class ToolbarButton extends React.Component<Props & TouchableOpacityProps
           * @see: https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/custom-icons/ */
 
         return (
-            <TouchableOpacity
+            <AnimatedTouchableOpacity
                 onPress={onTap}
-                style={StyleSheet.compose(
+                style={[
                     {
                         width: compact ? 24 : 30,
                         height: compact ? 24 : 30,
@@ -34,8 +42,8 @@ export class ToolbarButton extends React.Component<Props & TouchableOpacityProps
                         justifyContent: "center",
                         // margin: 10
                     },
-                    style
-                )}
+                    containerStyle
+                ]}
                 {...rest}
             >
                 <Icon
@@ -49,7 +57,7 @@ export class ToolbarButton extends React.Component<Props & TouchableOpacityProps
                     name={name}
                 >
                 </Icon>
-            </TouchableOpacity>
+            </AnimatedTouchableOpacity>
         );
     }
 }
