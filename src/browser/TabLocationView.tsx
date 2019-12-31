@@ -177,82 +177,67 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
         // console.log(`animatedSlotBackgroundColor`, animatedSlotBackgroundColor);
 
         return (
-            /* self.view */
+            /* self.view now flattened down to simplify UI. */
+
+            /* self.contentView */
+            /* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L149 */
+            /* https://developer.apple.com/documentation/uikit/uistackview */
             <Animated.View
-                // iosOverflowSafeArea={false}
                 style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    backgroundColor: animatedSlotBackgroundColorString,
+                    borderRadius: 10,
+                    // margin: 8,
                     flexGrow: 1,
-                    width: "100%",
-                    flexDirection: 'column',
+
                     // transform: [
                     //     { scaleY: this.props.animatedTitleOpacity as any, },
                     // ],
+                    // opacity: this.props.animatedTitleOpacity,
                     // height: this.props.animatedNavBarTranslateY as any,
 
-                    // backgroundColor: "blue",
+                    marginHorizontal: 8,
+                    paddingVertical: 4,
+
+                    // backgroundColor: "indigo",
                 }}
-                {...rest}
             >
-                {/* self.contentView */}
-                {/* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L149 */}
-                {/* https://developer.apple.com/documentation/uikit/uistackview */}
-                <Animated.View
+                {/* frontSpaceView */}
+                <View style={{ width: TabLocationViewUX.Spacing }}/>
+
+                {/* privacyIndicator */}
+                <PrivacyIndicator
                     style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-around",
-                        backgroundColor: animatedSlotBackgroundColorString,
-                        borderRadius: 10,
-                        // margin: 8,
-                        flexGrow: 1,
-
-                        // transform: [
-                        //     { scaleY: this.props.animatedTitleOpacity as any, },
-                        // ],
-                        // opacity: this.props.animatedTitleOpacity,
-                        // height: this.props.animatedNavBarTranslateY as any,
-
-                        marginHorizontal: 8,
-                        paddingVertical: 4,
-
-                        // backgroundColor: "indigo",
+                        transform: [
+                            { scaleX: animatedScale },
+                            { scaleY: animatedScale },
+                        ],
                     }}
-                >
-                    {/* frontSpaceView */}
-                    <View style={{ width: TabLocationViewUX.Spacing }}/>
+                />
+                
+                {/* privacyIndicatorSeparator */}
+                <View style={{ width: 3 }}/>
+                <LockImageView locked={true}/>
+                <UrlTextField
+                    style={{
+                        backgroundColor: textFieldBackgroundColor,
+                        flexGrow: 1,
+                    }}
+                />
+                <PageOptionsButton
+                    style={{
+                        backgroundColor: buttonBackgroundColor,
+                        transform: [
+                            { scaleX: animatedScale },
+                            { scaleY: animatedScale },
+                        ],
+                    }}
+                />
 
-                    {/* privacyIndicator */}
-                    <PrivacyIndicator
-                        style={{
-                            transform: [
-                                { scaleX: animatedScale },
-                                { scaleY: animatedScale },
-                            ],
-                        }}
-                    />
-                    
-                    {/* privacyIndicatorSeparator */}
-                    <View style={{ width: 3 }}/>
-                    <LockImageView locked={true}/>
-                    <UrlTextField
-                        style={{
-                            backgroundColor: textFieldBackgroundColor,
-                            flexGrow: 1,
-                        }}
-                    />
-                    <PageOptionsButton
-                        style={{
-                            backgroundColor: buttonBackgroundColor,
-                            transform: [
-                                { scaleX: animatedScale },
-                                { scaleY: animatedScale },
-                            ],
-                        }}
-                    />
-
-                    {/* Another spacer view */}
-                    <View style={{ width: TabLocationViewUX.Spacing }}/>
-                </Animated.View>
+                {/* Another spacer view */}
+                <View style={{ width: TabLocationViewUX.Spacing }}/>
             </Animated.View>
         );
     }
