@@ -13,6 +13,7 @@ import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'r
 import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GradientProgressBarConnected } from "~/Widgets/GradientProgressBar";
 import Animated from "react-native-reanimated";
+import { HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
 const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
 
 const BrowserViewControllerUX = {
@@ -177,7 +178,7 @@ interface WebViewContainerProps {
 const IosWebView = WebView as React.ComponentClass<IOSWebViewProps>;
 const AnimatedIosWebView = Animated.createAnimatedComponent(IosWebView) as React.ComponentClass<IOSWebViewProps>;
 const DRAG_END_INITIAL: number = 10000000;
-const NAV_BAR_HEIGHT: number = 64;
+const NAV_BAR_HEIGHT: number = 44;
 
 // https://github.com/rgommezz/reanimated-collapsible-navbar/blob/master/App.js#L36
 function runSpring({
@@ -285,11 +286,6 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
         this.props.setProgressOnWebView({ progress, tab: this.props.activeTab });
     };
 
-    componentDidMount(){
-        console.log(`WebView ref:`, webViews.get(this.props.activeTab).current);
-        console.log(`WebView node handle:`, findNodeHandle(webViews.get(this.props.activeTab).current));
-    }
-
     // const MyWebView = ({ children, ...rest }) => React.createElement(WebView, props, children);
 
     render(){
@@ -327,7 +323,7 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                                     contentOffset: {
                                         // y: this.props.scrollY,
                                         y: (y) => {
-                                            console.log(`I'm alive:`, y._value);
+                                            // console.log(`I'm alive:`, y._value);
                                             return Animated.block([
                                                 Animated.set(this.props.scrollY, y),
                                                 Animated.call(
@@ -548,35 +544,41 @@ export class BrowserViewController extends React.Component<Props, State> {
     constructor(props: Props){
         super(props);
 
-        const diffClampNode = diffClamp(
-            add(this.scrollY, this.snapOffset),
-            0,
-            NAV_BAR_HEIGHT,
-        );
-        const inverseDiffClampNode = multiply(diffClampNode, -1);
+        // const diffClampNode = diffClamp(
+        //     add(this.scrollY, this.snapOffset),
+        //     0,
+        //     NAV_BAR_HEIGHT,
+        // );
+        // const inverseDiffClampNode = multiply(diffClampNode, -1);
 
-        const clock = new Clock();
+        // const clock = new Clock();
 
-        const snapPoint = cond(
-            lessThan(diffClampNode, NAV_BAR_HEIGHT / 2),
-            0,
-            -NAV_BAR_HEIGHT,
-        );
+        // const snapPoint = cond(
+        //     lessThan(diffClampNode, NAV_BAR_HEIGHT / 2),
+        //     0,
+        //     -NAV_BAR_HEIGHT,
+        // );
 
-        this.animatedNavBarTranslateY = cond(
-            // Condition to detect if we stopped scrolling
-            neq(this.scrollEndDragVelocity, DRAG_END_INITIAL),
-            runSpring({
-                clock,
-                from: inverseDiffClampNode,
-                velocity: 0,
-                toValue: snapPoint,
-                scrollEndDragVelocity: this.scrollEndDragVelocity,
-                snapOffset: this.snapOffset,
-                diffClampNode,
-            }),
-            inverseDiffClampNode,
-        );
+        // this.animatedNavBarTranslateY = cond(
+        //     // Condition to detect if we stopped scrolling
+        //     neq(this.scrollEndDragVelocity, DRAG_END_INITIAL),
+        //     runSpring({
+        //         clock,
+        //         from: inverseDiffClampNode,
+        //         velocity: 0,
+        //         toValue: snapPoint,
+        //         scrollEndDragVelocity: this.scrollEndDragVelocity,
+        //         snapOffset: this.snapOffset,
+        //         diffClampNode,
+        //     }),
+        //     inverseDiffClampNode,
+        // );
+
+        this.animatedNavBarTranslateY = interpolate(this.scrollY, {
+            inputRange: [0, HEADER_RETRACTED_HEIGHT],
+            outputRange: [HEADER_REVEALED_HEIGHT, HEADER_RETRACTED_HEIGHT],
+            extrapolate: Extrapolate.CLAMP,
+        });
 
         this.animatedTitleOpacity = interpolate(this.animatedNavBarTranslateY, {
             inputRange: [-NAV_BAR_HEIGHT, 0],

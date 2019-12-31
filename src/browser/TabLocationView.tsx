@@ -143,6 +143,9 @@ class PrivacyIndicator extends React.Component<{} & TouchableOpacityProps, {}> {
     }
 }
 
+export const HEADER_RETRACTED_HEIGHT: number = 22;
+export const HEADER_REVEALED_HEIGHT: number = 44;
+
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
 
@@ -196,7 +199,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     //     { scaleY: this.props.animatedTitleOpacity as any, },
                     // ],
                     // opacity: this.props.animatedTitleOpacity,
-                    // height: this.props.animatedNavBarTranslateY as any,
+                    height: this.props.animatedNavBarTranslateY,
 
                     marginHorizontal: 8,
                     paddingVertical: 4,
