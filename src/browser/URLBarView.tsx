@@ -90,9 +90,6 @@ export class URLBarView extends React.Component<Props, State>{
                     <StopReloadButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
                     {/* AKA locationView. */}
                     <TabLocationViewConnected
-                        style={{
-                            flexGrow: 1,
-                        }}
                         scrollY={this.props.scrollY}
                         animatedTitleOpacity={this.props.animatedTitleOpacity}
                         animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
@@ -108,10 +105,6 @@ export class URLBarView extends React.Component<Props, State>{
                 <>
                     {/* AKA locationView. */}
                     <TabLocationViewConnected
-                        style={{
-                            flexGrow: 1,
-                            width: "100%",
-                        }}
                         scrollY={this.props.scrollY}
                         animatedTitleOpacity={this.props.animatedTitleOpacity}
                         animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}

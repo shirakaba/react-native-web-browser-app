@@ -144,10 +144,10 @@ class PrivacyIndicator extends React.Component<{} & TouchableOpacityProps, {}> {
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift
-export class TabLocationView extends React.Component<Props & ViewProps, State>{
+export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
 
     render(){
-        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, percentRevealed, style, ...rest } = this.props;
+        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, percentRevealed, ...rest } = this.props;
 
         const factor: number = percentRevealed / 100;
 
@@ -178,16 +178,19 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
 
         return (
             /* self.view */
-            <View
+            <Animated.View
                 // iosOverflowSafeArea={false}
-                style={StyleSheet.compose(
-                    {
-                        flexDirection: 'column',
+                style={{
+                    flexGrow: 1,
+                    width: "100%",
+                    flexDirection: 'column',
+                    // transform: [
+                    //     { scaleY: this.props.animatedTitleOpacity as any, },
+                    // ],
+                    // height: this.props.animatedNavBarTranslateY as any,
 
-                        // backgroundColor: "blue",
-                    },
-                    style
-                )}
+                    // backgroundColor: "blue",
+                }}
                 {...rest}
             >
                 {/* self.contentView */}
@@ -204,9 +207,10 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                         flexGrow: 1,
 
                         // transform: [
-                        //     { opacity: this.props.animatedTitleOpacity, },
+                        //     { scaleY: this.props.animatedTitleOpacity as any, },
                         // ],
-                        opacity: this.props.animatedTitleOpacity,
+                        // opacity: this.props.animatedTitleOpacity,
+                        // height: this.props.animatedNavBarTranslateY as any,
 
                         marginHorizontal: 8,
                         paddingVertical: 4,
@@ -249,7 +253,7 @@ export class TabLocationView extends React.Component<Props & ViewProps, State>{
                     {/* Another spacer view */}
                     <View style={{ width: TabLocationViewUX.Spacing }}/>
                 </Animated.View>
-            </View>
+            </Animated.View>
         );
     }
 }
