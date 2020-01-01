@@ -44,9 +44,9 @@ export function runSpring({
         spring(clock, state, config),
         cond(state.finished, [
             call(
-                [snapOffset, scrollEndDragVelocity, diffClampNode],
+                [snapOffset, scrollEndDragVelocity, diffClampNode, toValue],
                 (r) => {
-                    console.log(`runSpring got snapOffset ${r[0]}; scrollEndDragVelocity ${r[1]}; diffClampNode ${r[2]}`);
+                    console.log(`runSpring got snapOffset ${r[0]}; scrollEndDragVelocity ${r[1]}; diffClampNode ${r[2]}; toValue ${r[3]}`);
                 }
             ),
             set(scrollEndDragVelocity, DRAG_END_INITIAL),
