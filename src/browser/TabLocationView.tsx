@@ -74,6 +74,7 @@ class DisplayTextField extends React.Component<DisplayTextFieldProps & TextInput
             <TextInput
                 style={StyleSheet.compose(
                     {
+                        /* Note: I suspect that Safari may use fontSize 16. */
                         fontSize: 18,
                         flex: 1,
                     },
@@ -205,7 +206,9 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     height: this.props.animatedNavBarTranslateY,
 
                     marginHorizontal: 8,
-                    paddingVertical: 4,
+                    /* paddingVertical actually causes the text overflow to get clipped, so we'll instead get our padding
+                     * by reserving more height than the content needs. */
+                    // paddingVertical: 4,
 
                     // backgroundColor: "indigo",
                 }}
