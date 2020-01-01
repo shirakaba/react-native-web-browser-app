@@ -36,7 +36,6 @@ export class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {
 interface WebViewContainerProps {
     scrollY: Animated.Value<number>,
     scrollEndDragVelocity: Animated.Value<number>,
-    snapOffset: Animated.Value<number>,
     animatedNavBarTranslateY: Animated.Node<number>,
     animatedTitleOpacity: Animated.Node<number>,
 
@@ -156,7 +155,7 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
                                                 Animated.call(
                                                     [y],
                                                     (r) => {
-                                                        console.log(`Reanimated got arg`, r[0]);
+                                                        // console.log(`Reanimated got arg`, r[0]);
                                                     }
                                                 )
                                             ]);

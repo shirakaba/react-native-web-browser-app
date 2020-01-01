@@ -9,6 +9,7 @@ import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GradientProgressBarConnected } from "~/browser/header/GradientProgressBar";
 import Animated, { not } from "react-native-reanimated";
 import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
+import { runSpring, DRAG_END_INITIAL, NAV_BAR_HEIGHT } from "../bothBars/barSpring";
 const { interpolate, Extrapolate } = Animated;
 
 class TopTabsContainer extends React.Component<{}, {}>{
@@ -23,6 +24,7 @@ class TopTabsContainer extends React.Component<{}, {}>{
 }
 
 interface Props {
+    scrollEndDragVelocity: Animated.Value<number>,
     scrollY: Animated.Value<number>,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
@@ -40,50 +42,59 @@ interface State {
 export class Header extends React.Component<Props & ViewProps, State>{
     private readonly animatedNavBarTranslateY: Animated.Node<number>;
     private readonly animatedTitleOpacity: Animated.Node<number>;
+    private readonly snapOffset: Animated.Value<number> = new Animated.Value(0);
 
     constructor(props: Props & ViewProps){
         super(props);
 
-        // const diffClampNode = diffClamp(
-        //     add(this.scrollY, this.snapOffset),
-        //     0,
-        //     NAV_BAR_HEIGHT,
-        // );
-        // const inverseDiffClampNode = multiply(diffClampNode, -1);
+        const diffClampNode = Animated.diffClamp(
+            Animated.add(this.props.scrollY, this.snapOffset),
+            // 0,
+            // NAV_BAR_HEIGHT,
+            // HEADER_RETRACTED_HEIGHT,
+            // HEADER_REVEALED_HEIGHT,
 
-        // const clock = new Clock();
+            0,
+            HEADER_RETRACTION_DISTANCE,
+        );
+        const inverseDiffClampNode = Animated.multiply(diffClampNode, -1);
 
-        // const snapPoint = cond(
-        //     lessThan(diffClampNode, NAV_BAR_HEIGHT / 2),
-        //     0,
-        //     -NAV_BAR_HEIGHT,
-        // );
+        const clock = new Animated.Clock();
 
-        // this.animatedNavBarTranslateY = cond(
-        //     // Condition to detect if we stopped scrolling
-        //     neq(this.scrollEndDragVelocity, DRAG_END_INITIAL),
-        //     runSpring({
-        //         clock,
-        //         from: inverseDiffClampNode,
-        //         velocity: 0,
-        //         toValue: snapPoint,
-        //         scrollEndDragVelocity: this.scrollEndDragVelocity,
-        //         snapOffset: this.snapOffset,
-        //         diffClampNode,
-        //     }),
-        //     inverseDiffClampNode,
-        // );
+        const snapPoint = Animated.cond(
+            Animated.lessThan(diffClampNode, HEADER_RETRACTION_DISTANCE / 2),
+            // 0,
+            // -NAV_BAR_HEIGHT,
+            HEADER_RETRACTED_HEIGHT,
+            // -HEADER_RETRACTION_DISTANCE,
+            HEADER_REVEALED_HEIGHT,
+        );
 
-        this.animatedNavBarTranslateY = interpolate(this.props.scrollY, {
-            // -y means finger is moving upwards (so bar should retract)
-            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
-            outputRange: [HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT],
+        this.animatedNavBarTranslateY = Animated.cond(
+            // Condition to detect if we stopped scrolling
+            Animated.neq(this.props.scrollEndDragVelocity, DRAG_END_INITIAL),
+            runSpring({
+                clock,
+                from: inverseDiffClampNode,
+                velocity: 0,
+                toValue: snapPoint,
+                scrollEndDragVelocity: this.props.scrollEndDragVelocity,
+                snapOffset: this.snapOffset,
+                diffClampNode,
+            }),
+            inverseDiffClampNode,
+        );
 
-            /* To disable header retraction */
-            // outputRange: [HEADER_REVEALED_HEIGHT, HEADER_REVEALED_HEIGHT],
+        // this.animatedNavBarTranslateY = interpolate(this.props.scrollY, {
+        //     // -y means finger is moving upwards (so bar should retract)
+        //     inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
+        //     outputRange: [HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT],
+
+        //     /* To disable header retraction */
+        //     // outputRange: [HEADER_REVEALED_HEIGHT, HEADER_REVEALED_HEIGHT],
             
-            extrapolate: Extrapolate.CLAMP,
-        });
+        //     extrapolate: Extrapolate.CLAMP,
+        // });
 
         this.animatedTitleOpacity = interpolate(this.props.scrollY, {
             inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
@@ -138,6 +149,7 @@ export class Header extends React.Component<Props & ViewProps, State>{
 
 
 interface RetractibleHeaderProps {
+    scrollEndDragVelocity: Animated.Value<number>,
     scrollY: Animated.Value<number>,
     animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateY: Animated.Node<number>,
@@ -195,6 +207,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                         >
                             {/* TODO: make Header height shrink to new dynamic height */}
                             <Header
+                                scrollEndDragVelocity={this.props.scrollEndDragVelocity}
                                 scrollY={this.props.scrollY}
                                 toolbarIsShowing={orientation === "landscape"}
                                 inOverlayMode={false}
