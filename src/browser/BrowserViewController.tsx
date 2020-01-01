@@ -325,20 +325,10 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                                         y: (y) => {
                                             return Animated.block([
                                                 Animated.cond(
-                                                    Animated.and(
-                                                        /* We won't update scrollY if there was no panGesture movement.
-                                                         * This is necessary because onScroll is called without gestures
-                                                         * sometimes, e.g. due to autolayout when first initialising. */
-                                                        Animated.neq(y, 0),
-                                                        /* TODO: We won't update scrollY unless the gesture velocity was significant.
-                                                         * This approach isn't working because the onScrollEndDrag event comes after
-                                                         * the onScroll event, so we're always one step out of date. Not sure how iOS
-                                                         * Safari does it, as they'll be up against the same issue. */
-                                                        Animated.greaterOrEq(
-                                                            Animated.abs(this.props.scrollEndDragVelocity),
-                                                            0.5
-                                                        ),
-                                                    ),
+                                                    /* We won't update scrollY if there was no panGesture movement.
+                                                     * This is necessary because onScroll is called without gestures
+                                                     * sometimes, e.g. due to autolayout when first initialising. */
+                                                    Animated.neq(y, 0),
                                                        
                                                     /* We always receive a gesture relative to 0.
                                                     * e.g. when panning down (scrolling up): +3, 9, 12, 20.
@@ -360,7 +350,7 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                                                 Animated.call(
                                                     [y],
                                                     (r) => {
-                                                        console.log(`panGestureTranslationInWebView`, r[0]);
+                                                        console.log(`Reanimated got arg`, r[0]);
                                                     }
                                                 )
                                             ]);
@@ -378,17 +368,7 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                             {
                                 nativeEvent: {
                                     velocity: {
-                                        y: (y) => {
-                                            return Animated.block([
-                                                Animated.set(this.props.scrollEndDragVelocity, y),
-                                                Animated.call(
-                                                    [y],
-                                                    (r) => {
-                                                        console.log(`velocity`, r[0]);
-                                                    }
-                                                )
-                                            ]);
-                                        }
+                                        y: this.props.scrollEndDragVelocity
                                     }
                                 }
                             }
