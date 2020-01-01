@@ -75,6 +75,7 @@ class DisplayTextField extends React.Component<DisplayTextFieldProps & TextInput
                 style={StyleSheet.compose(
                     {
                         fontSize: 18,
+                        flex: 1,
                     },
                     style
                 )}
