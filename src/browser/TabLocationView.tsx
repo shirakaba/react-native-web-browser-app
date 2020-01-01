@@ -1,12 +1,11 @@
 import * as React from "react";
-import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, TouchableOpacityProps, StyleSheet, StyleProp, TextStyle, processColor } from "react-native";
+import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, StyleSheet, StyleProp, TextStyle } from "react-native";
 import { ToolbarButton, ToolbarButtonProps } from "./ToolbarButton";
 import { PrivacyIndicatorView } from "~/Views/PrivacyIndicatorView";
 import { connect } from 'react-redux';
 import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationState";
 import { WholeStoreState } from "~/store/store";
 import { RetractionState } from "~/store/barsState";
-import normalizeColorToObj, { ColorObj } from "~/utils/normalizeColorToObj";
 import Animated from "react-native-reanimated";
 
 interface Props {
@@ -153,33 +152,6 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
     render(){
         const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, percentRevealed, ...rest } = this.props;
 
-        const factor: number = percentRevealed / 100;
-
-        const revealedScale: number = 1;
-        const retractedScale: number = 0;
-        const scaleDiff: number = revealedScale - retractedScale;
-        const animatedScale: number = (factor * scaleDiff) + retractedScale;
-        // console.log(`animatedScale`, animatedScale);
-
-        // const colorFromString = processColor('rgba(10, 20, 30, 0.4)');
-        //                           aarrggbb
-        // const expectedInt     = 0x660a141e;
-        const slotBackgroundColorObj: ColorObj = normalizeColorToObj(slotBackgroundColor);
-        // console.log(`slotBackgroundColor ${slotBackgroundColor} -> slotBackgroundColorObj`, slotBackgroundColorObj);
-        
-        const revealedSlotBackgroundColorAlpha: number = 1;
-        const retractedSlotBackgroundColorAlpha: number = 0;
-        const slotBackgroundColorAlphaDiff: number = revealedSlotBackgroundColorAlpha - retractedSlotBackgroundColorAlpha;
-        const animatedSlotBackgroundColorAlpha: number = (factor * 255 * slotBackgroundColorAlphaDiff) + retractedSlotBackgroundColorAlpha;
-        const animatedSlotBackgroundColor: ColorObj = {
-            a: animatedSlotBackgroundColorAlpha,
-            r: slotBackgroundColorObj.r,
-            g: slotBackgroundColorObj.g,
-            b: slotBackgroundColorObj.b,
-        };
-        const animatedSlotBackgroundColorString: string = `rgba(${animatedSlotBackgroundColor.r},${animatedSlotBackgroundColor.g},${animatedSlotBackgroundColor.b},${animatedSlotBackgroundColor.a})`;
-        // console.log(`animatedSlotBackgroundColor`, animatedSlotBackgroundColor);
-
         return (
             /* self.view now flattened down to simplify UI. */
 
@@ -218,7 +190,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                         width: "100%",
                         height: "100%",
                         borderRadius: 10,
-                        backgroundColor: animatedSlotBackgroundColorString,
+                        backgroundColor: slotBackgroundColor,
                         opacity: this.props.animatedTitleOpacity,
                     }}
                 />

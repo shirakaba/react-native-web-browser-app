@@ -1,5 +1,4 @@
 import * as React from "react";
-import { TopTabsViewController } from "./TopTabsViewController";
 import { RetractibleHeaderConnected } from "./Header";
 import { View, ViewProps, StyleSheet } from "react-native";
 import Animated from "react-native-reanimated";
@@ -14,56 +13,43 @@ const BrowserViewControllerUX = {
     BookmarkStarAnimationOffset: 80,
 }
 
-// https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L128
-class TopTabsContainer extends React.Component<{}, {}> {
-    render(){
-        return (
-            // UIView()
-            <View style={{ flexDirection: "column" }}>
-                {/* topTabsViewController.view */}
-                <TopTabsViewController/>
-            </View>
-        );
-    }
-}
+// // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L70
+// class AlertStackView extends React.Component<ViewProps, {}> {
+//     render(){
+//         const { style, children, ...rest } = this.props;
 
-// https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L70
-class AlertStackView extends React.Component<ViewProps, {}> {
-    render(){
-        const { style, children, ...rest } = this.props;
+//         return (
+//             <View
+//                 style={StyleSheet.compose(
+//                     {
+//                         flexDirection: "column",
+//                     },
+//                     style
+//                 )}
+//                 {...rest}
+//             />
+//         );
+//     }
+// }
 
-        return (
-            <View
-                style={StyleSheet.compose(
-                    {
-                        flexDirection: "column",
-                    },
-                    style
-                )}
-                {...rest}
-            />
-        );
-    }
-}
+// // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L65
+// class OverlayBackground extends React.Component<ViewProps, {}> {
+//     render(){
+//         const { style, ...rest } = this.props;
 
-// https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L65
-class OverlayBackground extends React.Component<ViewProps, {}> {
-    render(){
-        const { style, ...rest } = this.props;
-
-        return (
-            // UIVisualEffectView()
-            <View
-                style={StyleSheet.compose(
-                    {
-                        flexDirection: "column",
-                    },
-                    style
-                )}
-            />
-        );
-    }
-}
+//         return (
+//             // UIVisualEffectView()
+//             <View
+//                 style={StyleSheet.compose(
+//                     {
+//                         flexDirection: "column",
+//                     },
+//                     style
+//                 )}
+//             />
+//         );
+//     }
+// }
 
 interface Props {
     orientation: "portrait"|"landscape"|"unknown",
@@ -103,15 +89,12 @@ export class BrowserViewController extends React.Component<Props, State> {
                 />
 
                 <View
-                    // dock={"bottom"}
-                    // stretchLastChild={true}
                     style={{
                         flex: 1,
                         width: "100%",
                         height: "100%",
                         flexGrow: 1,
                         alignItems:"center",
-                        // justifyContent: "flex-start",
                         backgroundColor:"green",
                         flexDirection: "column",
                     }}
@@ -121,8 +104,6 @@ export class BrowserViewController extends React.Component<Props, State> {
                             flex: 1,
                             flexDirection: "column",
                             width: "100%",
-                            // height: "100%",
-                            // flexGrow: 1,
                         }}
                     >
                         <WebViewContainerBackdrop

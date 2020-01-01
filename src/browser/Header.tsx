@@ -1,6 +1,6 @@
 import * as React from "react";
 import { URLBarView } from "./URLBarView";
-import { TopTabsViewController } from "./TopTabsViewController";
+import { TopTabsViewController } from "./TopTabsContainer";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { setBarsRetraction, RetractionState } from "~/store/barsState";

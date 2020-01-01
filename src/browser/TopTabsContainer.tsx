@@ -16,3 +16,16 @@ export class TopTabsViewController extends React.Component<{}, {}> {
         );
     }
 }
+
+// https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L128
+export class TopTabsContainer extends React.Component<{}, {}> {
+    render(){
+        return (
+            // UIView()
+            <View style={{ flexDirection: "column" }}>
+                {/* topTabsViewController.view */}
+                <TopTabsViewController/>
+            </View>
+        );
+    }
+}
