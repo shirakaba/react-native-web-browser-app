@@ -4,13 +4,12 @@ import { TopTabsViewController } from "./TopTabsViewController";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { setBarsRetraction, RetractionState } from "~/store/barsState";
-import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform, findNodeHandle } from "react-native";
-import { WebView } from 'react-native-webview';
-import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
+import { View, ViewProps, StyleSheet, } from "react-native";
+import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GradientProgressBarConnected } from "~/Widgets/GradientProgressBar";
 import Animated, { not } from "react-native-reanimated";
 import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
-const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
+const { interpolate, Extrapolate } = Animated;
 
 class TopTabsContainer extends React.Component<{}, {}>{
 

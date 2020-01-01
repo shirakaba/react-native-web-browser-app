@@ -6,9 +6,8 @@ import { setBarsRetraction, RetractionState } from "~/store/barsState";
 import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform, findNodeHandle } from "react-native";
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
-import Animated, { not } from "react-native-reanimated";
-import { HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT, HEADER_RETRACTION_DISTANCE } from "./TabLocationView";
-const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
+import Animated from "react-native-reanimated";
+import { HEADER_RETRACTION_DISTANCE } from "./TabLocationView";
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L110
 export class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {
@@ -123,9 +122,7 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
                     }}
                     // TODO: will have to solve how best to build one webView for each tab, give it a unique ref, and allow animation between tabs.
                     ref={webViews.get(activeTab)}
-                    // onPan={this.onPan}
-                    // onRetractBarsRecommendation={this.onBarRetractionRecommendation}
-                    onScroll={reanimatedEvent(
+                    onScroll={Animated.event(
                         [
                             {
                                 nativeEvent: {
@@ -172,7 +169,7 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
                             useNativeDriver: true
                         }
                     )}
-                    onScrollEndDrag={reanimatedEvent(
+                    onScrollEndDrag={Animated.event(
                         [
                             {
                                 nativeEvent: {
