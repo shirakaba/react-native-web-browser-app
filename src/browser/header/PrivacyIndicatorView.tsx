@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ToolbarButton } from "~/browser/ToolbarButton";
+import { ToolbarButton } from "~/browser/bothBars/ToolbarButton";
 import { TouchableOpacityProps } from "react-native";
 
 interface Props {

@@ -1,8 +1,8 @@
 import * as React from "react";
-import { GradientProgressBarConnected } from "../Widgets/GradientProgressBar";
-import { AutocompleteTextField } from "~/Widgets/AutocompleteTextField";
+import { GradientProgressBarConnected } from "./GradientProgressBar";
+import { AutocompleteTextField } from "~/browser/header/AutocompleteTextField";
 import { TabLocationView, TabLocationViewConnected } from "./TabLocationView";
-import { BackButtonConnected, ForwardButtonConnected, StopReloadButtonConnected, TabsButtonConnected, MenuButtonConnected, CancelButtonConnected } from "./BarButtons";
+import { BackButtonConnected, ForwardButtonConnected, StopReloadButtonConnected, TabsButtonConnected, MenuButtonConnected, CancelButtonConnected } from "../bothBars/BarButtons";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { View } from "react-native";

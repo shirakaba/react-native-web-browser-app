@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View, ViewProps, StyleProp, ViewStyle } from "react-native";
-import { BackButtonConnected, ForwardButtonConnected, MenuButtonConnected, SearchButtonConnected, TabsButtonConnected, } from "./BarButtons";
+import { BackButtonConnected, ForwardButtonConnected, MenuButtonConnected, SearchButtonConnected, TabsButtonConnected, } from "../bothBars/BarButtons";
 
 interface Props {
     style?: ViewStyle,

@@ -1,10 +1,10 @@
 import * as React from "react";
-import { RetractibleHeaderConnected } from "./Header";
+import { RetractibleHeaderConnected } from "./header/Header";
 import { View, ViewProps, StyleSheet } from "react-native";
 import Animated from "react-native-reanimated";
-import { FooterConnected } from "./Footer";
-import { HEADER_RETRACTION_DISTANCE } from "./TabLocationView";
-import { DRAG_END_INITIAL } from "./barSpring";
+import { FooterConnected } from "./footer/Footer";
+import { HEADER_RETRACTION_DISTANCE } from "./header/TabLocationView";
+import { DRAG_END_INITIAL } from "./bothBars/barSpring";
 import { WebViewContainerConnected, WebViewContainerBackdrop } from "./WebViewContainer";
 
 const BrowserViewControllerUX = {

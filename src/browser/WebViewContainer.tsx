@@ -7,7 +7,7 @@ import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableW
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
 import Animated from "react-native-reanimated";
-import { HEADER_RETRACTION_DISTANCE } from "./TabLocationView";
+import { HEADER_RETRACTION_DISTANCE } from "./header/TabLocationView";
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L110
 export class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {

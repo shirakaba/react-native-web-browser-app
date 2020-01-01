@@ -1,7 +1,7 @@
 import * as React from "react";
 import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, StyleSheet, StyleProp, TextStyle } from "react-native";
-import { ToolbarButton, ToolbarButtonProps } from "./ToolbarButton";
-import { PrivacyIndicatorView } from "~/Views/PrivacyIndicatorView";
+import { ToolbarButton, ToolbarButtonProps } from "../bothBars/ToolbarButton";
+import { PrivacyIndicatorView } from "~/browser/header/PrivacyIndicatorView";
 import { connect } from 'react-redux';
 import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationState";
 import { WholeStoreState } from "~/store/store";

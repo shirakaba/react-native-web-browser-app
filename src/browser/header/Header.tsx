@@ -6,7 +6,7 @@ import { WholeStoreState } from "~/store/store";
 import { setBarsRetraction, RetractionState } from "~/store/barsState";
 import { View, ViewProps, StyleSheet, } from "react-native";
 import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
-import { GradientProgressBarConnected } from "~/Widgets/GradientProgressBar";
+import { GradientProgressBarConnected } from "~/browser/header/GradientProgressBar";
 import Animated, { not } from "react-native-reanimated";
 import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
 const { interpolate, Extrapolate } = Animated;

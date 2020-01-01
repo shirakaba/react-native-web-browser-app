@@ -6,7 +6,7 @@ import { setBarsRetraction, RetractionState } from "~/store/barsState";
 import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform, findNodeHandle } from "react-native";
 import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import Animated, { not } from "react-native-reanimated";
-import { HEADER_RETRACTION_DISTANCE } from "./TabLocationView";
+import { HEADER_RETRACTION_DISTANCE } from "../header/TabLocationView";
 const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
 
 
