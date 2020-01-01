@@ -31,19 +31,19 @@ To be clear: This project is **purely** focused on building a browser UI, and fo
 
 ## Roadmap
 
-[X] Functional navigation buttons (back, forward, stop, refresh)
-[X] Functional URL bar (can navigate to URL inputs and updates text upon page redirect)
-[X] Rotation
-[X] Bar retraction
-[ ] Bars snapping to fully retracted/revealed upon gesture release
-[ ] Tabs
-[ ] History
-[ ] Browsing-state persistence
-[ ] Search suggestions
-[ ] Bookmarks
-[ ] Reading list
-[ ] Page-specific actions
-[ ] Branded app-specific actions (e.g. JS injection, popup blocking, whatever)
+- [X] Functional navigation buttons (back, forward, stop, refresh)
+- [X] Functional URL bar (can navigate to URL inputs and updates text upon page redirect)
+- [X] Rotation
+- [X] Bar retraction
+- [ ] Bars snapping to fully retracted/revealed upon gesture release
+- [ ] Tabs
+- [ ] History
+- [ ] Browsing-state persistence
+- [ ] Search suggestions
+- [ ] Bookmarks
+- [ ] Reading list
+- [ ] Page-specific actions
+- [ ] Branded app-specific actions (e.g. JS injection, popup blocking, whatever)
 
 ## Prior art
 
