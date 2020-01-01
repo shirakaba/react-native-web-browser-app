@@ -329,19 +329,23 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                                                      * This is necessary because onScroll is called without gestures
                                                      * sometimes, e.g. due to autolayout when first initialising. */
                                                     Animated.neq(y, 0),
-
-                                                    /* FIXME: We always receive a gesture relative to 0.
-                                                     * e.g. when panning down (scrolling up): +3, 9, 12, 20.
-                                                     * It needs to be added to the current this.props.scrollY to make sense. */
-
-                                                    /* We could consider not updating scrollY if the bar is already in
-                                                     *  the position that the gesture would be taking it towards. */
-                                                    // Animated.and(
-                                                    //     Animated.greaterThan(y, 0),
-                                                    //     Animated.greaterThan(this.props.scrollY, 0),
-                                                    // )
-                                                    
-                                                    Animated.set(this.props.scrollY, y),
+                                                       
+                                                    /* We always receive a gesture relative to 0.
+                                                    * e.g. when panning down (scrolling up): +3, 9, 12, 20.
+                                                    * It needs to be added to the current this.props.scrollY to make sense. */
+                                                    Animated.set(
+                                                        this.props.scrollY,
+                                                        Animated.max(
+                                                            -HEADER_RETRACTION_DISTANCE,
+                                                            Animated.min(
+                                                                HEADER_RETRACTION_DISTANCE,
+                                                                Animated.add(
+                                                                    this.props.scrollY,
+                                                                    y,
+                                                                )
+                                                            ),
+                                                        ),
+                                                    ),
                                                 ),
                                                 Animated.call(
                                                     [y],
