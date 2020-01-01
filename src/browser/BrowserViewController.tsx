@@ -320,8 +320,9 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                         [
                             {
                                 nativeEvent: {
-                                    panGestureTranslation: {
+                                    panGestureTranslationInWebView: {
                                         // y: this.props.scrollY,
+                                        // yCompensated: (y) => {
                                         y: (y) => {
                                             // console.log(`I'm alive:`, y._value);
                                             return Animated.block([
@@ -484,8 +485,8 @@ class Footer extends React.Component<FooterProps, {}> {
                                         // height: FOOTER_REVEALED_HEIGHT + unsafeAreaCoverHeight,
                                         height: interpolate(this.props.scrollY, {
                                             // We'll keep the footer retraction in sync with that of the header retraction.
-                                            inputRange: [0, HEADER_RETRACTED_HEIGHT],
-                                            outputRange: [add(FOOTER_REVEALED_HEIGHT, unsafeAreaCoverHeight), FOOTER_RETRACTED_HEIGHT],
+                                            inputRange: [-HEADER_RETRACTED_HEIGHT, 0],
+                                            outputRange: [FOOTER_RETRACTED_HEIGHT, add(FOOTER_REVEALED_HEIGHT, unsafeAreaCoverHeight)],
                                             extrapolate: Extrapolate.CLAMP,
                                         }),
                                     }
@@ -589,7 +590,7 @@ export class BrowserViewController extends React.Component<Props, State> {
 
         this.animatedNavBarTranslateY = interpolate(this.scrollY, {
             inputRange: [0, HEADER_RETRACTED_HEIGHT],
-            outputRange: [HEADER_REVEALED_HEIGHT, HEADER_RETRACTED_HEIGHT],
+            outputRange: [HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT],
 
             /* To disable header retraction */
             // outputRange: [HEADER_REVEALED_HEIGHT, HEADER_REVEALED_HEIGHT],
@@ -599,7 +600,7 @@ export class BrowserViewController extends React.Component<Props, State> {
 
         this.animatedTitleOpacity = interpolate(this.scrollY, {
             inputRange: [0, HEADER_RETRACTED_HEIGHT],
-            outputRange: [1, 0],
+            outputRange: [0, 1],
             extrapolate: Extrapolate.CLAMP,
         });
     }
