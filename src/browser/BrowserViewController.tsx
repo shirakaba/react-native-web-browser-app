@@ -1,23 +1,12 @@
 import * as React from "react";
-import { URLBarView } from "./URLBarView";
 import { TopTabsViewController } from "./TopTabsViewController";
-import { Header, RetractibleHeaderConnected } from "./Header";
-import { TabToolbar } from "./TabToolbar";
-import { connect } from "react-redux";
-import { WholeStoreState } from "~/store/store";
-import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView } from "~/store/navigationState";
-import { setBarsRetraction, RetractionState } from "~/store/barsState";
-import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform, findNodeHandle } from "react-native";
-import { WebView } from 'react-native-webview';
-import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
-import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
-import { GradientProgressBarConnected } from "~/Widgets/GradientProgressBar";
-import Animated, { not } from "react-native-reanimated";
+import { RetractibleHeaderConnected } from "./Header";
+import { View, ViewProps, StyleSheet } from "react-native";
+import Animated from "react-native-reanimated";
 import { FooterConnected } from "./Footer";
-import { HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT, HEADER_RETRACTION_DISTANCE } from "./TabLocationView";
+import { HEADER_RETRACTION_DISTANCE } from "./TabLocationView";
 import { DRAG_END_INITIAL } from "./barSpring";
 import { WebViewContainerConnected, WebViewContainerBackdrop } from "./WebViewContainer";
-const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
