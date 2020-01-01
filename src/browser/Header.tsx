@@ -9,8 +9,8 @@ import { WebView } from 'react-native-webview';
 import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GradientProgressBarConnected } from "~/Widgets/GradientProgressBar";
 import Animated, { not } from "react-native-reanimated";
+import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
 const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
-
 
 class TopTabsContainer extends React.Component<{}, {}>{
 
@@ -25,8 +25,6 @@ class TopTabsContainer extends React.Component<{}, {}>{
 
 interface Props {
     scrollY: Animated.Value<number>,
-    animatedTitleOpacity: Animated.Node<number>,
-    animatedNavBarTranslateY: Animated.Node<number>,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
     buttonBackgroundColor?: string,
@@ -41,6 +39,59 @@ interface State {
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L105
 // Header used to have a subchild, "UrlBarTopTabsContainer", but that has now been flattened.
 export class Header extends React.Component<Props & ViewProps, State>{
+    private readonly animatedNavBarTranslateY: Animated.Node<number>;
+    private readonly animatedTitleOpacity: Animated.Node<number>;
+
+    constructor(props: Props & ViewProps){
+        super(props);
+
+        // const diffClampNode = diffClamp(
+        //     add(this.scrollY, this.snapOffset),
+        //     0,
+        //     NAV_BAR_HEIGHT,
+        // );
+        // const inverseDiffClampNode = multiply(diffClampNode, -1);
+
+        // const clock = new Clock();
+
+        // const snapPoint = cond(
+        //     lessThan(diffClampNode, NAV_BAR_HEIGHT / 2),
+        //     0,
+        //     -NAV_BAR_HEIGHT,
+        // );
+
+        // this.animatedNavBarTranslateY = cond(
+        //     // Condition to detect if we stopped scrolling
+        //     neq(this.scrollEndDragVelocity, DRAG_END_INITIAL),
+        //     runSpring({
+        //         clock,
+        //         from: inverseDiffClampNode,
+        //         velocity: 0,
+        //         toValue: snapPoint,
+        //         scrollEndDragVelocity: this.scrollEndDragVelocity,
+        //         snapOffset: this.snapOffset,
+        //         diffClampNode,
+        //     }),
+        //     inverseDiffClampNode,
+        // );
+
+        this.animatedNavBarTranslateY = interpolate(this.props.scrollY, {
+            // -y means finger is moving upwards (so bar should retract)
+            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
+            outputRange: [HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT],
+
+            /* To disable header retraction */
+            // outputRange: [HEADER_REVEALED_HEIGHT, HEADER_REVEALED_HEIGHT],
+            
+            extrapolate: Extrapolate.CLAMP,
+        });
+
+        this.animatedTitleOpacity = interpolate(this.props.scrollY, {
+            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
+            outputRange: [0, 1],
+            extrapolate: Extrapolate.CLAMP,
+        });
+    }
 
     render(){
         const {
@@ -71,8 +122,8 @@ export class Header extends React.Component<Props & ViewProps, State>{
                 {/* urlBar */}
                 <URLBarView
                     scrollY={this.props.scrollY}
-                    animatedTitleOpacity={this.props.animatedTitleOpacity}
-                    animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
+                    animatedTitleOpacity={this.animatedTitleOpacity}
+                    animatedNavBarTranslateY={this.animatedNavBarTranslateY}
                     inOverlayMode={inOverlayMode}
                     toolbarIsShowing={toolbarIsShowing}
                     slotBackgroundColor={slotBackgroundColor}
@@ -146,8 +197,6 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                             {/* TODO: make Header height shrink to new dynamic height */}
                             <Header
                                 scrollY={this.props.scrollY}
-                                animatedTitleOpacity={this.props.animatedTitleOpacity}
-                                animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                                 toolbarIsShowing={orientation === "landscape"}
                                 inOverlayMode={false}
                                 slotBackgroundColor={"darkgray"}

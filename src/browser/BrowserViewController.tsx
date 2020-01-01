@@ -15,6 +15,7 @@ import { GradientProgressBarConnected } from "~/Widgets/GradientProgressBar";
 import Animated, { not } from "react-native-reanimated";
 import { FooterConnected } from "./Footer";
 import { HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT, HEADER_RETRACTION_DISTANCE } from "./TabLocationView";
+import { DRAG_END_INITIAL } from "./barSpring";
 const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
 
 const BrowserViewControllerUX = {
@@ -80,75 +81,8 @@ interface WebViewContainerProps {
 
 const IosWebView = WebView as React.ComponentClass<IOSWebViewProps>;
 const AnimatedIosWebView = Animated.createAnimatedComponent(IosWebView) as React.ComponentClass<IOSWebViewProps>;
-const DRAG_END_INITIAL: number = 10000000;
-const NAV_BAR_HEIGHT: number = 44;
-
-// https://github.com/rgommezz/reanimated-collapsible-navbar/blob/master/App.js#L36
-function runSpring({
-    clock,
-    from,
-    velocity,
-    toValue,
-    scrollEndDragVelocity,
-    snapOffset,
-    diffClampNode,
-}) {
-    const state = {
-        finished: new Animated.Value(0),
-        velocity: new Animated.Value(0),
-        position: new Animated.Value(0),
-        time: new Animated.Value(0),
-    };
-
-    const config = {
-        damping: 1,
-        mass: 1,
-        stiffness: 50,
-        overshootClamping: true,
-        restSpeedThreshold: 0.001,
-        restDisplacementThreshold: 0.001,
-        toValue: new Animated.Value(0),
-    };
-
-    return [
-        cond(clockRunning(clock), 0, [
-            set(state.finished, 0),
-            set(state.velocity, velocity),
-            set(state.position, from),
-            set(config.toValue, toValue),
-            startClock(clock),
-        ]),
-        spring(clock, state, config),
-        cond(state.finished, [
-            set(scrollEndDragVelocity, DRAG_END_INITIAL),
-            set(
-                snapOffset,
-                cond(
-                    eq(toValue, 0),
-                    // SnapOffset acts as an accumulator.
-                    // We need to keep track of the previous offsets applied.
-                    add(snapOffset, multiply(diffClampNode, -1)),
-                    add(snapOffset, sub(NAV_BAR_HEIGHT, diffClampNode)),
-                ),
-            ),
-            stopClock(clock),
-        ]),
-        state.position,
-    ];
-}
 
 class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps, { }> {
-    private readonly onBarRetractionRecommendation = (e) => {
-        // console.log(`WebView onBarRetractionRecommendation ${Object.keys(e)}`);
-        
-        if(e.nativeEvent.recommendation === "retract"){
-            // Gesture flings the scrollView upwards (scrolls downwards)
-            this.props.setBarsRetraction({ bars: "both", animated: true, retraction: RetractionState.retracted });
-        } else {
-            this.props.setBarsRetraction({ bars: "both", animated: true, retraction: RetractionState.revealed });
-        }
-    };
-
     private readonly onLoadStarted = (event: WebViewNavigationEvent) => {
         const { url, navigationType } = event.nativeEvent;
 
@@ -284,8 +218,6 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                     onLoadCommit={this.onLoadCommitted}
                     onLoadEnd={this.onLoadFinished}
                     onLoadProgress={this.onProgress}
-                    // Feeding in either bar's state is sufficient for now, unless we find a reason to start retracting them independently.
-                    // barRetractionState={barsState.footer.retraction}
                 />
             </View>
         );
@@ -393,57 +325,6 @@ export class BrowserViewController extends React.Component<Props, State> {
     private readonly snapOffset = new Animated.Value(0);
     private readonly animatedNavBarTranslateY: Animated.Node<number>;
     private readonly animatedTitleOpacity: Animated.Node<number>;
-
-    constructor(props: Props){
-        super(props);
-
-        // const diffClampNode = diffClamp(
-        //     add(this.scrollY, this.snapOffset),
-        //     0,
-        //     NAV_BAR_HEIGHT,
-        // );
-        // const inverseDiffClampNode = multiply(diffClampNode, -1);
-
-        // const clock = new Clock();
-
-        // const snapPoint = cond(
-        //     lessThan(diffClampNode, NAV_BAR_HEIGHT / 2),
-        //     0,
-        //     -NAV_BAR_HEIGHT,
-        // );
-
-        // this.animatedNavBarTranslateY = cond(
-        //     // Condition to detect if we stopped scrolling
-        //     neq(this.scrollEndDragVelocity, DRAG_END_INITIAL),
-        //     runSpring({
-        //         clock,
-        //         from: inverseDiffClampNode,
-        //         velocity: 0,
-        //         toValue: snapPoint,
-        //         scrollEndDragVelocity: this.scrollEndDragVelocity,
-        //         snapOffset: this.snapOffset,
-        //         diffClampNode,
-        //     }),
-        //     inverseDiffClampNode,
-        // );
-
-        this.animatedNavBarTranslateY = interpolate(this.scrollY, {
-            // -y means finger is moving upwards (so bar should retract)
-            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
-            outputRange: [HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT],
-
-            /* To disable header retraction */
-            // outputRange: [HEADER_REVEALED_HEIGHT, HEADER_REVEALED_HEIGHT],
-            
-            extrapolate: Extrapolate.CLAMP,
-        });
-
-        this.animatedTitleOpacity = interpolate(this.scrollY, {
-            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
-            outputRange: [0, 1],
-            extrapolate: Extrapolate.CLAMP,
-        });
-    }
 
     render(){
         const { orientation } = this.props;
