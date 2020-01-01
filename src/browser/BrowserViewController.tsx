@@ -485,7 +485,8 @@ class Footer extends React.Component<FooterProps, {}> {
                                         // height: FOOTER_REVEALED_HEIGHT + unsafeAreaCoverHeight,
                                         height: interpolate(this.props.scrollY, {
                                             // We'll keep the footer retraction in sync with that of the header retraction.
-                                            inputRange: [-HEADER_RETRACTED_HEIGHT, 0],
+                                            // -y means finger is moving upwards (so bar should retract)
+                                            inputRange: [-(HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT), (HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT)],
                                             outputRange: [FOOTER_RETRACTED_HEIGHT, add(FOOTER_REVEALED_HEIGHT, unsafeAreaCoverHeight)],
                                             extrapolate: Extrapolate.CLAMP,
                                         }),
@@ -589,7 +590,8 @@ export class BrowserViewController extends React.Component<Props, State> {
         // );
 
         this.animatedNavBarTranslateY = interpolate(this.scrollY, {
-            inputRange: [0, HEADER_RETRACTED_HEIGHT],
+            // -y means finger is moving upwards (so bar should retract)
+            inputRange: [-(HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT), (HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT)],
             outputRange: [HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT],
 
             /* To disable header retraction */
@@ -599,7 +601,7 @@ export class BrowserViewController extends React.Component<Props, State> {
         });
 
         this.animatedTitleOpacity = interpolate(this.scrollY, {
-            inputRange: [0, HEADER_RETRACTED_HEIGHT],
+            inputRange: [-(HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT), (HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT)],
             outputRange: [0, 1],
             extrapolate: Extrapolate.CLAMP,
         });
