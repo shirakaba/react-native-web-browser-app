@@ -12,8 +12,8 @@ import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
 import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GradientProgressBarConnected } from "~/Widgets/GradientProgressBar";
-import Animated from "react-native-reanimated";
-import { HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
+import Animated, { not } from "react-native-reanimated";
+import { HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT, HEADER_RETRACTION_DISTANCE } from "./TabLocationView";
 const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
 
 const BrowserViewControllerUX = {
@@ -322,17 +322,21 @@ class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps
                                 nativeEvent: {
                                     panGestureTranslationInWebView: {
                                         // y: this.props.scrollY,
-                                        // yCompensated: (y) => {
                                         y: (y) => {
-                                            // console.log(`I'm alive:`, y._value);
                                             return Animated.block([
-                                                Animated.set(this.props.scrollY, y),
-                                                Animated.call(
-                                                    [y],
-                                                    (r) => {
-                                                        console.log(`Reanimated got arg`, r[0]);
-                                                    }
-                                                )
+                                                Animated.cond(
+                                                    /* We won't update scrollY if there was no panGesture movement.
+                                                     * This is necessary because onScroll is called without gestures
+                                                     * sometimes, e.g. due to autolayout when first initialising. */
+                                                    Animated.neq(y, 0),
+                                                    Animated.set(this.props.scrollY, y),
+                                                ),
+                                                // Animated.call(
+                                                //     [y],
+                                                //     (r) => {
+                                                //         console.log(`Reanimated got arg`, r[0]);
+                                                //     }
+                                                // )
                                             ]);
                                         }
                                     }
@@ -486,7 +490,7 @@ class Footer extends React.Component<FooterProps, {}> {
                                         height: interpolate(this.props.scrollY, {
                                             // We'll keep the footer retraction in sync with that of the header retraction.
                                             // -y means finger is moving upwards (so bar should retract)
-                                            inputRange: [-(HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT), (HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT)],
+                                            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
                                             outputRange: [FOOTER_RETRACTED_HEIGHT, add(FOOTER_REVEALED_HEIGHT, unsafeAreaCoverHeight)],
                                             extrapolate: Extrapolate.CLAMP,
                                         }),
@@ -550,7 +554,7 @@ interface State {
 }
 
 export class BrowserViewController extends React.Component<Props, State> {
-    private readonly scrollY = new Animated.Value(0);
+    private readonly scrollY = new Animated.Value(HEADER_RETRACTION_DISTANCE);
     private readonly scrollEndDragVelocity = new Animated.Value(DRAG_END_INITIAL);
     private readonly snapOffset = new Animated.Value(0);
     private readonly animatedNavBarTranslateY: Animated.Node<number>;
@@ -591,7 +595,7 @@ export class BrowserViewController extends React.Component<Props, State> {
 
         this.animatedNavBarTranslateY = interpolate(this.scrollY, {
             // -y means finger is moving upwards (so bar should retract)
-            inputRange: [-(HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT), (HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT)],
+            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
             outputRange: [HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT],
 
             /* To disable header retraction */
@@ -601,7 +605,7 @@ export class BrowserViewController extends React.Component<Props, State> {
         });
 
         this.animatedTitleOpacity = interpolate(this.scrollY, {
-            inputRange: [-(HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT), (HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT)],
+            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
             outputRange: [0, 1],
             extrapolate: Extrapolate.CLAMP,
         });
