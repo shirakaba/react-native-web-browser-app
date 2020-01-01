@@ -1,7 +1,7 @@
 import * as React from "react";
 import { URLBarView } from "./URLBarView";
 import { TopTabsViewController } from "./TopTabsViewController";
-import { Header } from "./Header";
+import { Header, RetractibleHeaderConnected } from "./Header";
 import { TabToolbar } from "./TabToolbar";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
@@ -13,6 +13,7 @@ import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'r
 import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GradientProgressBarConnected } from "~/Widgets/GradientProgressBar";
 import Animated, { not } from "react-native-reanimated";
+import { FooterConnected } from "./Footer";
 import { HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT, HEADER_RETRACTION_DISTANCE } from "./TabLocationView";
 const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
 
@@ -34,104 +35,6 @@ class TopTabsContainer extends React.Component<{}, {}> {
         );
     }
 }
-
-interface RetractibleHeaderProps {
-    scrollY: Animated.Value<number>,
-    animatedTitleOpacity: Animated.Node<number>,
-    animatedNavBarTranslateY: Animated.Node<number>,
-
-    percentRevealed: number,
-    urlBarText: string,
-    orientation: "portrait"|"landscape"|"unknown",
-    retraction: RetractionState,
-}
-
-// https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L61
-// Formerly named "NotchAreaCover".
-class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<ViewProps, "orientation">, {}> {
-    render(){
-        const { orientation, retraction, urlBarText, percentRevealed, style, children, ...rest } = this.props;
-
-        /* Dimensions based on: https://github.com/taisukeh/ScrollingBars */
-        // TODO: detect tablet vs. mobile on React Native.
-        // const revealedHeight: number = orientation === "portrait" || Device.deviceType === "Tablet" ? 64 : 44;
-        const revealedHeight: number = orientation === "portrait" ? 44 : 44;
-        const retractedHeight: number = orientation === "portrait" ? 30 : 0;
-
-        const heightDiff: number = revealedHeight - retractedHeight;
-        const factor: number = percentRevealed / 100;
-        const animatedHeight: number = (factor * heightDiff) + retractedHeight;
-
-        // console.log(`[RetractibleHeader] animatedHeight: ${animatedHeight}; ${factor} * ${heightDiff} + ${retractedHeight}; retraction ${retraction}`);
-
-        return (
-            <SafeAreaConsumer>
-                {(edgeInsets: EdgeInsets) => {
-                    const unsafeAreaCoverHeight: number = edgeInsets.top;
-
-                    return (
-                        <Animated.View
-                            style={{
-                                flexDirection: "column",
-                                // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
-                                justifyContent: "flex-end",
-                                // alignItems: "center",
-                                width: "100%",
-                                // height: animatedHeight + unsafeAreaCoverHeight,
-                                backgroundColor: "gray",
-
-                                paddingTop: edgeInsets.top,
-
-                                // transform: [
-                                //     {
-                                //         translateY: this.props.animatedNavBarTranslateY as any,
-                                //     },
-                                // ]
-                            }}
-                            // height={{ value: animatedHeight, unit: "dip" }}
-                            {...rest}
-                        >
-                            {/* TODO: make Header height shrink to new dynamic height */}
-                            <Header
-                                scrollY={this.props.scrollY}
-                                animatedTitleOpacity={this.props.animatedTitleOpacity}
-                                animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
-                                toolbarIsShowing={orientation === "landscape"}
-                                inOverlayMode={false}
-                                slotBackgroundColor={"darkgray"}
-                                textFieldBackgroundColor={"transparent"}
-                                buttonBackgroundColor={"transparent"}
-                                style={{
-                                    paddingLeft: edgeInsets.left,
-                                    paddingRight: edgeInsets.right,
-                                }}
-                            />
-                            <GradientProgressBarConnected
-                                style={{
-                                    width: "100%",
-                                }}
-                            />
-                        </Animated.View>
-                    );
-                }}
-            </SafeAreaConsumer>
-        );
-    }
-}
-
-
-const RetractibleHeaderConnected = connect(
-    (wholeStoreState: WholeStoreState) => {
-        // console.log(`wholeStoreState`, wholeStoreState);
-        // console.log(`percentRevealed: ${wholeStoreState.bars.header.percentRevealed}`);
-        return {
-            urlBarText: wholeStoreState.navigation.urlBarText,
-            retraction: wholeStoreState.bars.header.retraction,
-            percentRevealed: wholeStoreState.bars.header.percentRevealed,
-        };
-    },
-    {},
-)(RetractibleHeader);
 
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L110
@@ -456,91 +359,6 @@ class AlertStackView extends React.Component<ViewProps, {}> {
         );
     }
 }
-
-interface FooterOwnProps {
-    scrollY: Animated.Value<number>,
-    percentRevealed: number,
-    orientation: "portrait"|"landscape"|"unknown",
-    retraction: RetractionState,
-    showToolbar: boolean,
-};
-
-type FooterProps = FooterOwnProps & Omit<ViewProps, "orientation"|"style">;
-
-export const FOOTER_RETRACTED_HEIGHT: number = 0;
-export const FOOTER_REVEALED_HEIGHT: number = 44;
-
-// https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L103
-class Footer extends React.Component<FooterProps, {}> {
-    render(){
-        const { retraction, showToolbar, orientation, percentRevealed, children, ...rest } = this.props;
-
-        const revealedHeight: number = 44;
-        const retractedHeight: number = 0;
-
-        const heightDiff: number = revealedHeight - retractedHeight;
-        const factor: number = percentRevealed / 100;
-        const animatedHeight: number = (factor * heightDiff) + retractedHeight;
-
-        if(showToolbar){
-            /* Warning: I've tried other layouts (StackLayout and FlexboxLayout) here, but they shift
-             * horizontally after rotation. Only ContentView seems to escape this bug. */
-            return (
-                <SafeAreaConsumer>
-                    {(edgeInsets: EdgeInsets) => {
-                        const unsafeAreaCoverHeight: number = edgeInsets.bottom;
-
-                        return (
-                            <Animated.View
-                                style={{
-                                        flexDirection: "column",
-                                        width: "100%",
-                                        backgroundColor: "gray",
-                                        display: orientation === "landscape" ? "none" : "flex",
-                                        /* Combine this with auto height. */
-                                        // paddingBottom: unsafeAreaCoverHeight,
-                                        paddingLeft: edgeInsets.left,
-                                        paddingRight: edgeInsets.right,
-                                        
-                                        // height: FOOTER_REVEALED_HEIGHT + unsafeAreaCoverHeight,
-                                        height: interpolate(this.props.scrollY, {
-                                            // We'll keep the footer retraction in sync with that of the header retraction.
-                                            // -y means finger is moving upwards (so bar should retract)
-                                            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
-                                            outputRange: [FOOTER_RETRACTED_HEIGHT, add(FOOTER_REVEALED_HEIGHT, unsafeAreaCoverHeight)],
-                                            extrapolate: Extrapolate.CLAMP,
-                                        }),
-                                    }
-                                }
-                                // height={{ value: animatedHeight, unit: "dip" }}
-                                {...rest}
-                            >
-                                <TabToolbar/>
-                            </Animated.View>
-                        );
-                    }}    
-                </SafeAreaConsumer>
-            );
-        }
-
-        // Unclear what footer should do when not showing toolbar...
-        return (
-            <View>
-            </View>
-        );
-    }
-}
-
-const FooterConnected = connect(
-    (wholeStoreState: WholeStoreState) => {
-        // console.log(`wholeStoreState`, wholeStoreState);
-        return {
-            retraction: wholeStoreState.bars.footer.retraction,
-            percentRevealed: wholeStoreState.bars.footer.percentRevealed,
-        };
-    },
-    {},
-)(Footer);
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L65
 class OverlayBackground extends React.Component<ViewProps, {}> {

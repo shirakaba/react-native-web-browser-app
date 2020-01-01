@@ -1,7 +1,5 @@
 import * as React from "react";
 import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, TouchableOpacityProps, StyleSheet, StyleProp, TextStyle, processColor } from "react-native";
-// import { WebView, ActionBar, StackLayout, EventData, TextField, Color } from "@nativescript/core";
-// import { $WebView, $ActionBar, $StackLayout, $FlexboxLayout, $ContentView, $Image, $TextField, $GridLayout, $TextView } from "react-nativescript";
 import { ToolbarButton, ToolbarButtonProps } from "./ToolbarButton";
 import { PrivacyIndicatorView } from "~/Views/PrivacyIndicatorView";
 import { connect } from 'react-redux';
@@ -9,7 +7,7 @@ import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationS
 import { WholeStoreState } from "~/store/store";
 import { RetractionState } from "~/store/barsState";
 import normalizeColorToObj, { ColorObj } from "~/utils/normalizeColorToObj";
-import Animated, { Extrapolate } from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
 interface Props {
     scrollY: Animated.Value<number>,
