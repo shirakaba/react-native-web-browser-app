@@ -85,9 +85,9 @@ export class URLBarView extends React.Component<Props, State>{
             // i.e. landscape (so show all the items that the footer would normally handle)
             stackContents = (
                 <>
-                    <BackButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
-                    <ForwardButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
-                    <StopReloadButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
+                    <BackButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
+                    <ForwardButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
+                    <StopReloadButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
                     {/* AKA locationView. */}
                     <TabLocationViewConnected
                         scrollY={this.props.scrollY}
@@ -95,8 +95,8 @@ export class URLBarView extends React.Component<Props, State>{
                         animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
                         slotBackgroundColor={slotBackgroundColor} buttonBackgroundColor={buttonBackgroundColor} textFieldBackgroundColor={textFieldBackgroundColor}
                     />
-                    <TabsButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
-                    <MenuButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
+                    <TabsButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
+                    <MenuButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
                 </>
             );
         } else {
