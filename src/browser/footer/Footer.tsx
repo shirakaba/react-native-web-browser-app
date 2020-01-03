@@ -45,13 +45,11 @@ export class Footer extends React.Component<FooterProps, {}> {
                                         flexDirection: "column",
                                         width: "100%",
                                         backgroundColor: "gray",
-                                        display: orientation === "landscape" ? "none" : "flex",
                                         /* Combine this with auto height. */
                                         // paddingBottom: unsafeAreaCoverHeight,
                                         paddingLeft: edgeInsets.left,
                                         paddingRight: edgeInsets.right,
                                         
-                                        // height: FOOTER_REVEALED_HEIGHT + unsafeAreaCoverHeight,
                                         height: retractionStyle === RetractionStyle.alwaysRevealed ? 
                                             FOOTER_REVEALED_HEIGHT + unsafeAreaCoverHeight : 
                                             interpolate(this.props.scrollY, {

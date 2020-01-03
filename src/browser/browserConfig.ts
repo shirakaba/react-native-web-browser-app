@@ -52,7 +52,9 @@ export const defaultConfig: BrowserConfig = {
             portrait: [],
             landscape: [],
         },
-        portraitRetraction: RetractionStyle.alwaysRevealed,
+        portraitRetraction: RetractionStyle.retractToHidden,
+
+        // May consider promoting this on tablets to alwaysRevealed (requires react-native-device-info to detect).
         landscapeRetraction: RetractionStyle.retractToHidden,
     }
 };
