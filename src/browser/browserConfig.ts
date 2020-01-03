@@ -34,6 +34,10 @@ export interface HeaderConfig extends BarConfig {
     textFieldBackgroundColor?: string,
 }
 
+/**
+ * References are made to the header retraction/reveal heights because the footer
+ * is designed to retract at exactly the same rate as the header does.
+ */
 export interface FooterConfig extends BarConfig {
     HEADER_RETRACTED_HEIGHT?: number,
     HEADER_REVEALED_HEIGHT?: number,
