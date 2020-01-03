@@ -184,18 +184,18 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
         }
 
         // Where 1 is not compact and 0 is fully compact.
-        let compactionFactor;
+        let scaleFactor: number;
         switch(retractionStyle){
             case RetractionStyle.alwaysRevealed:
-                compactionFactor = 1;
+                scaleFactor = 1;
                 break;
             case RetractionStyle.alwaysHidden:
             case RetractionStyle.alwaysCompact:
-                compactionFactor = 0;
+                scaleFactor = 0;
                 break;
             case RetractionStyle.retractToCompact:
             case RetractionStyle.retractToHidden:
-                compactionFactor = this.props.animatedTitleOpacity as any;
+                scaleFactor = this.props.animatedTitleOpacity as any;
                 break;
         }
 
@@ -235,7 +235,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                         height: "100%",
                         borderRadius: 10,
                         backgroundColor: slotBackgroundColor,
-                        opacity: compactionFactor,
+                        opacity: scaleFactor,
                     }}
                 />
 
@@ -246,8 +246,8 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 <PrivacyIndicator
                     containerStyle={{
                         transform: [
-                            { scaleX: compactionFactor },
-                            { scaleY: compactionFactor },
+                            { scaleX: scaleFactor },
+                            { scaleY: scaleFactor },
                         ],
                     }}
                 />
@@ -278,8 +278,8 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 <PageOptionsButton
                     containerStyle={{
                         transform: [
-                            { scaleX: compactionFactor },
-                            { scaleY: compactionFactor },
+                            { scaleX: scaleFactor },
+                            { scaleY: scaleFactor },
                         ],
                     }}
                 />
