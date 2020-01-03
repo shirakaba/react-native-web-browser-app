@@ -12,7 +12,6 @@ interface Props {
     scrollY: Animated.Value<number>,
     animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateY: Animated.Node<number>,
-    percentRevealed: number,
     retraction: RetractionState,
     slotBackgroundColor?: string,
     buttonBackgroundColor?: string,
@@ -150,7 +149,7 @@ export const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADE
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
 
     render(){
-        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, percentRevealed, ...rest } = this.props;
+        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, ...rest } = this.props;
 
         return (
             /* self.view now flattened down to simplify UI. */
@@ -168,11 +167,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
 
                     /* Mirrors that of the round-cornered backdrop view. */
                     borderRadius: 10,
-
-                    // transform: [
-                    //     { scaleY: this.props.animatedTitleOpacity as any, },
-                    // ],
-                    // opacity: this.props.animatedTitleOpacity,
+                    
                     height: this.props.animatedNavBarTranslateY,
 
                     marginHorizontal: 8,
@@ -239,7 +234,6 @@ export const TabLocationViewConnected = connect(
         // console.log(`wholeStoreState`, wholeStoreState);
         return {
             retraction: wholeStoreState.bars.header.retraction,
-            percentRevealed: wholeStoreState.bars.header.percentRevealed,
         };
     },
     {},

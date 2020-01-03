@@ -142,7 +142,6 @@ interface RetractibleHeaderProps {
     animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateY: Animated.Node<number>,
 
-    percentRevealed: number,
     urlBarText: string,
     orientation: "portrait"|"landscape"|"unknown",
     retraction: RetractionState,
@@ -152,19 +151,7 @@ interface RetractibleHeaderProps {
 // Formerly named "NotchAreaCover".
 export class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<ViewProps, "orientation">, {}> {
     render(){
-        const { orientation, retraction, urlBarText, percentRevealed, style, children, ...rest } = this.props;
-
-        /* Dimensions based on: https://github.com/taisukeh/ScrollingBars */
-        // TODO: detect tablet vs. mobile on React Native.
-        // const revealedHeight: number = orientation === "portrait" || Device.deviceType === "Tablet" ? 64 : 44;
-        const revealedHeight: number = orientation === "portrait" ? 44 : 44;
-        const retractedHeight: number = orientation === "portrait" ? 30 : 0;
-
-        const heightDiff: number = revealedHeight - retractedHeight;
-        const factor: number = percentRevealed / 100;
-        const animatedHeight: number = (factor * heightDiff) + retractedHeight;
-
-        // console.log(`[RetractibleHeader] animatedHeight: ${animatedHeight}; ${factor} * ${heightDiff} + ${retractedHeight}; retraction ${retraction}`);
+        const { orientation, retraction, urlBarText, style, children, ...rest } = this.props;
 
         return (
             <SafeAreaConsumer>
@@ -179,21 +166,12 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                                 justifyContent: "flex-end",
                                 // alignItems: "center",
                                 width: "100%",
-                                // height: animatedHeight + unsafeAreaCoverHeight,
                                 backgroundColor: "gray",
 
                                 paddingTop: edgeInsets.top,
-
-                                // transform: [
-                                //     {
-                                //         translateY: this.props.animatedNavBarTranslateY as any,
-                                //     },
-                                // ]
                             }}
-                            // height={{ value: animatedHeight, unit: "dip" }}
                             {...rest}
                         >
-                            {/* TODO: make Header height shrink to new dynamic height */}
                             <Header
                                 scrollY={this.props.scrollY}
                                 toolbarIsShowing={orientation === "landscape"}
@@ -223,11 +201,9 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
 export const RetractibleHeaderConnected = connect(
     (wholeStoreState: WholeStoreState) => {
         // console.log(`wholeStoreState`, wholeStoreState);
-        // console.log(`percentRevealed: ${wholeStoreState.bars.header.percentRevealed}`);
         return {
             urlBarText: wholeStoreState.navigation.urlBarText,
             retraction: wholeStoreState.bars.header.retraction,
-            percentRevealed: wholeStoreState.bars.header.percentRevealed,
             orientation: wholeStoreState.ui.orientation,
         };
     },
