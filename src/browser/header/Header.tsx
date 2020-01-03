@@ -6,7 +6,7 @@ import { WholeStoreState } from "~/store/store";
 import { setBarsRetraction, RetractionState } from "~/store/barsState";
 import { View, ViewProps, StyleSheet, } from "react-native";
 import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
-import { GradientProgressBarConnected } from "~/browser/header/GradientProgressBar";
+import { GradientProgressBarConnected, GRADIENT_PROGRESS_BAR_HEIGHT } from "~/browser/header/GradientProgressBar";
 import Animated from "react-native-reanimated";
 const { interpolate, Extrapolate } = Animated;
 import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT, HEADER_CONTAINER_REVEALED_HEIGHT } from "./TabLocationView";
@@ -92,7 +92,7 @@ interface RetractibleHeaderProps {
     scrollY: Animated.Value<number>,
 
     urlBarText: string,
-    orientation: "portrait"|"landscape"|"unknown",
+    orientation: "portrait"|"landscape",
     retraction: RetractionState,
 }
 
@@ -173,36 +173,37 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                 {(edgeInsets: EdgeInsets) => {
                     const unsafeAreaCoverHeight: number = edgeInsets.top;
 
-                    // const autoHeightEquivalent: number = HEADER_REVEALED_HEIGHT + URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + 2;
-
+                    /* Landscape needs to slide offscreen so we need to estimate its fixed height (yes, this is fragile). */
+                    const landscapeRetractionStyle = orientation === "portrait" ? 
+                        {
+                            height: "auto",
+                        } : 
+                        {
+                            height: Animated.interpolate(
+                                this.animatedNavBarTranslateYLandscape,
+                                {
+                                    inputRange: [0, HEADER_REVEALED_HEIGHT],
+                                    outputRange: [0, HEADER_REVEALED_HEIGHT + URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + GRADIENT_PROGRESS_BAR_HEIGHT],
+                                    extrapolate: Extrapolate.CLAMP,
+                                }
+                            ),
+                        };
 
                     return (
                         <Animated.View
-                            style={{
-                                flexDirection: "column",
-                                // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
-                                justifyContent: "flex-end",
-                                // alignItems: "center",
-                                width: "100%",
-                                backgroundColor: "gray",
+                            style={[
+                                {
+                                    flexDirection: "column",
+                                    // Best to be flex-end (stack children upon bottom edge) so that the loading bar hangs on the edge.
+                                    justifyContent: "flex-end",
+                                    // alignItems: "center",
+                                    width: "100%",
+                                    backgroundColor: "gray",
 
-                                height: 
-                                    orientation === "portrait" ? 
-                                        Animated.add(
-                                            this.animatedNavBarTranslateYPortrait,
-                                            URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + 2
-                                        ) : 
-                                        Animated.interpolate(
-                                            this.animatedNavBarTranslateYLandscape,
-                                            {
-                                                inputRange: [0, HEADER_REVEALED_HEIGHT],
-                                                outputRange: [0, HEADER_REVEALED_HEIGHT + URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + 2],
-                                                extrapolate: Extrapolate.CLAMP,
-                                            }
-                                        ),
-
-                                paddingTop: edgeInsets.top,
-                            }}
+                                    paddingTop: edgeInsets.top,
+                                },
+                                landscapeRetractionStyle
+                            ]}
                             {...rest}
                         >
                             <Header

@@ -15,6 +15,8 @@ interface State {
     barWidth: Animated.Value,
 }
 
+export const GRADIENT_PROGRESS_BAR_HEIGHT: number = 2;
+
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift
 class GradientProgressBar extends React.Component<GradientProgressBarProps, State>{
     constructor(props: GradientProgressBarProps){
@@ -81,7 +83,7 @@ class GradientProgressBar extends React.Component<GradientProgressBarProps, Stat
             >
                 <Animated.View
                     style={{
-                        height: 2,
+                        height: GRADIENT_PROGRESS_BAR_HEIGHT,
                         backgroundColor: "blue",
                         width: this.state.barWidth.interpolate({
                             inputRange: [0, 1],
