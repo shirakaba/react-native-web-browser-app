@@ -228,6 +228,7 @@ export const RetractibleHeaderConnected = connect(
             urlBarText: wholeStoreState.navigation.urlBarText,
             retraction: wholeStoreState.bars.header.retraction,
             percentRevealed: wholeStoreState.bars.header.percentRevealed,
+            orientation: wholeStoreState.ui.orientation,
         };
     },
     {},

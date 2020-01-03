@@ -1,11 +1,14 @@
 import * as React from "react";
 import { RetractibleHeaderConnected } from "./header/Header";
-import { View, ViewProps, StyleSheet } from "react-native";
+import { View, ViewProps, StyleSheet, Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { FooterConnected } from "./footer/Footer";
 import { HEADER_RETRACTION_DISTANCE } from "./header/TabLocationView";
 import { DRAG_END_INITIAL } from "./bothBars/barSpring";
 import { WebViewContainerConnected, WebViewContainerBackdrop } from "./WebViewContainer";
+import { isPortrait, updateOrientation } from "~/store/uiState";
+import { connect } from "react-redux";
+import { WholeStoreState } from "~/store/store";
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -52,7 +55,7 @@ const BrowserViewControllerUX = {
 // }
 
 interface Props {
-    orientation: "portrait"|"landscape"|"unknown",
+    updateOrientation: typeof updateOrientation,
 }
 
 interface State {
@@ -66,8 +69,20 @@ export class BrowserViewController extends React.Component<Props, State> {
     private readonly animatedNavBarTranslateY: Animated.Node<number>;
     private readonly animatedTitleOpacity: Animated.Node<number>;
 
+    private readonly onOrientationChange = () => {
+        this.props.updateOrientation(isPortrait() ? 'portrait' : 'landscape');
+    };
+
+    componentDidMount(){
+        Dimensions.addEventListener('change', this.onOrientationChange);
+    }
+    
+    componentWillUnmount(){
+        Dimensions.removeEventListener('change', this.onOrientationChange);
+    }
+
     render(){
-        const { orientation } = this.props;
+        const { } = this.props;
         // Visibility of certain components changes when switching app (if in private browsing mode)
         // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L343
 
@@ -85,7 +100,6 @@ export class BrowserViewController extends React.Component<Props, State> {
                     scrollY={this.scrollY}
                     animatedTitleOpacity={this.animatedTitleOpacity}
                     animatedNavBarTranslateY={this.animatedNavBarTranslateY}
-                    orientation={orientation}
                 />
 
                 <View
@@ -127,7 +141,6 @@ export class BrowserViewController extends React.Component<Props, State> {
 
                     <FooterConnected
                         scrollY={this.scrollY}
-                        orientation={orientation}
                         showToolbar={true}
                     />
                 </View>
@@ -135,3 +148,13 @@ export class BrowserViewController extends React.Component<Props, State> {
         );
     }
 }
+
+export const BrowserViewControllerConnected = connect(
+    (wholeStoreState: WholeStoreState) => {
+        // console.log(`wholeStoreState`, wholeStoreState);
+        return {};
+    },
+    {
+        updateOrientation: updateOrientation
+    },
+)(BrowserViewController);

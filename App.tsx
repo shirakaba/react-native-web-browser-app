@@ -3,56 +3,25 @@ import { View, Text, StyleSheet, Dimensions, Platform } from 'react-native';
 // import { BrowserViewController } from '~/browser/BrowserViewController';
 import { Provider } from 'react-redux';
 import { store } from '~/store/store';
-import { BrowserViewController } from "~/browser/BrowserViewController";
+import { BrowserViewControllerConnected } from "~/browser/BrowserViewController";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
-function isPortrait(): boolean {
-    const { width, height } = Dimensions.get('screen');
-    return height >= width;
-};
 
 interface Props {
 }
 
 interface State {
-    orientation: "portrait"|"landscape",
 }
 
 class AppContainer extends React.Component<Props, State> {
-    constructor(props){
-        super(props);
-
-        this.state = {
-            orientation: isPortrait() ? 'portrait' : 'landscape',
-        };
-    }
-
-    private readonly onOrientationChange = () => {
-        this.setState({
-            orientation: isPortrait() ? 'portrait' : 'landscape'
-        });
-    };
-
-    componentDidMount(){
-        Dimensions.addEventListener('change', this.onOrientationChange);
-        
-        // const page: Page = this.props.forwardedRef.current!;
-        // page.addCssFile("./components/AppContainer.scss"); // Path is relative to the 'app' folder; not relative to this file!
-    }
-    
-    componentWillUnmount(){
-        Dimensions.removeEventListener('change', this.onOrientationChange);
-    }
-
     render(){
         const { } = this.props;
-        const { orientation } = this.state;
+        const { } = this.state;
 
         return (
             <SafeAreaProvider>
                 <Provider store={store}>
                     <View style={styles.container}>
-                        <BrowserViewController orientation={orientation}/>
+                        <BrowserViewControllerConnected/>
                         {/* <Text>AppContainer</Text> */}
                     </View>
                 </Provider>

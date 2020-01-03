@@ -13,7 +13,7 @@ const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, les
 interface FooterOwnProps {
     scrollY: Animated.Value<number>,
     percentRevealed: number,
-    orientation: "portrait"|"landscape"|"unknown",
+    orientation: "portrait"|"landscape",
     retraction: RetractionState,
     showToolbar: boolean,
 };
@@ -90,6 +90,7 @@ export const FooterConnected = connect(
         return {
             retraction: wholeStoreState.bars.footer.retraction,
             percentRevealed: wholeStoreState.bars.footer.percentRevealed,
+            orientation: wholeStoreState.ui.orientation,
         };
     },
     {},
