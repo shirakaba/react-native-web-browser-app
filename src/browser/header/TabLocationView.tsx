@@ -5,7 +5,7 @@ import { PrivacyIndicatorView } from "~/browser/header/PrivacyIndicatorView";
 import { connect } from 'react-redux';
 import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationState";
 import { WholeStoreState } from "~/store/store";
-import Animated from "react-native-reanimated";
+import Animated, { Transitioning } from "react-native-reanimated";
 import { HeaderConfig, RetractionStyle } from "../browserConfig";
 
 const TabLocationViewUX = {
@@ -31,7 +31,7 @@ class LockImageView extends React.Component<{ locked: boolean } & ToolbarButtonP
 
 class ClearUrlBarTextButton extends React.Component<{ urlBarText: string, updateUrlBarText: typeof updateUrlBarText, } & ToolbarButtonProps, {}> {
     private readonly onClearButtonPress = () => {
-        this.props.updateUrlBarText("");
+        this.props.updateUrlBarText({ text: "", fromNavigationEvent: false });
     };
 
     render(){
@@ -74,7 +74,7 @@ interface DisplayTextFieldProps {
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L319
 class DisplayTextField extends React.Component<DisplayTextFieldProps & TextInputProps, {}> {
     private readonly onChangeText = (text: string) => {
-        this.props.updateUrlBarText(text);
+        this.props.updateUrlBarText({ text, fromNavigationEvent: false });
     };
 
     private readonly onSubmitEditing = (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
@@ -164,6 +164,7 @@ export const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADE
 
 
 interface Props {
+    activeTabIsSecure: boolean|null,
     urlBarText: string,
     updateUrlBarText: typeof updateUrlBarText,
     config: HeaderConfig,
@@ -180,7 +181,7 @@ interface State {
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
     render(){
-        const { urlBarText, config, orientation, ...rest } = this.props;
+        const { activeTabIsSecure, urlBarText, config, orientation, ...rest } = this.props;
         const { buttons, slotBackgroundColor = "darkgray", textFieldBackgroundColor = "transparent", landscapeRetraction, portraitRetraction } = config;
         const retractionStyle: RetractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
 
@@ -281,8 +282,10 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 {/* privacyIndicatorSeparator */}
                 <View style={{ width: 3 }}/>
                 <LockImageView
-                    locked={true}
+                    locked={!!activeTabIsSecure}
                     containerStyle={{
+                        /* I'm not sure how ftp:// and sftp:// links are usually represented, so we'll hide the lock altogether. */
+                        display: activeTabIsSecure === null ? "none": "flex",
                         /* Nothing to do with animation; just my lazy way of making it more compact. */
                         transform: [
                             { scaleX: 0.66 },
@@ -325,10 +328,11 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
 
 export const TabLocationViewConnected = connect(
     (wholeStoreState: WholeStoreState) => {
-        // console.log(`wholeStoreState`, wholeStoreState);
+        // console.log(`wholeStoreState.navigation.urlBarText`, wholeStoreState.navigation.urlBarText);
         return {
             orientation: wholeStoreState.ui.orientation,
             urlBarText: wholeStoreState.navigation.urlBarText,
+            activeTabIsSecure: wholeStoreState.navigation.tabs[wholeStoreState.navigation.activeTab].isSecure,
         };
     },
     {

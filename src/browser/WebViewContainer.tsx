@@ -64,7 +64,7 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
         if(Platform.OS === "ios" || Platform.OS === "macos"){
             /* iOS seems to fire loading events on the non-main frame, so onLoadCommitted event is the best one on which to update the main-frame URL.
              * This event doesn't exist on Android to my knowledge, so I haven't hooked it up in BetterWebView. */
-            this.props.updateUrlBarText(url);
+            this.props.updateUrlBarText({ text: url, fromNavigationEvent: true });
         }
         this.props.updateWebViewNavigationState({ canGoBack, canGoForward, tab: this.props.activeTab });
     };
@@ -78,7 +78,7 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
 
         if(Platform.OS === "android"){
             /* TODO: check whether Android fires onLoadFinished at sensible moments for updating the URL bar text. */
-            this.props.updateUrlBarText(url);
+            this.props.updateUrlBarText({ text: url, fromNavigationEvent: true });
         }
         this.props.updateWebViewNavigationState({ canGoBack, canGoForward, tab: this.props.activeTab });
     };

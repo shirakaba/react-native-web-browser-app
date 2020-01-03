@@ -22,6 +22,7 @@ const navigationSlice = createSlice({
         tabs: {
             tab0: {
                 url: initialPage,
+                isSecure: true,
                 loadProgress: 0,
                 canGoBack: false,
                 canGoForward: false,
@@ -34,10 +35,13 @@ const navigationSlice = createSlice({
         /**
          * Update the singleton URL bar's displayed text (does not launch a query).
          */
-        updateUrlBarText(state, action: PayloadAction<string>) {
-            // console.log(`[navigationState.ts] updateUrlBarText action ${JSON.stringify(action)} and state`, state);
-            const text = action.payload;
+        updateUrlBarText(state, action: PayloadAction<{ text: string, fromNavigationEvent: boolean }>) {
+            console.log(`[navigationState.ts] updateUrlBarText action ${JSON.stringify(action)} and state`, state);
+            const { text, fromNavigationEvent } = action.payload;
             state.urlBarText = text;
+            if(fromNavigationEvent){
+                state.tabs[state.activeTab].isSecure = text.startsWith("https://") ? true : text.startsWith("http://") ? false : null;
+            }
         },
         updateWebViewNavigationState(state, action: PayloadAction<{ canGoBack: boolean, canGoForward: boolean, tab?: string }>){
             const { canGoBack, canGoForward, tab = state.activeTab } = action.payload;
@@ -53,6 +57,7 @@ const navigationSlice = createSlice({
             state.tabs[tab] = {
                 ...state.tabs[tab],
                 url,
+                isSecure: url.startsWith("https://") ? true : url.startsWith("http://") ? false : null,
                 loadProgress: 0,
             };
         },
