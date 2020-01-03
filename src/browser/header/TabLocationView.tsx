@@ -8,18 +8,6 @@ import { WholeStoreState } from "~/store/store";
 import Animated from "react-native-reanimated";
 import { HeaderConfig, RetractionStyle } from "../browserConfig";
 
-interface Props {
-    config: HeaderConfig,
-    orientation: "portrait"|"landscape",
-    scrollY: Animated.Value<number>,
-    animatedTitleOpacity: Animated.Node<number>,
-    animatedNavBarTranslateYPortrait: Animated.Node<number>,
-    animatedNavBarTranslateYLandscape: Animated.Node<number>,
-}
-
-interface State {
-}
-
 const TabLocationViewUX = {
     Spacing: 8,
     PlaceholderLefPadding: 12,
@@ -144,11 +132,29 @@ export const HEADER_RETRACTED_HEIGHT: number = 22;
 export const HEADER_REVEALED_HEIGHT: number = 44;
 export const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT;
 
+
+interface Props {
+    urlBarText: string,
+    updateUrlBarText: typeof updateUrlBarText,
+    config: HeaderConfig,
+    orientation: "portrait"|"landscape",
+    scrollY: Animated.Value<number>,
+    animatedTitleOpacity: Animated.Node<number>,
+    animatedNavBarTranslateYPortrait: Animated.Node<number>,
+    animatedNavBarTranslateYLandscape: Animated.Node<number>,
+}
+
+interface State {
+}
+
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
+    private readonly onClearButtonPress = () => {
+        this.props.updateUrlBarText("");
+    };
 
     render(){
-        const { config, orientation, ...rest } = this.props;
+        const { urlBarText, config, orientation, ...rest } = this.props;
         const { buttons, slotBackgroundColor = "darkgray", textFieldBackgroundColor = "transparent", landscapeRetraction, portraitRetraction } = config;
         const retractionStyle: RetractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
 
@@ -255,6 +261,20 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                         flexGrow: 1,
                     }}
                 />
+                {/* Text clear button */}
+                <ToolbarButton
+                    onPress={this.onClearButtonPress}
+                    name={"times-circle"}
+                    solid
+                    containerStyle={{
+                        display: urlBarText.length > 0 ? "flex": "none",
+                        /* Nothing to do with animation; just my lazy way of making it more compact. */
+                        transform: [
+                            { scaleX: 0.80 },
+                            { scaleY: 0.80 },
+                        ]
+                    }}
+                />
                 <PageOptionsButton
                     containerStyle={{
                         transform: [
@@ -276,7 +296,10 @@ export const TabLocationViewConnected = connect(
         // console.log(`wholeStoreState`, wholeStoreState);
         return {
             orientation: wholeStoreState.ui.orientation,
+            urlBarText: wholeStoreState.navigation.urlBarText,
         };
     },
-    {},
+    {
+        updateUrlBarText,
+    },
 )(TabLocationView);
