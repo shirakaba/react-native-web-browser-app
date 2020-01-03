@@ -15,7 +15,6 @@ interface State {
 class AppContainer extends React.Component<Props, State> {
     render(){
         const { } = this.props;
-        const { } = this.state;
 
         return (
             <SafeAreaProvider>
