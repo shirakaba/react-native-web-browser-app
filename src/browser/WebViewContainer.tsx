@@ -37,8 +37,6 @@ interface WebViewContainerProps {
     scrollY: Animated.Value<number>,
     scrollEndDragVelocity: Animated.Value<number>,
     snapOffset: Animated.Value<number>,
-    animatedNavBarTranslateY: Animated.Node<number>,
-    animatedTitleOpacity: Animated.Node<number>,
 
     barsState: WholeStoreState["bars"],
     activeTab: string,

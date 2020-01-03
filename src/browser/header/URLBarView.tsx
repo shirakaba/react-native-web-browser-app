@@ -13,7 +13,8 @@ import Animated from "react-native-reanimated";
 interface Props {
     scrollY: Animated.Value<number>,
     animatedTitleOpacity: Animated.Node<number>,
-    animatedNavBarTranslateY: Animated.Node<number>,
+    animatedNavBarTranslateYPortait: Animated.Node<number>,
+    animatedNavBarTranslateYLandscape: Animated.Node<number>,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
     buttonBackgroundColor?: string,
@@ -92,8 +93,11 @@ export class URLBarView extends React.Component<Props, State>{
                     <TabLocationViewConnected
                         scrollY={this.props.scrollY}
                         animatedTitleOpacity={this.props.animatedTitleOpacity}
-                        animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
-                        slotBackgroundColor={slotBackgroundColor} buttonBackgroundColor={buttonBackgroundColor} textFieldBackgroundColor={textFieldBackgroundColor}
+                        animatedNavBarTranslateYLandscape={this.props.animatedNavBarTranslateYLandscape}
+                        animatedNavBarTranslateYPortrait={this.props.animatedNavBarTranslateYPortait}
+                        slotBackgroundColor={slotBackgroundColor}
+                        buttonBackgroundColor={buttonBackgroundColor}
+                        textFieldBackgroundColor={textFieldBackgroundColor}
                     />
                     <TabsButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
                     <MenuButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
@@ -107,7 +111,8 @@ export class URLBarView extends React.Component<Props, State>{
                     <TabLocationViewConnected
                         scrollY={this.props.scrollY}
                         animatedTitleOpacity={this.props.animatedTitleOpacity}
-                        animatedNavBarTranslateY={this.props.animatedNavBarTranslateY}
+                        animatedNavBarTranslateYLandscape={this.props.animatedNavBarTranslateYLandscape}
+                        animatedNavBarTranslateYPortrait={this.props.animatedNavBarTranslateYPortait}
                         slotBackgroundColor={slotBackgroundColor}
                         buttonBackgroundColor={buttonBackgroundColor}
                         textFieldBackgroundColor={textFieldBackgroundColor}

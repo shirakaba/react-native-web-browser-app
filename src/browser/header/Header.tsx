@@ -7,9 +7,9 @@ import { setBarsRetraction, RetractionState } from "~/store/barsState";
 import { View, ViewProps, StyleSheet, } from "react-native";
 import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GradientProgressBarConnected } from "~/browser/header/GradientProgressBar";
-import Animated, { not } from "react-native-reanimated";
-import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
+import Animated from "react-native-reanimated";
 const { interpolate, Extrapolate } = Animated;
+import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
 
 class TopTabsContainer extends React.Component<{}, {}>{
 
@@ -23,6 +23,10 @@ class TopTabsContainer extends React.Component<{}, {}>{
 }
 
 interface Props {
+    animatedNavBarTranslateYPortrait: Animated.Node<number>,
+    animatedNavBarTranslateYLandscape: Animated.Node<number>,
+    animatedTitleOpacity: Animated.Node<number>,
+
     scrollY: Animated.Value<number>,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
@@ -38,10 +42,68 @@ interface State {
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L105
 // Header used to have a subchild, "UrlBarTopTabsContainer", but that has now been flattened.
 export class Header extends React.Component<Props & ViewProps, State>{
-    private readonly animatedNavBarTranslateY: Animated.Node<number>;
+    render(){
+        const {
+            slotBackgroundColor,
+            textFieldBackgroundColor,
+            buttonBackgroundColor,
+            toolbarIsShowing,
+            inOverlayMode,
+            style,
+            children,
+            ...rest
+        } = this.props;
+        return (
+            <View
+                style={StyleSheet.compose(
+                    {
+                        flexDirection: 'column',
+                        
+                        justifyContent: "flex-start",
+                        marginHorizontal: 4,
+                        // flex: 1,
+                        // backgroundColor: "orange",
+                    },
+                    style
+                )}
+                {...rest}
+            >
+                {/* urlBar */}
+                <URLBarView
+                    scrollY={this.props.scrollY}
+                    animatedTitleOpacity={this.props.animatedTitleOpacity}
+                    animatedNavBarTranslateYLandscape={this.props.animatedNavBarTranslateYLandscape}
+                    animatedNavBarTranslateYPortait={this.props.animatedNavBarTranslateYPortrait}
+                    inOverlayMode={inOverlayMode}
+                    toolbarIsShowing={toolbarIsShowing}
+                    slotBackgroundColor={slotBackgroundColor}
+                    textFieldBackgroundColor={textFieldBackgroundColor}
+                    buttonBackgroundColor={buttonBackgroundColor}
+                />
+                {/* topTabsContainer */}
+                <TopTabsContainer/>
+            </View>
+        );
+    }
+}
+
+
+interface RetractibleHeaderProps {
+    scrollY: Animated.Value<number>,
+
+    urlBarText: string,
+    orientation: "portrait"|"landscape"|"unknown",
+    retraction: RetractionState,
+}
+
+// https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L61
+// Formerly named "NotchAreaCover".
+export class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<ViewProps, "orientation">, {}> {
+    private readonly animatedNavBarTranslateYPortrait: Animated.Node<number>;
+    private readonly animatedNavBarTranslateYLandscape: Animated.Node<number>;
     private readonly animatedTitleOpacity: Animated.Node<number>;
 
-    constructor(props: Props & ViewProps){
+    constructor(props: RetractibleHeaderProps & Omit<ViewProps, "orientation">){
         super(props);
 
         // const diffClampNode = diffClamp(
@@ -74,10 +136,21 @@ export class Header extends React.Component<Props & ViewProps, State>{
         //     inverseDiffClampNode,
         // );
 
-        this.animatedNavBarTranslateY = interpolate(this.props.scrollY, {
+        this.animatedNavBarTranslateYPortrait = interpolate(this.props.scrollY, {
             // -y means finger is moving upwards (so bar should retract)
-            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
+            inputRange: [-HEADER_RETRACTION_DISTANCE, HEADER_RETRACTION_DISTANCE],
             outputRange: [HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT],
+
+            /* To disable header retraction */
+            // outputRange: [HEADER_REVEALED_HEIGHT, HEADER_REVEALED_HEIGHT],
+            
+            extrapolate: Extrapolate.CLAMP,
+        });
+
+        this.animatedNavBarTranslateYLandscape = interpolate(this.props.scrollY, {
+            // -y means finger is moving upwards (so bar should retract)
+            inputRange: [-HEADER_RETRACTION_DISTANCE, HEADER_RETRACTION_DISTANCE],
+            outputRange: [0, HEADER_REVEALED_HEIGHT],
 
             /* To disable header retraction */
             // outputRange: [HEADER_REVEALED_HEIGHT, HEADER_REVEALED_HEIGHT],
@@ -92,64 +165,6 @@ export class Header extends React.Component<Props & ViewProps, State>{
         });
     }
 
-    render(){
-        const {
-            slotBackgroundColor,
-            textFieldBackgroundColor,
-            buttonBackgroundColor,
-            toolbarIsShowing,
-            inOverlayMode,
-            style,
-            children,
-            ...rest
-        } = this.props;
-        return (
-            <View
-                style={StyleSheet.compose(
-                    {
-                        flexDirection: 'column',
-                        
-                        justifyContent: "flex-start",
-                        marginHorizontal: 4,
-                        // flex: 1,
-                        // backgroundColor: "orange",
-                    },
-                    style
-                )}
-                {...rest}
-            >
-                {/* urlBar */}
-                <URLBarView
-                    scrollY={this.props.scrollY}
-                    animatedTitleOpacity={this.animatedTitleOpacity}
-                    animatedNavBarTranslateY={this.animatedNavBarTranslateY}
-                    inOverlayMode={inOverlayMode}
-                    toolbarIsShowing={toolbarIsShowing}
-                    slotBackgroundColor={slotBackgroundColor}
-                    textFieldBackgroundColor={textFieldBackgroundColor}
-                    buttonBackgroundColor={buttonBackgroundColor}
-                />
-                {/* topTabsContainer */}
-                <TopTabsContainer/>
-            </View>
-        );
-    }
-}
-
-
-interface RetractibleHeaderProps {
-    scrollY: Animated.Value<number>,
-    animatedTitleOpacity: Animated.Node<number>,
-    animatedNavBarTranslateY: Animated.Node<number>,
-
-    urlBarText: string,
-    orientation: "portrait"|"landscape"|"unknown",
-    retraction: RetractionState,
-}
-
-// https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L61
-// Formerly named "NotchAreaCover".
-export class RetractibleHeader extends React.Component<RetractibleHeaderProps & Omit<ViewProps, "orientation">, {}> {
     render(){
         const { orientation, retraction, urlBarText, style, children, ...rest } = this.props;
 
@@ -168,12 +183,18 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                                 width: "100%",
                                 backgroundColor: "gray",
 
+                                // height: orientation === "portrait" ? this.animatedNavBarTranslateYPortrait : this.animatedNavBarTranslateYLandscape,
+                                // height: this.animatedNavBarTranslateYPortrait,
+
                                 paddingTop: edgeInsets.top,
                             }}
                             {...rest}
                         >
                             <Header
                                 scrollY={this.props.scrollY}
+                                animatedNavBarTranslateYLandscape={this.animatedNavBarTranslateYLandscape}
+                                animatedNavBarTranslateYPortrait={this.animatedNavBarTranslateYPortrait}
+                                animatedTitleOpacity={this.animatedTitleOpacity}
                                 toolbarIsShowing={orientation === "landscape"}
                                 inOverlayMode={false}
                                 slotBackgroundColor={"darkgray"}

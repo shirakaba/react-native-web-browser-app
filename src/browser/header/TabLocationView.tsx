@@ -9,9 +9,11 @@ import { RetractionState } from "~/store/barsState";
 import Animated from "react-native-reanimated";
 
 interface Props {
+    orientation: "portrait"|"landscape",
     scrollY: Animated.Value<number>,
     animatedTitleOpacity: Animated.Node<number>,
-    animatedNavBarTranslateY: Animated.Node<number>,
+    animatedNavBarTranslateYPortrait: Animated.Node<number>,
+    animatedNavBarTranslateYLandscape: Animated.Node<number>,
     retraction: RetractionState,
     slotBackgroundColor?: string,
     buttonBackgroundColor?: string,
@@ -149,7 +151,7 @@ export const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADE
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
 
     render(){
-        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, ...rest } = this.props;
+        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, orientation, ...rest } = this.props;
 
         return (
             /* self.view now flattened down to simplify UI. */
@@ -168,7 +170,9 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     /* Mirrors that of the round-cornered backdrop view. */
                     borderRadius: 10,
                     
-                    height: this.props.animatedNavBarTranslateY,
+                    height: this.props.animatedNavBarTranslateYPortrait,
+                    // height: orientation === "portrait" ? this.props.animatedNavBarTranslateYPortrait : this.props.animatedNavBarTranslateYLandscape,
+                    // overflow: "hidden",
 
                     marginHorizontal: 8,
                     /* paddingVertical actually causes the text overflow to get clipped, so we'll instead get our padding
@@ -233,6 +237,7 @@ export const TabLocationViewConnected = connect(
     (wholeStoreState: WholeStoreState) => {
         // console.log(`wholeStoreState`, wholeStoreState);
         return {
+            orientation: wholeStoreState.ui.orientation, 
             retraction: wholeStoreState.bars.header.retraction,
         };
     },
