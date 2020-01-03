@@ -39,9 +39,36 @@ export class Footer extends React.Component<FooterProps, {}> {
                     {(edgeInsets: EdgeInsets) => {
                         const unsafeAreaCoverHeight: number = edgeInsets.bottom;
 
+                        let heightStyle;
+                        switch(retractionStyle){
+                            case RetractionStyle.alwaysRevealed:
+                                heightStyle = {
+                                    // height: "auto",
+                                    height: FOOTER_REVEALED_HEIGHT + unsafeAreaCoverHeight,
+                                };
+                                break;
+                            // case RetractionStyle.retractToCompact:
+                            case RetractionStyle.retractToHidden:
+                                heightStyle = {
+                                    height: interpolate(this.props.scrollY, {
+                                        // We'll keep the footer retraction in sync with that of the header retraction.
+                                        // -y means finger is moving upwards (so bar should retract)
+                                        inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
+                                        outputRange: [FOOTER_RETRACTED_HEIGHT, add(FOOTER_REVEALED_HEIGHT, unsafeAreaCoverHeight)],
+                                        extrapolate: Extrapolate.CLAMP,
+                                    }),
+                                };
+                                break;
+                            case RetractionStyle.alwaysHidden:
+                                heightStyle = {
+                                    height: FOOTER_RETRACTED_HEIGHT
+                                };
+                        }
+
                         return (
                             <Animated.View
-                                style={{
+                                style={[
+                                    {
                                         flexDirection: "column",
                                         width: "100%",
                                         backgroundColor: "gray",
@@ -49,18 +76,9 @@ export class Footer extends React.Component<FooterProps, {}> {
                                         // paddingBottom: unsafeAreaCoverHeight,
                                         paddingLeft: edgeInsets.left,
                                         paddingRight: edgeInsets.right,
-                                        
-                                        height: retractionStyle === RetractionStyle.alwaysRevealed ? 
-                                            FOOTER_REVEALED_HEIGHT + unsafeAreaCoverHeight : 
-                                            interpolate(this.props.scrollY, {
-                                                // We'll keep the footer retraction in sync with that of the header retraction.
-                                                // -y means finger is moving upwards (so bar should retract)
-                                                inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
-                                                outputRange: [FOOTER_RETRACTED_HEIGHT, add(FOOTER_REVEALED_HEIGHT, unsafeAreaCoverHeight)],
-                                                extrapolate: Extrapolate.CLAMP,
-                                            }),
-                                    }
-                                }
+                                    },
+                                    heightStyle
+                                ]}
                                 // height={{ value: animatedHeight, unit: "dip" }}
                                 {...rest}
                             >

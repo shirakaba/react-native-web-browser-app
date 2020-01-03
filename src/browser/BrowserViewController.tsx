@@ -96,6 +96,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                 }}
             >
                 <RetractibleHeaderConnected
+                    config={config.header}
                     scrollY={this.scrollY}
                 />
 

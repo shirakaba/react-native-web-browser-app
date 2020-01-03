@@ -7,10 +7,12 @@ import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { View } from "react-native";
 import Animated from "react-native-reanimated";
+import { HeaderConfig } from "../browserConfig";
 
 /* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/URLBarView.swift */
 
 interface Props {
+    config: HeaderConfig,
     scrollY: Animated.Value<number>,
     animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateYPortait: Animated.Node<number>,
@@ -70,7 +72,7 @@ export class URLBarView extends React.Component<Props, State>{
     }
 
     render(){
-        const { slotBackgroundColor = "gray", textFieldBackgroundColor = "white", buttonBackgroundColor = "transparent", toolbarIsShowing, inOverlayMode } = this.props;
+        const { config, slotBackgroundColor = "gray", textFieldBackgroundColor = "white", buttonBackgroundColor = "transparent", toolbarIsShowing, inOverlayMode } = this.props;
         const { } = this.state;
 
         let stackContents: React.ReactNode;
@@ -93,6 +95,7 @@ export class URLBarView extends React.Component<Props, State>{
                     <StopReloadButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
                     {/* AKA locationView. */}
                     <TabLocationViewConnected
+                        config={config}
                         scrollY={this.props.scrollY}
                         animatedTitleOpacity={this.props.animatedTitleOpacity}
                         animatedNavBarTranslateYLandscape={this.props.animatedNavBarTranslateYLandscape}
@@ -111,6 +114,7 @@ export class URLBarView extends React.Component<Props, State>{
                 <>
                     {/* AKA locationView. */}
                     <TabLocationViewConnected
+                        config={config}
                         scrollY={this.props.scrollY}
                         animatedTitleOpacity={this.props.animatedTitleOpacity}
                         animatedNavBarTranslateYLandscape={this.props.animatedNavBarTranslateYLandscape}

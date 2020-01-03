@@ -1,5 +1,6 @@
 export enum RetractionStyle {
     alwaysRevealed = "alwaysRevealed",
+    alwaysHidden = "alwaysHidden",
     /* Displays text and icons but not buttons, which would be too small to tap */
     retractToCompact = "retractToCompact",
     retractToHidden = "retractToHidden",
@@ -19,8 +20,8 @@ export interface HeaderConfig extends BarConfig {
         portrait: [],
         landscape: [],
     },
-    portraitRetraction: RetractionStyle.retractToCompact,
-    landscapeRetraction: RetractionStyle.retractToCompact|RetractionStyle.retractToHidden,
+    portraitRetraction: RetractionStyle,
+    landscapeRetraction: RetractionStyle,
 }
 
 export interface FooterConfig extends BarConfig {
@@ -28,8 +29,8 @@ export interface FooterConfig extends BarConfig {
         portrait: [],
         landscape: [],
     },
-    portraitRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden,
-    landscapeRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden,
+    portraitRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden|RetractionStyle.alwaysHidden,
+    landscapeRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden|RetractionStyle.alwaysHidden,
 }
 
 export interface BrowserConfig {
@@ -55,6 +56,6 @@ export const defaultConfig: BrowserConfig = {
         portraitRetraction: RetractionStyle.retractToHidden,
 
         // May consider promoting this on tablets to alwaysRevealed (requires react-native-device-info to detect).
-        landscapeRetraction: RetractionStyle.retractToHidden,
+        landscapeRetraction: RetractionStyle.alwaysHidden,
     }
 };

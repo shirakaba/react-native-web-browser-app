@@ -6,8 +6,10 @@ import { connect } from 'react-redux';
 import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationState";
 import { WholeStoreState } from "~/store/store";
 import Animated from "react-native-reanimated";
+import { HeaderConfig, RetractionStyle } from "../browserConfig";
 
 interface Props {
+    config: HeaderConfig,
     orientation: "portrait"|"landscape",
     scrollY: Animated.Value<number>,
     animatedTitleOpacity: Animated.Node<number>,
@@ -149,7 +151,29 @@ export const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADE
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
 
     render(){
-        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", orientation, ...rest } = this.props;
+        const { config, slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", orientation, ...rest } = this.props;
+        const { buttons, landscapeRetraction, portraitRetraction } = config;
+        const retractionStyle: RetractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
+
+        let heightStyle;
+        switch(retractionStyle){
+            case RetractionStyle.alwaysRevealed:
+                heightStyle = {
+                    // height: "auto",
+                    height: HEADER_REVEALED_HEIGHT,
+                };
+                break;
+            case RetractionStyle.retractToCompact:
+            case RetractionStyle.retractToHidden:
+                heightStyle = {
+                    height: this.props.animatedNavBarTranslateYPortrait,
+                };
+                break;
+            case RetractionStyle.alwaysHidden:
+                heightStyle = {
+                    height: 0
+                };
+        }
 
         return (
             /* self.view now flattened down to simplify UI. */
@@ -158,28 +182,26 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
             /* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift#L149 */
             /* https://developer.apple.com/documentation/uikit/uistackview */
             <Animated.View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-around",
-                    // margin: 8,
-                    flexGrow: 1,
+                style={[
+                    {
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-around",
+                        // margin: 8,
+                        flexGrow: 1,
 
-                    /* Mirrors that of the round-cornered backdrop view. */
-                    borderRadius: 10,
-                    
-                    height: this.props.animatedNavBarTranslateYPortrait,
-                    // height: 0,
-                    // height: orientation === "portrait" ? this.props.animatedNavBarTranslateYPortrait : this.props.animatedNavBarTranslateYLandscape,
-                    // overflow: "hidden",
+                        /* Mirrors that of the round-cornered backdrop view. */
+                        borderRadius: 10,
 
-                    marginHorizontal: 8,
-                    /* paddingVertical actually causes the text overflow to get clipped, so we'll instead get our padding
-                     * by reserving more height than the content needs. */
-                    // paddingVertical: 4,
+                        marginHorizontal: 8,
+                        /* paddingVertical actually causes the text overflow to get clipped, so we'll instead get our padding
+                        * by reserving more height than the content needs. */
+                        // paddingVertical: 4,
 
-                    // backgroundColor: "indigo",
-                }}
+                        // backgroundColor: "indigo",
+                    },
+                    heightStyle
+                ]}
             >
                 {/* Simplest way to animate a backgroundColor fade-out with nativeDriver: introduce a backdrop view. */}
                 <Animated.View
@@ -189,7 +211,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                         height: "100%",
                         borderRadius: 10,
                         backgroundColor: slotBackgroundColor,
-                        opacity: this.props.animatedTitleOpacity,
+                        opacity: retractionStyle === RetractionStyle.alwaysRevealed ? 1 : this.props.animatedTitleOpacity,
                     }}
                 />
 
@@ -200,8 +222,8 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 <PrivacyIndicator
                     containerStyle={{
                         transform: [
-                            { scaleX: this.props.animatedTitleOpacity as any },
-                            { scaleY: this.props.animatedTitleOpacity as any },
+                            { scaleX: retractionStyle === RetractionStyle.alwaysRevealed ? 1 : this.props.animatedTitleOpacity as any },
+                            { scaleY: retractionStyle === RetractionStyle.alwaysRevealed ? 1 : this.props.animatedTitleOpacity as any },
                         ],
                     }}
                 />
@@ -219,8 +241,8 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     containerStyle={{
                         backgroundColor: buttonBackgroundColor,
                         transform: [
-                            { scaleX: this.props.animatedTitleOpacity as any },
-                            { scaleY: this.props.animatedTitleOpacity as any },
+                            { scaleX: retractionStyle === RetractionStyle.alwaysRevealed ? 1 : this.props.animatedTitleOpacity as any },
+                            { scaleY: retractionStyle === RetractionStyle.alwaysRevealed ? 1 : this.props.animatedTitleOpacity as any },
                         ],
                     }}
                 />

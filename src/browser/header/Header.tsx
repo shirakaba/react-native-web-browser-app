@@ -9,6 +9,7 @@ import { GradientProgressBarConnected, GRADIENT_PROGRESS_BAR_HEIGHT } from "~/br
 import Animated from "react-native-reanimated";
 const { interpolate, Extrapolate } = Animated;
 import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
+import { HeaderConfig, RetractionStyle } from "../browserConfig";
 
 class TopTabsContainer extends React.Component<{}, {}>{
 
@@ -22,6 +23,7 @@ class TopTabsContainer extends React.Component<{}, {}>{
 }
 
 interface Props {
+    config: HeaderConfig,
     animatedNavBarTranslateYPortrait: Animated.Node<number>,
     animatedNavBarTranslateYLandscape: Animated.Node<number>,
     animatedTitleOpacity: Animated.Node<number>,
@@ -43,6 +45,7 @@ interface State {
 export class Header extends React.Component<Props & ViewProps, State>{
     render(){
         const {
+            config,
             slotBackgroundColor,
             textFieldBackgroundColor,
             buttonBackgroundColor,
@@ -69,6 +72,7 @@ export class Header extends React.Component<Props & ViewProps, State>{
             >
                 {/* urlBar */}
                 <URLBarView
+                    config={config}
                     scrollY={this.props.scrollY}
                     animatedTitleOpacity={this.props.animatedTitleOpacity}
                     animatedNavBarTranslateYLandscape={this.props.animatedNavBarTranslateYLandscape}
@@ -88,6 +92,7 @@ export class Header extends React.Component<Props & ViewProps, State>{
 
 
 interface RetractibleHeaderProps {
+    config: HeaderConfig,
     scrollY: Animated.Value<number>,
 
     urlBarText: string,
@@ -103,6 +108,9 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
 
     constructor(props: RetractibleHeaderProps & Omit<ViewProps, "orientation">){
         super(props);
+
+        const { config } = props;
+        const { buttons, landscapeRetraction, portraitRetraction } = config;
 
         // const diffClampNode = diffClamp(
         //     add(this.scrollY, this.snapOffset),
@@ -164,28 +172,40 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
     }
 
     render(){
-        const { orientation, urlBarText, style, children, ...rest } = this.props;
-
         return (
             <SafeAreaConsumer>
                 {(edgeInsets: EdgeInsets) => {
+                    const { config, orientation, urlBarText, style, children, ...rest } = this.props;
+                    const { buttons, landscapeRetraction, portraitRetraction } = config;
+                    const retractionStyle: RetractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
+
                     const unsafeAreaCoverHeight: number = edgeInsets.top;
 
-                    /* Landscape needs to slide offscreen so we need to estimate its fixed height (yes, this is fragile). */
-                    const landscapeRetractionStyle = orientation === "portrait" ? 
-                        {
-                            height: "auto",
-                        } : 
-                        {
-                            height: Animated.interpolate(
-                                this.animatedNavBarTranslateYLandscape,
-                                {
-                                    inputRange: [0, HEADER_REVEALED_HEIGHT],
-                                    outputRange: [0, HEADER_REVEALED_HEIGHT + URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + GRADIENT_PROGRESS_BAR_HEIGHT],
-                                    extrapolate: Extrapolate.CLAMP,
-                                }
-                            ),
-                        };
+                    let heightStyle;
+                    switch(retractionStyle){
+                        case RetractionStyle.alwaysRevealed:
+                        case RetractionStyle.retractToCompact:
+                            heightStyle = {
+                                height: "auto"
+                            };
+                            break;
+                        case RetractionStyle.retractToHidden:
+                            heightStyle = {
+                                height: Animated.interpolate(
+                                    this.animatedNavBarTranslateYLandscape,
+                                    {
+                                        inputRange: [0, HEADER_REVEALED_HEIGHT],
+                                        outputRange: [0, HEADER_REVEALED_HEIGHT + URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + GRADIENT_PROGRESS_BAR_HEIGHT],
+                                        extrapolate: Extrapolate.CLAMP,
+                                    }
+                                ),
+                            };
+                            break;
+                        case RetractionStyle.alwaysHidden:
+                            heightStyle = {
+                                height: 0
+                            };
+                    }
 
                     return (
                         <Animated.View
@@ -200,11 +220,12 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
 
                                     paddingTop: edgeInsets.top,
                                 },
-                                landscapeRetractionStyle
+                                heightStyle
                             ]}
                             {...rest}
                         >
                             <Header
+                                config={config}
                                 scrollY={this.props.scrollY}
                                 animatedNavBarTranslateYLandscape={this.animatedNavBarTranslateYLandscape}
                                 animatedNavBarTranslateYPortrait={this.animatedNavBarTranslateYPortrait}
