@@ -90,6 +90,11 @@ function getWebView(tab: string){
         return null;
     }
 
+    if((webViewRef.current as any).getNode){
+        console.log(`webViewRef for tab "${tab}" is an Reanimated component; calling getNode() on it.`);
+        return (webViewRef.current as any).getNode();
+    }
+
     return webViewRef.current!;
 }
 
@@ -170,7 +175,7 @@ export function goBackOnWebView(tab?: string): AppThunk {
             return Promise.resolve();
         }
 
-        console.log(`[goBackOnWebView] Calling goBack() on webView for chosenTab "${chosenTab}" while canGoBack is: ${webView.canGoBack}  and webView is:`, webView);
+        console.log(`[goBackOnWebView] Calling goBack() on webView for chosenTab "${chosenTab}" while canGoBack is: ${webView.canGoBack}`);
         webView.goBack();
 
         return dispatch(navigationSlice.actions.goBackOnWebView());
@@ -185,7 +190,7 @@ export function goForwardOnWebView(tab?: string): AppThunk {
             return Promise.resolve();
         }
 
-        console.log(`[goForwardOnWebView] Calling goForward() on webView for chosenTab "${chosenTab}" while canGoForward is: ${webView.canGoForward} and webView is:`, webView);
+        console.log(`[goForwardOnWebView] Calling goForward() on webView for chosenTab "${chosenTab}" while canGoForward is: ${webView.canGoForward}`);
         webView.goForward();
 
         return dispatch(navigationSlice.actions.goForwardOnWebView());
