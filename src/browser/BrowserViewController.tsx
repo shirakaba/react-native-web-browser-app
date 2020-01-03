@@ -65,7 +65,6 @@ interface State {
 export class BrowserViewController extends React.Component<Props, State> {
     private readonly scrollY = new Animated.Value(HEADER_RETRACTION_DISTANCE);
     private readonly scrollEndDragVelocity = new Animated.Value(DRAG_END_INITIAL);
-    private readonly snapOffset = new Animated.Value(0);
 
     private readonly onOrientationChange = () => {
         this.props.updateOrientation(isPortrait() ? 'portrait' : 'landscape');
@@ -129,7 +128,6 @@ export class BrowserViewController extends React.Component<Props, State> {
                             }}
                             scrollY={this.scrollY}
                             scrollEndDragVelocity={this.scrollEndDragVelocity}
-                            snapOffset={this.snapOffset}
                         />
                     </View>
 

@@ -36,7 +36,6 @@ export class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {
 interface WebViewContainerProps {
     scrollY: Animated.Value<number>,
     scrollEndDragVelocity: Animated.Value<number>,
-    snapOffset: Animated.Value<number>,
 
     barsState: WholeStoreState["bars"],
     activeTab: string,
@@ -111,10 +110,6 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
                 {...rest}
             >
                 <AnimatedIosWebView
-                    style={{
-                        width: "100%",
-                        height: "100%",
-                    }}
                     source={{
                         uri: tabs[activeTab].url,
                     }}
