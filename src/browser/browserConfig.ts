@@ -14,6 +14,7 @@ export interface BarConfig {
     },
     portraitRetraction: RetractionStyle,
     landscapeRetraction: RetractionStyle,
+    backgroundColor?: string,
 }
 
 export interface HeaderConfig extends BarConfig {
@@ -23,6 +24,8 @@ export interface HeaderConfig extends BarConfig {
     },
     portraitRetraction: RetractionStyle,
     landscapeRetraction: RetractionStyle,
+    slotBackgroundColor?: string,
+    textFieldBackgroundColor?: string,
 }
 
 export interface FooterConfig extends BarConfig {
@@ -48,6 +51,9 @@ export const defaultConfig: BrowserConfig = {
         },
         portraitRetraction: RetractionStyle.retractToCompact,
         landscapeRetraction: RetractionStyle.retractToHidden,
+        backgroundColor: "gray",
+        slotBackgroundColor: "darkgray",
+        textFieldBackgroundColor: "transparent",
     },
     footer: {
         buttons: {
@@ -56,5 +62,6 @@ export const defaultConfig: BrowserConfig = {
         },
         portraitRetraction: RetractionStyle.retractToHidden,
         landscapeRetraction: RetractionStyle.alwaysHidden,
+        backgroundColor: "gray",
     }
 };

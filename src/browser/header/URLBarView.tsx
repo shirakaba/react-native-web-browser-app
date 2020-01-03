@@ -9,22 +9,6 @@ import { View } from "react-native";
 import Animated from "react-native-reanimated";
 import { HeaderConfig } from "../browserConfig";
 
-/* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/URLBarView.swift */
-
-interface Props {
-    config: HeaderConfig,
-    scrollY: Animated.Value<number>,
-    animatedTitleOpacity: Animated.Node<number>,
-    animatedNavBarTranslateYPortait: Animated.Node<number>,
-    animatedNavBarTranslateYLandscape: Animated.Node<number>,
-    slotBackgroundColor?: string,
-    textFieldBackgroundColor?: string,
-    buttonBackgroundColor?: string,
-    inOverlayMode: boolean,
-    toolbarIsShowing: boolean,
-    // location: string, // locationTextField?.text
-}
-
 interface State {
     // text: string, // locationTextField?.text
 }
@@ -60,6 +44,19 @@ class LocationContainer extends React.Component<{}, {}>{
     }
 }
 
+/* https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/URLBarView.swift */
+
+interface Props {
+    config: HeaderConfig,
+    scrollY: Animated.Value<number>,
+    animatedTitleOpacity: Animated.Node<number>,
+    animatedNavBarTranslateYPortait: Animated.Node<number>,
+    animatedNavBarTranslateYLandscape: Animated.Node<number>,
+    inOverlayMode: boolean,
+    toolbarIsShowing: boolean,
+    // location: string, // locationTextField?.text
+}
+
 export const URL_BAR_VIEW_PADDING_VERTICAL: number = 8;
 
 export class URLBarView extends React.Component<Props, State>{
@@ -72,7 +69,8 @@ export class URLBarView extends React.Component<Props, State>{
     }
 
     render(){
-        const { config, slotBackgroundColor = "gray", textFieldBackgroundColor = "white", buttonBackgroundColor = "transparent", toolbarIsShowing, inOverlayMode } = this.props;
+        const { config, toolbarIsShowing, inOverlayMode } = this.props;
+        const { } = config;
         const { } = this.state;
 
         let stackContents: React.ReactNode;
@@ -83,16 +81,16 @@ export class URLBarView extends React.Component<Props, State>{
                 <>
                     {/* AKA locationTextField */}
                     <ToolbarTextField/>
-                    <CancelButtonConnected style={{ backgroundColor: buttonBackgroundColor }}/>
+                    <CancelButtonConnected/>
                 </>
             );
         } else if(toolbarIsShowing){
             // i.e. landscape (so show all the items that the footer would normally handle)
             stackContents = (
                 <>
-                    <BackButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
-                    <ForwardButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
-                    <StopReloadButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
+                    <BackButtonConnected/>
+                    <ForwardButtonConnected/>
+                    <StopReloadButtonConnected/>
                     {/* AKA locationView. */}
                     <TabLocationViewConnected
                         config={config}
@@ -100,12 +98,9 @@ export class URLBarView extends React.Component<Props, State>{
                         animatedTitleOpacity={this.props.animatedTitleOpacity}
                         animatedNavBarTranslateYLandscape={this.props.animatedNavBarTranslateYLandscape}
                         animatedNavBarTranslateYPortrait={this.props.animatedNavBarTranslateYPortait}
-                        slotBackgroundColor={slotBackgroundColor}
-                        buttonBackgroundColor={buttonBackgroundColor}
-                        textFieldBackgroundColor={textFieldBackgroundColor}
                     />
-                    <TabsButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
-                    <MenuButtonConnected containerStyle={{ backgroundColor: buttonBackgroundColor }}/>
+                    <TabsButtonConnected/>
+                    <MenuButtonConnected/>
                 </>
             );
         } else {
@@ -119,9 +114,6 @@ export class URLBarView extends React.Component<Props, State>{
                         animatedTitleOpacity={this.props.animatedTitleOpacity}
                         animatedNavBarTranslateYLandscape={this.props.animatedNavBarTranslateYLandscape}
                         animatedNavBarTranslateYPortrait={this.props.animatedNavBarTranslateYPortait}
-                        slotBackgroundColor={slotBackgroundColor}
-                        buttonBackgroundColor={buttonBackgroundColor}
-                        textFieldBackgroundColor={textFieldBackgroundColor}
                     />
                 </>
             );

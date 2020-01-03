@@ -1,8 +1,10 @@
 import * as React from "react";
 import { View, ViewProps, StyleProp, ViewStyle } from "react-native";
 import { BackButtonConnected, ForwardButtonConnected, MenuButtonConnected, SearchButtonConnected, TabsButtonConnected, } from "../bothBars/BarButtons";
+import { HeaderConfig } from "../browserConfig";
 
 interface Props {
+    config: HeaderConfig,
     style?: ViewStyle,
 }
 
@@ -14,7 +16,8 @@ interface State {
 export class TabToolbar extends React.Component<Props & ViewProps, State>{
 
     render(){
-        const { style, ...rest } = this.props;
+        const { config, style, ...rest } = this.props;
+
         return (
             <View
                 style={[

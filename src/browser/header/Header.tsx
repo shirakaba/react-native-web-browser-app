@@ -29,9 +29,6 @@ interface Props {
     animatedTitleOpacity: Animated.Node<number>,
 
     scrollY: Animated.Value<number>,
-    slotBackgroundColor?: string,
-    textFieldBackgroundColor?: string,
-    buttonBackgroundColor?: string,
     inOverlayMode: boolean,
     toolbarIsShowing: boolean,
 }
@@ -46,9 +43,6 @@ export class Header extends React.Component<Props & ViewProps, State>{
     render(){
         const {
             config,
-            slotBackgroundColor,
-            textFieldBackgroundColor,
-            buttonBackgroundColor,
             toolbarIsShowing,
             inOverlayMode,
             style,
@@ -79,9 +73,6 @@ export class Header extends React.Component<Props & ViewProps, State>{
                     animatedNavBarTranslateYPortait={this.props.animatedNavBarTranslateYPortrait}
                     inOverlayMode={inOverlayMode}
                     toolbarIsShowing={toolbarIsShowing}
-                    slotBackgroundColor={slotBackgroundColor}
-                    textFieldBackgroundColor={textFieldBackgroundColor}
-                    buttonBackgroundColor={buttonBackgroundColor}
                 />
                 {/* topTabsContainer */}
                 <TopTabsContainer/>
@@ -176,7 +167,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
             <SafeAreaConsumer>
                 {(edgeInsets: EdgeInsets) => {
                     const { config, orientation, urlBarText, style, children, ...rest } = this.props;
-                    const { buttons, landscapeRetraction, portraitRetraction } = config;
+                    const { buttons, backgroundColor, landscapeRetraction, portraitRetraction } = config;
                     const retractionStyle: RetractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
 
                     const unsafeAreaCoverHeight: number = edgeInsets.top;
@@ -217,7 +208,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                                     justifyContent: "flex-end",
                                     // alignItems: "center",
                                     width: "100%",
-                                    backgroundColor: "gray",
+                                    backgroundColor,
 
                                     paddingTop: edgeInsets.top,
                                 },
@@ -233,9 +224,6 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                                 animatedTitleOpacity={this.animatedTitleOpacity}
                                 toolbarIsShowing={orientation === "landscape"}
                                 inOverlayMode={false}
-                                slotBackgroundColor={"darkgray"}
-                                textFieldBackgroundColor={"transparent"}
-                                buttonBackgroundColor={"transparent"}
                                 style={{
                                     paddingLeft: edgeInsets.left,
                                     paddingRight: edgeInsets.right,

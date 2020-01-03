@@ -15,9 +15,6 @@ interface Props {
     animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateYPortrait: Animated.Node<number>,
     animatedNavBarTranslateYLandscape: Animated.Node<number>,
-    slotBackgroundColor?: string,
-    buttonBackgroundColor?: string,
-    textFieldBackgroundColor?: string,
 }
 
 interface State {
@@ -151,8 +148,8 @@ export const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADE
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
 
     render(){
-        const { config, slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", orientation, ...rest } = this.props;
-        const { buttons, landscapeRetraction, portraitRetraction } = config;
+        const { config, orientation, ...rest } = this.props;
+        const { buttons, buttonBackgroundColor = "transparent", slotBackgroundColor = "darkgray", textFieldBackgroundColor = "transparent", landscapeRetraction, portraitRetraction } = config;
         const retractionStyle: RetractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
 
         let heightStyle;

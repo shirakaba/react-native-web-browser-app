@@ -27,7 +27,7 @@ export const FOOTER_REVEALED_HEIGHT: number = 44;
 export class Footer extends React.Component<FooterProps, {}> {
     render(){
         const { config, showToolbar, orientation, children, ...rest } = this.props;
-        const { buttons, landscapeRetraction, portraitRetraction } = config;
+        const { buttons, backgroundColor, landscapeRetraction, portraitRetraction } = config;
 
         const retractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
 
@@ -71,7 +71,7 @@ export class Footer extends React.Component<FooterProps, {}> {
                                     {
                                         flexDirection: "column",
                                         width: "100%",
-                                        backgroundColor: "gray",
+                                        backgroundColor,
                                         /* Combine this with auto height. */
                                         // paddingBottom: unsafeAreaCoverHeight,
                                         paddingLeft: edgeInsets.left,
@@ -82,7 +82,7 @@ export class Footer extends React.Component<FooterProps, {}> {
                                 // height={{ value: animatedHeight, unit: "dip" }}
                                 {...rest}
                             >
-                                <TabToolbar/>
+                                <TabToolbar config={config}/>
                             </Animated.View>
                         );
                     }}    
