@@ -158,9 +158,9 @@ class PrivacyIndicator extends React.Component<{} & ToolbarButtonProps, {}> {
     }
 }
 
-export const HEADER_RETRACTED_HEIGHT: number = 22;
-export const HEADER_REVEALED_HEIGHT: number = 44;
-export const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT;
+export const DEFAULT_HEADER_RETRACTED_HEIGHT: number = 22;
+export const DEFAULT_HEADER_REVEALED_HEIGHT: number = 44;
+// export const HEADER_RETRACTION_DISTANCE: number = DEFAULT_HEADER_REVEALED_HEIGHT - DEFAULT_HEADER_RETRACTED_HEIGHT;
 
 
 interface Props {
@@ -182,8 +182,11 @@ interface State {
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
     render(){
         const { activeTabIsSecure, urlBarText, config, orientation, ...rest } = this.props;
-        const { buttons, slotBackgroundColor = "darkgray", textFieldBackgroundColor = "transparent", landscapeRetraction, portraitRetraction } = config;
+        const { buttons, slotBackgroundColor = "darkgray", textFieldBackgroundColor = "transparent", landscapeRetraction, portraitRetraction, HEADER_RETRACTED_HEIGHT = DEFAULT_HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT = DEFAULT_HEADER_REVEALED_HEIGHT  } = config;
         const retractionStyle: RetractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
+
+        const HEADER_HIDDEN_HEIGHT: number = 0;
+        const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT;
 
         let heightStyle;
         switch(retractionStyle){
@@ -206,7 +209,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 break;
             case RetractionStyle.alwaysHidden:
                 heightStyle = {
-                    height: 0
+                    height: HEADER_HIDDEN_HEIGHT
                 };
         }
 

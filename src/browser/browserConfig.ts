@@ -1,3 +1,6 @@
+import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
+import { DEFAULT_FOOTER_REVEALED_HEIGHT } from "./footer/Footer";
+
 export enum RetractionStyle {
     alwaysRevealed = "alwaysRevealed",
     alwaysCompact = "alwaysCompact",
@@ -18,6 +21,9 @@ export interface BarConfig {
 }
 
 export interface HeaderConfig extends BarConfig {
+    HEADER_RETRACTED_HEIGHT?: number,
+    HEADER_REVEALED_HEIGHT?: number,
+    HEADER_HIDDEN_HEIGHT?: number,
     buttons: {
         portrait: [],
         landscape: [],
@@ -29,6 +35,9 @@ export interface HeaderConfig extends BarConfig {
 }
 
 export interface FooterConfig extends BarConfig {
+    HEADER_RETRACTED_HEIGHT?: number,
+    HEADER_REVEALED_HEIGHT?: number,
+    FOOTER_REVEALED_HEIGHT: number,
     buttons: {
         portrait: [],
         landscape: [],
@@ -45,6 +54,8 @@ export interface BrowserConfig {
 
 export const defaultConfig: BrowserConfig = {
     header: {
+        HEADER_RETRACTED_HEIGHT: DEFAULT_HEADER_RETRACTED_HEIGHT,
+        HEADER_REVEALED_HEIGHT: DEFAULT_HEADER_REVEALED_HEIGHT,
         buttons: {
             portrait: [],
             landscape: [],
@@ -56,6 +67,9 @@ export const defaultConfig: BrowserConfig = {
         textFieldBackgroundColor: "transparent",
     },
     footer: {
+        HEADER_RETRACTED_HEIGHT: DEFAULT_HEADER_RETRACTED_HEIGHT,
+        HEADER_REVEALED_HEIGHT: DEFAULT_HEADER_REVEALED_HEIGHT,
+        FOOTER_REVEALED_HEIGHT: DEFAULT_FOOTER_REVEALED_HEIGHT,
         buttons: {
             portrait: [],
             landscape: [],

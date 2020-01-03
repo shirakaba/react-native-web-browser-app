@@ -3,13 +3,13 @@ import { RetractibleHeaderConnected } from "./header/Header";
 import { View, ViewProps, StyleSheet, Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { FooterConnected } from "./footer/Footer";
-import { HEADER_RETRACTION_DISTANCE } from "./header/TabLocationView";
 import { DRAG_END_INITIAL } from "./bothBars/barSpring";
 import { WebViewContainerConnected, WebViewContainerBackdrop } from "./WebViewContainer";
 import { isPortrait, updateOrientation } from "~/store/uiState";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { BrowserConfig, defaultConfig } from "~/browser/browserConfig";
+import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -65,8 +65,21 @@ interface State {
 }
 
 export class BrowserViewController extends React.Component<Props, State> {
-    private readonly scrollY = new Animated.Value(HEADER_RETRACTION_DISTANCE);
+    private readonly scrollY;
     private readonly scrollEndDragVelocity = new Animated.Value(DRAG_END_INITIAL);
+
+    constructor(props: Props){
+        super(props);
+
+        const { config = defaultConfig, } = props;
+        const {
+            HEADER_RETRACTED_HEIGHT = DEFAULT_HEADER_RETRACTED_HEIGHT,
+            HEADER_REVEALED_HEIGHT = DEFAULT_HEADER_REVEALED_HEIGHT,
+        } = config.header;
+        const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT;
+
+        this.scrollY = new Animated.Value(HEADER_RETRACTION_DISTANCE);
+    }
 
     private readonly onOrientationChange = () => {
         this.props.updateOrientation(isPortrait() ? 'portrait' : 'landscape');
@@ -129,6 +142,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                                 position: "absolute",
                                 flexGrow: 1,
                             }}
+                            headerConfig={config.header}
                             scrollY={this.scrollY}
                             scrollEndDragVelocity={this.scrollEndDragVelocity}
                         />

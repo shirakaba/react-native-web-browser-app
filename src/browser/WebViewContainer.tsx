@@ -6,7 +6,8 @@ import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableW
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
 import Animated from "react-native-reanimated";
-import { HEADER_RETRACTION_DISTANCE } from "./header/TabLocationView";
+import { HeaderConfig } from "./browserConfig";
+import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L110
 export class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {
@@ -33,6 +34,7 @@ export class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {
 }
 
 interface WebViewContainerProps {
+    headerConfig: HeaderConfig,
     scrollY: Animated.Value<number>,
     scrollEndDragVelocity: Animated.Value<number>,
 
@@ -94,7 +96,12 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
     // const MyWebView = ({ children, ...rest }) => React.createElement(WebView, props, children);
 
     render(){
-        const { activeTab, tabs, style, children, ...rest } = this.props;
+        const { headerConfig, activeTab, tabs, style, children, ...rest } = this.props;
+        const {
+            HEADER_RETRACTED_HEIGHT = DEFAULT_HEADER_RETRACTED_HEIGHT,
+            HEADER_REVEALED_HEIGHT = DEFAULT_HEADER_REVEALED_HEIGHT,
+        } = headerConfig;
+        const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT;
 
         return (
             // UIView()

@@ -8,8 +8,8 @@ import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GradientProgressBarConnected, GRADIENT_PROGRESS_BAR_HEIGHT } from "~/browser/header/GradientProgressBar";
 import Animated from "react-native-reanimated";
 const { interpolate, Extrapolate } = Animated;
-import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
 import { HeaderConfig, RetractionStyle } from "../browserConfig";
+import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./TabLocationView";
 
 class TopTabsContainer extends React.Component<{}, {}>{
 
@@ -101,7 +101,16 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
         super(props);
 
         const { config } = props;
-        const { buttons, landscapeRetraction, portraitRetraction } = config;
+        const {
+            buttons,
+            landscapeRetraction,
+            portraitRetraction,
+            HEADER_RETRACTED_HEIGHT = DEFAULT_HEADER_RETRACTED_HEIGHT,
+            HEADER_REVEALED_HEIGHT = DEFAULT_HEADER_REVEALED_HEIGHT,
+        } = config;
+
+        const HEADER_HIDDEN_HEIGHT: number = 0;
+        const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADER_RETRACTED_HEIGHT;
 
         // const diffClampNode = diffClamp(
         //     add(this.scrollY, this.snapOffset),
@@ -147,7 +156,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
         this.animatedNavBarTranslateYLandscape = interpolate(this.props.scrollY, {
             // -y means finger is moving upwards (so bar should retract)
             inputRange: [-HEADER_RETRACTION_DISTANCE, HEADER_RETRACTION_DISTANCE],
-            outputRange: [0, HEADER_REVEALED_HEIGHT],
+            outputRange: [HEADER_HIDDEN_HEIGHT, HEADER_REVEALED_HEIGHT],
 
             /* To disable header retraction */
             // outputRange: [HEADER_REVEALED_HEIGHT, HEADER_REVEALED_HEIGHT],
@@ -167,7 +176,15 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
             <SafeAreaConsumer>
                 {(edgeInsets: EdgeInsets) => {
                     const { config, orientation, urlBarText, style, children, ...rest } = this.props;
-                    const { buttons, backgroundColor, landscapeRetraction, portraitRetraction } = config;
+                    const {
+                        buttons,
+                        backgroundColor,
+                        landscapeRetraction,
+                        portraitRetraction,
+                        HEADER_RETRACTED_HEIGHT = DEFAULT_HEADER_RETRACTED_HEIGHT,
+                        HEADER_REVEALED_HEIGHT = DEFAULT_HEADER_REVEALED_HEIGHT,
+                    } = config;
+                    const HEADER_HIDDEN_HEIGHT: number = 0;
                     const retractionStyle: RetractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
 
                     const unsafeAreaCoverHeight: number = edgeInsets.top;
@@ -186,8 +203,8 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                                 height: Animated.interpolate(
                                     this.animatedNavBarTranslateYLandscape,
                                     {
-                                        inputRange: [0, HEADER_REVEALED_HEIGHT],
-                                        outputRange: [0, HEADER_REVEALED_HEIGHT + URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + GRADIENT_PROGRESS_BAR_HEIGHT],
+                                        inputRange: [HEADER_HIDDEN_HEIGHT, HEADER_REVEALED_HEIGHT],
+                                        outputRange: [HEADER_HIDDEN_HEIGHT, HEADER_REVEALED_HEIGHT + URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + GRADIENT_PROGRESS_BAR_HEIGHT],
                                         extrapolate: Extrapolate.CLAMP,
                                     }
                                 ),
@@ -195,7 +212,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                             break;
                         case RetractionStyle.alwaysHidden:
                             heightStyle = {
-                                height: 0
+                                height: HEADER_HIDDEN_HEIGHT
                             };
                     }
 
