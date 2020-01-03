@@ -1,5 +1,5 @@
 import * as React from "react";
-import { URLBarView } from "./URLBarView";
+import { URLBarView, URL_BAR_VIEW_PADDING_VERTICAL } from "./URLBarView";
 import { TopTabsViewController } from "./TopTabsContainer";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
@@ -9,7 +9,7 @@ import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GradientProgressBarConnected } from "~/browser/header/GradientProgressBar";
 import Animated from "react-native-reanimated";
 const { interpolate, Extrapolate } = Animated;
-import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
+import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT, HEADER_CONTAINER_REVEALED_HEIGHT } from "./TabLocationView";
 
 class TopTabsContainer extends React.Component<{}, {}>{
 
@@ -173,6 +173,9 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                 {(edgeInsets: EdgeInsets) => {
                     const unsafeAreaCoverHeight: number = edgeInsets.top;
 
+                    // const autoHeightEquivalent: number = HEADER_REVEALED_HEIGHT + URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + 2;
+
+
                     return (
                         <Animated.View
                             style={{
@@ -183,8 +186,20 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                                 width: "100%",
                                 backgroundColor: "gray",
 
-                                // height: orientation === "portrait" ? this.animatedNavBarTranslateYPortrait : this.animatedNavBarTranslateYLandscape,
-                                // height: this.animatedNavBarTranslateYPortrait,
+                                height: 
+                                    orientation === "portrait" ? 
+                                        Animated.add(
+                                            this.animatedNavBarTranslateYPortrait,
+                                            URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + 2
+                                        ) : 
+                                        Animated.interpolate(
+                                            this.animatedNavBarTranslateYLandscape,
+                                            {
+                                                inputRange: [0, HEADER_REVEALED_HEIGHT],
+                                                outputRange: [0, HEADER_REVEALED_HEIGHT + URL_BAR_VIEW_PADDING_VERTICAL * 2 + edgeInsets.top + 2],
+                                                extrapolate: Extrapolate.CLAMP,
+                                            }
+                                        ),
 
                                 paddingTop: edgeInsets.top,
                             }}

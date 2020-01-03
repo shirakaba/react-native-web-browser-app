@@ -58,6 +58,8 @@ class LocationContainer extends React.Component<{}, {}>{
     }
 }
 
+export const URL_BAR_VIEW_PADDING_VERTICAL: number = 8;
+
 export class URLBarView extends React.Component<Props, State>{
     constructor(props: Props){
         super(props);
@@ -129,7 +131,7 @@ export class URLBarView extends React.Component<Props, State>{
                     alignItems: "center",
                     height: "auto",
                     width: "100%",
-                    paddingVertical: 8,
+                    paddingVertical: URL_BAR_VIEW_PADDING_VERTICAL,
 
                     // backgroundColor: "green",
                 }}

@@ -171,6 +171,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     borderRadius: 10,
                     
                     height: this.props.animatedNavBarTranslateYPortrait,
+                    // height: 0,
                     // height: orientation === "portrait" ? this.props.animatedNavBarTranslateYPortrait : this.props.animatedNavBarTranslateYLandscape,
                     // overflow: "hidden",
 
