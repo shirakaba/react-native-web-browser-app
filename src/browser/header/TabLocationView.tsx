@@ -149,7 +149,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
 
     render(){
         const { config, orientation, ...rest } = this.props;
-        const { buttons, buttonBackgroundColor = "transparent", slotBackgroundColor = "darkgray", textFieldBackgroundColor = "transparent", landscapeRetraction, portraitRetraction } = config;
+        const { buttons, slotBackgroundColor = "darkgray", textFieldBackgroundColor = "transparent", landscapeRetraction, portraitRetraction } = config;
         const retractionStyle: RetractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
 
         let heightStyle;
@@ -257,7 +257,6 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 />
                 <PageOptionsButton
                     containerStyle={{
-                        backgroundColor: buttonBackgroundColor,
                         transform: [
                             { scaleX: compactionFactor },
                             { scaleY: compactionFactor },
