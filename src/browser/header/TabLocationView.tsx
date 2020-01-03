@@ -29,14 +29,45 @@ class LockImageView extends React.Component<{ locked: boolean } & ToolbarButtonP
     }
 }
 
+class ClearUrlBarTextButton extends React.Component<{ urlBarText: string, updateUrlBarText: typeof updateUrlBarText, } & ToolbarButtonProps, {}> {
+    private readonly onClearButtonPress = () => {
+        this.props.updateUrlBarText("");
+    };
+
+    render(){
+        const { urlBarText, light, brand, ...rest } = this.props;
+
+        return (
+            <ToolbarButton 
+                onPress={this.onClearButtonPress}
+                name={"times-circle"}
+                solid
+                {...rest}
+            />
+        );
+    }
+}
+
+const ClearUrlBarTextButtonConnected = connect(
+    (wholeStoreState: WholeStoreState) => {
+        // console.log(`wholeStoreState`, wholeStoreState);
+        const { urlBarText } = wholeStoreState.navigation;
+
+        return {
+            urlBarText,
+        };
+    },
+    {
+        updateUrlBarText,
+    },
+)(ClearUrlBarTextButton);
+
 interface DisplayTextFieldProps {
     style?: StyleProp<TextStyle>,
 
     activeTab: string,
     urlBarText: string,
-
     updateUrlBarText: typeof updateUrlBarText,
-    // setUrlOnWebView: typeof setUrlOnWebView,
     submitUrlBarTextToWebView: typeof submitUrlBarTextToWebView,
 }
 
@@ -80,11 +111,10 @@ class DisplayTextField extends React.Component<DisplayTextFieldProps & TextInput
 const DisplayTextFieldConnected = connect(
     (wholeStoreState: WholeStoreState) => {
         // console.log(`wholeStoreState`, wholeStoreState);
-        const { activeTab, tabs, urlBarText } = wholeStoreState.navigation;
+        const { activeTab, urlBarText } = wholeStoreState.navigation;
 
         return {
             activeTab,
-            // urlBarText: tabs[activeTab].url,
             urlBarText,
         };
     },
@@ -149,10 +179,6 @@ interface State {
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/TabLocationView.swift
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
-    private readonly onClearButtonPress = () => {
-        this.props.updateUrlBarText("");
-    };
-
     render(){
         const { urlBarText, config, orientation, ...rest } = this.props;
         const { buttons, slotBackgroundColor = "darkgray", textFieldBackgroundColor = "transparent", landscapeRetraction, portraitRetraction } = config;
@@ -261,11 +287,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                         flexGrow: 1,
                     }}
                 />
-                {/* Text clear button */}
-                <ToolbarButton
-                    onPress={this.onClearButtonPress}
-                    name={"times-circle"}
-                    solid
+                <ClearUrlBarTextButtonConnected
                     containerStyle={{
                         display: urlBarText.length > 0 ? "flex": "none",
                         /* Nothing to do with animation; just my lazy way of making it more compact. */
