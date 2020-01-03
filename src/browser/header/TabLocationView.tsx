@@ -5,7 +5,6 @@ import { PrivacyIndicatorView } from "~/browser/header/PrivacyIndicatorView";
 import { connect } from 'react-redux';
 import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationState";
 import { WholeStoreState } from "~/store/store";
-import { RetractionState } from "~/store/barsState";
 import Animated from "react-native-reanimated";
 
 interface Props {
@@ -14,7 +13,6 @@ interface Props {
     animatedTitleOpacity: Animated.Node<number>,
     animatedNavBarTranslateYPortrait: Animated.Node<number>,
     animatedNavBarTranslateYLandscape: Animated.Node<number>,
-    retraction: RetractionState,
     slotBackgroundColor?: string,
     buttonBackgroundColor?: string,
     textFieldBackgroundColor?: string,
@@ -151,7 +149,7 @@ export const HEADER_RETRACTION_DISTANCE: number = HEADER_REVEALED_HEIGHT - HEADE
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
 
     render(){
-        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", retraction, orientation, ...rest } = this.props;
+        const { slotBackgroundColor = "purple", buttonBackgroundColor = "transparent", textFieldBackgroundColor = "white", orientation, ...rest } = this.props;
 
         return (
             /* self.view now flattened down to simplify UI. */
@@ -238,8 +236,7 @@ export const TabLocationViewConnected = connect(
     (wholeStoreState: WholeStoreState) => {
         // console.log(`wholeStoreState`, wholeStoreState);
         return {
-            orientation: wholeStoreState.ui.orientation, 
-            retraction: wholeStoreState.bars.header.retraction,
+            orientation: wholeStoreState.ui.orientation,
         };
     },
     {},

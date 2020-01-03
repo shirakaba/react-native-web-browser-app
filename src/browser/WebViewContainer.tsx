@@ -2,7 +2,6 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView } from "~/store/navigationState";
-import { setBarsRetraction, RetractionState } from "~/store/barsState";
 import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform, findNodeHandle } from "react-native";
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
@@ -37,14 +36,10 @@ interface WebViewContainerProps {
     scrollY: Animated.Value<number>,
     scrollEndDragVelocity: Animated.Value<number>,
 
-    barsState: WholeStoreState["bars"],
     activeTab: string,
     tabs: TabStateRecord,
     updateUrlBarText: typeof updateUrlBarText,
     setProgressOnWebView: typeof setProgressOnWebView,
-    // setHeaderRetraction: typeof setHeaderRetraction,
-    // setFooterRetraction: typeof setFooterRetraction,
-    setBarsRetraction: typeof setBarsRetraction,
 }
 
 const IosWebView = WebView as React.ComponentClass<IOSWebViewProps>;
@@ -94,7 +89,7 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
     // const MyWebView = ({ children, ...rest }) => React.createElement(WebView, props, children);
 
     render(){
-        const { activeTab, tabs, barsState, style, children, ...rest } = this.props;
+        const { activeTab, tabs, style, children, ...rest } = this.props;
 
         return (
             // UIView()
@@ -190,7 +185,6 @@ export const WebViewContainerConnected = connect(
     (wholeStoreState: WholeStoreState) => {
         // console.log(`wholeStoreState`, wholeStoreState);
         return {
-            barsState: wholeStoreState.bars,
             activeTab: wholeStoreState.navigation.activeTab,
             tabs: wholeStoreState.navigation.tabs,
         };
@@ -198,8 +192,5 @@ export const WebViewContainerConnected = connect(
     {
         updateUrlBarText,
         setProgressOnWebView,
-        // setHeaderRetraction,
-        // setFooterRetraction,
-        setBarsRetraction,
     },
 )(WebViewContainer);

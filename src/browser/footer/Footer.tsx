@@ -2,7 +2,6 @@ import * as React from "react";
 import { TabToolbar } from "./TabToolbar";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
-import { setBarsRetraction, RetractionState } from "~/store/barsState";
 import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform, findNodeHandle } from "react-native";
 import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import Animated, { not } from "react-native-reanimated";
@@ -12,9 +11,7 @@ const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, les
 
 interface FooterOwnProps {
     scrollY: Animated.Value<number>,
-    percentRevealed: number,
     orientation: "portrait"|"landscape",
-    retraction: RetractionState,
     showToolbar: boolean,
 };
 
@@ -26,14 +23,7 @@ export const FOOTER_REVEALED_HEIGHT: number = 44;
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L103
 export class Footer extends React.Component<FooterProps, {}> {
     render(){
-        const { retraction, showToolbar, orientation, percentRevealed, children, ...rest } = this.props;
-
-        const revealedHeight: number = 44;
-        const retractedHeight: number = 0;
-
-        const heightDiff: number = revealedHeight - retractedHeight;
-        const factor: number = percentRevealed / 100;
-        const animatedHeight: number = (factor * heightDiff) + retractedHeight;
+        const { showToolbar, orientation, children, ...rest } = this.props;
 
         if(showToolbar){
             /* Warning: I've tried other layouts (StackLayout and FlexboxLayout) here, but they shift
@@ -88,8 +78,6 @@ export const FooterConnected = connect(
     (wholeStoreState: WholeStoreState) => {
         // console.log(`wholeStoreState`, wholeStoreState);
         return {
-            retraction: wholeStoreState.bars.footer.retraction,
-            percentRevealed: wholeStoreState.bars.footer.percentRevealed,
             orientation: wholeStoreState.ui.orientation,
         };
     },

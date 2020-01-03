@@ -3,13 +3,12 @@ import { URLBarView, URL_BAR_VIEW_PADDING_VERTICAL } from "./URLBarView";
 import { TopTabsViewController } from "./TopTabsContainer";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
-import { setBarsRetraction, RetractionState } from "~/store/barsState";
 import { View, ViewProps, StyleSheet, } from "react-native";
 import { SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import { GradientProgressBarConnected, GRADIENT_PROGRESS_BAR_HEIGHT } from "~/browser/header/GradientProgressBar";
 import Animated from "react-native-reanimated";
 const { interpolate, Extrapolate } = Animated;
-import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT, HEADER_CONTAINER_REVEALED_HEIGHT } from "./TabLocationView";
+import { HEADER_RETRACTION_DISTANCE, HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT } from "./TabLocationView";
 
 class TopTabsContainer extends React.Component<{}, {}>{
 
@@ -93,7 +92,6 @@ interface RetractibleHeaderProps {
 
     urlBarText: string,
     orientation: "portrait"|"landscape",
-    retraction: RetractionState,
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L61
@@ -166,7 +164,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
     }
 
     render(){
-        const { orientation, retraction, urlBarText, style, children, ...rest } = this.props;
+        const { orientation, urlBarText, style, children, ...rest } = this.props;
 
         return (
             <SafeAreaConsumer>
@@ -240,7 +238,6 @@ export const RetractibleHeaderConnected = connect(
         // console.log(`wholeStoreState`, wholeStoreState);
         return {
             urlBarText: wholeStoreState.navigation.urlBarText,
-            retraction: wholeStoreState.bars.header.retraction,
             orientation: wholeStoreState.ui.orientation,
         };
     },
