@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
-import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView } from "~/store/navigationState";
+import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView, updateWebViewNavigationState } from "~/store/navigationState";
 import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform, findNodeHandle } from "react-native";
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
@@ -40,6 +40,7 @@ interface WebViewContainerProps {
     tabs: TabStateRecord,
     updateUrlBarText: typeof updateUrlBarText,
     setProgressOnWebView: typeof setProgressOnWebView,
+    updateWebViewNavigationState: typeof updateWebViewNavigationState,
 }
 
 const IosWebView = WebView as React.ComponentClass<IOSWebViewProps>;
@@ -47,15 +48,16 @@ const AnimatedIosWebView = Animated.createAnimatedComponent(IosWebView) as React
 
 export class WebViewContainer extends React.Component<WebViewContainerProps & ViewProps, { }> {
     private readonly onLoadStarted = (event: WebViewNavigationEvent) => {
-        const { url, navigationType } = event.nativeEvent;
+        const { url, navigationType, canGoBack, canGoForward } = event.nativeEvent;
 
         console.log(`[WebView onLoadStarted] url ${url} navigationType ${navigationType}`);
         
         // TODO: handle errors
+        this.props.updateWebViewNavigationState({ canGoBack, canGoForward, tab: this.props.activeTab });
     };
 
     private readonly onLoadCommitted = (event: WebViewNavigationEvent) => {
-        const { url, navigationType } = event.nativeEvent;
+        const { url, navigationType, canGoBack, canGoForward } = event.nativeEvent;
 
         console.log(`[WebView onLoadCommitted] url ${url} navigationType ${navigationType}`);
 
@@ -64,10 +66,11 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
              * This event doesn't exist on Android to my knowledge, so I haven't hooked it up in BetterWebView. */
             this.props.updateUrlBarText(url);
         }
+        this.props.updateWebViewNavigationState({ canGoBack, canGoForward, tab: this.props.activeTab });
     };
 
     private readonly onLoadFinished = (event: WebViewNavigationEvent) => {
-        const { url, navigationType } = event.nativeEvent;
+        const { url, navigationType, canGoBack, canGoForward } = event.nativeEvent;
 
         console.log(`[WebView onLoadFinished] url ${url} navigationType ${navigationType}`);
 
@@ -77,13 +80,15 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
             /* TODO: check whether Android fires onLoadFinished at sensible moments for updating the URL bar text. */
             this.props.updateUrlBarText(url);
         }
+        this.props.updateWebViewNavigationState({ canGoBack, canGoForward, tab: this.props.activeTab });
     };
 
     private readonly onProgress = (event: WebViewProgressEvent) => {
-        const { url, progress } = event.nativeEvent;
+        const { url, progress, canGoBack, canGoForward } = event.nativeEvent;
         console.log(`[WebView onLoadProgress] progress ${progress}`);
 
         this.props.setProgressOnWebView({ progress, tab: this.props.activeTab });
+        this.props.updateWebViewNavigationState({ canGoBack, canGoForward, tab: this.props.activeTab });
     };
 
     // const MyWebView = ({ children, ...rest }) => React.createElement(WebView, props, children);
@@ -192,5 +197,6 @@ export const WebViewContainerConnected = connect(
     {
         updateUrlBarText,
         setProgressOnWebView,
+        updateWebViewNavigationState,
     },
 )(WebViewContainer);

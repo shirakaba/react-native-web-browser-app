@@ -10,6 +10,9 @@ interface Props {
     name?: string,
     compact?: boolean,
     onTap?: () => void,
+    enabled?: boolean,
+    enabledColor?: string,
+    disabledColor?: string,
 }
 
 interface State {
@@ -23,9 +26,7 @@ export type ToolbarButtonProps = Props & Omit<TouchableOpacityProps & ToolbarBut
 // https://github.com/cliqz/user-agent-ios/blob/7a91b5ea3e2fbb8b95dadd4f0cfd71b334e73449/Client/Frontend/Browser/TabToolbar.swift#L146
 export class ToolbarButton extends React.Component<ToolbarButtonProps, State>{
     render(){
-        const { onTap, containerStyle, compact, name = "", children, ...rest } = this.props;
-        
-        const textColour: string = "white";
+        const { onTap, containerStyle, compact, enabled = true, name = "", enabledColor = "white", disabledColor = "lightgray", children, ...rest } = this.props;
 
         /** For what it's worth: iOS HIG for "Navigation Bar and Toolbar Icon Size" gives 24pt target size, 28pt max size.
           * @see: https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/custom-icons/ */
@@ -33,6 +34,7 @@ export class ToolbarButton extends React.Component<ToolbarButtonProps, State>{
         return (
             <AnimatedTouchableOpacity
                 onPress={onTap}
+                disabled={!enabled}
                 style={[
                     {
                         width: compact ? 24 : 30,
@@ -51,7 +53,7 @@ export class ToolbarButton extends React.Component<ToolbarButtonProps, State>{
                         // padding: 9,
                         // fontFamily: "Font Awesome 5 Free",
                     }}
-                    color={textColour}
+                    color={enabled ? enabledColor : disabledColor}
                     size={compact ? 12 : 20}
                     
                     name={name}

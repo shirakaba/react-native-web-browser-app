@@ -23,6 +23,8 @@ const navigationSlice = createSlice({
             tab0: {
                 url: initialPage,
                 loadProgress: 0,
+                canGoBack: false,
+                canGoForward: false,
             }
         },
         urlBarText: initialPage,
@@ -37,10 +39,19 @@ const navigationSlice = createSlice({
             const text = action.payload;
             state.urlBarText = text;
         },
+        updateWebViewNavigationState(state, action: PayloadAction<{ canGoBack: boolean, canGoForward: boolean, tab?: string }>){
+            const { canGoBack, canGoForward, tab = state.activeTab } = action.payload;
+            state.tabs[tab] = {
+                ...state.tabs[tab],
+                canGoBack,
+                canGoForward,
+            };
+        },
         setUrlOnWebView(state, action: PayloadAction<{ url: string, tab?: string }>) {
             // console.log(`[setUrlOnWebView] setting url for activeTab "${state.activeTab}" as: "${action.payload.url}"`);
             const { url, tab = state.activeTab } = action.payload;
             state.tabs[tab] = {
+                ...state.tabs[tab],
                 url,
                 loadProgress: 0,
             };
@@ -65,7 +76,7 @@ const navigationSlice = createSlice({
     }
 });
 
-export const { updateUrlBarText, setProgressOnWebView } = navigationSlice.actions;
+export const { updateUrlBarText, setProgressOnWebView, updateWebViewNavigationState } = navigationSlice.actions;
 export const navigationSliceReducer = navigationSlice.reducer;
 
 function getWebView(tab: string){
@@ -147,7 +158,7 @@ export function submitUrlBarTextToWebView(text: string, tab?: string): AppThunk 
 
         console.log(`[setUrlOnWebView] Dispatching action to set url for chosenTab "${chosenTab}" as: "${url}"`);
 
-        return dispatch(navigationSlice.actions.setUrlOnWebView({ url, tab: chosenTab }));
+        return dispatch(navigationSlice.actions.setUrlOnWebView({ url, canGoBack: webView.canGoBack, canGoForward: webView.canGoForward, tab: chosenTab }));
     };
 }
 
@@ -159,7 +170,7 @@ export function goBackOnWebView(tab?: string): AppThunk {
             return Promise.resolve();
         }
 
-        console.log(`[goBackOnWebView] Calling goBack() on webView for chosenTab "${chosenTab}" while canGoBack is: ${webView.canGoBack}`);
+        console.log(`[goBackOnWebView] Calling goBack() on webView for chosenTab "${chosenTab}" while canGoBack is: ${webView.canGoBack}  and webView is:`, webView);
         webView.goBack();
 
         return dispatch(navigationSlice.actions.goBackOnWebView());
@@ -174,7 +185,7 @@ export function goForwardOnWebView(tab?: string): AppThunk {
             return Promise.resolve();
         }
 
-        console.log(`[goForwardOnWebView] Calling goForward() on webView for chosenTab "${chosenTab}" while canGoForward is: ${webView.canGoForward}`);
+        console.log(`[goForwardOnWebView] Calling goForward() on webView for chosenTab "${chosenTab}" while canGoForward is: ${webView.canGoForward} and webView is:`, webView);
         webView.goForward();
 
         return dispatch(navigationSlice.actions.goForwardOnWebView());

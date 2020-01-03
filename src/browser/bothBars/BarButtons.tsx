@@ -8,6 +8,7 @@ import { WholeStoreState } from "~/store/store";
 // From URLBarView
 
 interface BackButtonProps {
+    canGoBack: boolean,
     goBackOnWebView: typeof goBackOnWebView,
 }
 class BackButton extends React.Component<BackButtonProps & ToolbarButtonProps, {}> {
@@ -16,10 +17,11 @@ class BackButton extends React.Component<BackButtonProps & ToolbarButtonProps, {
     };
 
     render(){
-        const { ...rest } = this.props;
+        const { canGoBack, ...rest } = this.props;
         return (
             <ToolbarButton
                 {...rest}
+                enabled={canGoBack}
                 onTap={this.onTap}
                 name={"chevron-left"}
             />
@@ -29,7 +31,9 @@ class BackButton extends React.Component<BackButtonProps & ToolbarButtonProps, {
 export const BackButtonConnected = connect(
     (wholeStoreState: WholeStoreState) => {
         // May support pop-out history in future.
-        return {};
+        return {
+            canGoBack: wholeStoreState.navigation.tabs[wholeStoreState.navigation.activeTab].canGoBack,
+        };
     },
     {
         goBackOnWebView,
@@ -37,6 +41,7 @@ export const BackButtonConnected = connect(
 )(BackButton);
 
 interface ForwardButtonProps {
+    canGoForward: boolean,
     goForwardOnWebView: typeof goForwardOnWebView,
 }
 class ForwardButton extends React.Component<ForwardButtonProps & ToolbarButtonProps, {}> {
@@ -45,10 +50,11 @@ class ForwardButton extends React.Component<ForwardButtonProps & ToolbarButtonPr
     };
 
     render(){
-        const { ...rest } = this.props;
+        const { canGoForward, ...rest } = this.props;
         return (
             <ToolbarButton
                 {...rest}
+                enabled={canGoForward}
                 onTap={this.onTap}
                 name={"chevron-right"}
             />
@@ -58,7 +64,9 @@ class ForwardButton extends React.Component<ForwardButtonProps & ToolbarButtonPr
 export const ForwardButtonConnected = connect(
     (wholeStoreState: WholeStoreState) => {
         // May support pop-out history in future.
-        return {};
+        return {
+            canGoForward: wholeStoreState.navigation.tabs[wholeStoreState.navigation.activeTab].canGoForward,
+        };
     },
     {
         goForwardOnWebView,
