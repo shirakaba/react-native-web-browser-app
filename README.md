@@ -35,11 +35,12 @@ To be clear: This project is **purely** focused on building a browser UI, and fo
 - [X] Functional URL bar (can navigate to URL inputs and updates text upon page redirect)
 - [X] Rotation
 - [X] Bar retraction
+- [X] Intelligent URL vs. search query determination in search bar
+- [ ] Search suggestions
 - [ ] Bars snapping to fully retracted/revealed upon gesture release
 - [ ] Tabs
 - [ ] History
 - [ ] Browsing-state persistence
-- [ ] Search suggestions
 - [ ] Bookmarks
 - [ ] Reading list
 - [ ] Page-specific actions

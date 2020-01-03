@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ThunkAction } from "redux-thunk";
 import { Action } from 'redux';
 import { WholeStoreState, AppThunk } from "./store";
+import { isValidUrl, convertTextToSearchQuery, SearchProvider } from "~/utils/urlBarTextHandling";
 
 type WebView = any;
 type WebViewId = string;
@@ -24,7 +25,8 @@ const navigationSlice = createSlice({
                 loadProgress: 0,
             }
         },
-        urlBarText: initialPage
+        urlBarText: initialPage,
+        searchProvider: SearchProvider.DuckDuckGo,
     },
     reducers: {
         /**
@@ -80,7 +82,7 @@ function getWebView(tab: string){
     return webViewRef.current!;
 }
 
-export function submitUrlBarTextToWebView(url: string, tab?: string): AppThunk {
+export function submitUrlBarTextToWebView(text: string, tab?: string): AppThunk {
     return function(dispatch, getState) {
         const chosenTab: string = tab || getState().navigation.activeTab;
         const webView = getWebView(chosenTab);
@@ -88,10 +90,63 @@ export function submitUrlBarTextToWebView(url: string, tab?: string): AppThunk {
             return Promise.resolve();
         }
 
-        console.log(`[setUrlOnWebView] Setting URL on webView for chosenTab "${chosenTab}" as: ${url}`);
-        webView.src = url;
+        const trimmedText: string = text.trim();
+
+        if(trimmedText.length === 0){
+            return Promise.resolve();
+        }
+
+        let url: string;
+        let protocol: string|null = null;
+
+        if(trimmedText.startsWith("//")){
+            // We won't support protocol-relative URLs.
+            // TODO: reject
+            return Promise.resolve();
+        }
+
+        // https://stackoverflow.com/questions/2824302/how-to-make-regular-expression-into-non-greedy
+        const protocolMatchArr: RegExpMatchArray|null = trimmedText.match(/.*?:\/\//);
+        const lacksWhitespace: boolean = !/\s+/.test(trimmedText); // This is a cheap test, so we do it in preference of isValidUrl().
+        if(
+            protocolMatchArr === null || 
+            protocolMatchArr.length === 0 || 
+            trimmedText.indexOf(protocolMatchArr[0]) !== 0
+        ){
+            /* No protocol at start of string. Possible Cases:
+             * "bbc.co.uk", "foo bar", "what does https:// mean?", "bbc.co.uk#https://" (Safari fails this one as invalid) */
+            if(lacksWhitespace && isValidUrl(trimmedText)){
+                protocol = "http"; // It's now the server's responsibility to redirect us to HTTPS if available.
+                url = `${protocol}://${trimmedText}`;
+            } else {
+                protocol = "https"; // All our search engines use HTTPS
+                url = convertTextToSearchQuery(
+                    trimmedText,
+                    getState().navigation.searchProvider,
+                );
+            }
+        } else {
+            // Has a protocol at start ("https://bbc.co.uk").
+            protocol = protocolMatchArr[0].slice(0, -("://".length));
+            url = trimmedText;
+        }
+
+        if(protocol === "file"){
+            // We won't support file browsing (can rethink this later).
+            // TODO: reject
+            return Promise.resolve();
+        }
+
+        if(webView.src === url){
+            console.log(`[setUrlOnWebView] Setting URL on webView for chosenTab "${chosenTab}" as same as before, so refreshing: ${url}`);
+            webView.refresh();
+        } else {
+            console.log(`[setUrlOnWebView] Setting URL on webView for chosenTab "${chosenTab}" as: ${url}`);
+            webView.src = url;
+        }
 
         console.log(`[setUrlOnWebView] Dispatching action to set url for chosenTab "${chosenTab}" as: "${url}"`);
+
         return dispatch(navigationSlice.actions.setUrlOnWebView({ url, tab: chosenTab }));
     };
 }

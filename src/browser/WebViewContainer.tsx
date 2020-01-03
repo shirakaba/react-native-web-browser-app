@@ -156,7 +156,7 @@ export class WebViewContainer extends React.Component<WebViewContainerProps & Vi
                                                 Animated.call(
                                                     [y],
                                                     (r) => {
-                                                        console.log(`Reanimated got arg`, r[0]);
+                                                        // console.log(`Reanimated got arg`, r[0]);
                                                     }
                                                 )
                                             ]);
