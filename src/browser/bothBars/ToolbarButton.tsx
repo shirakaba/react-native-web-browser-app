@@ -8,7 +8,6 @@ export type ToolbarButtonContainerStyleProp = { containerStyle?: ToolbarButtonCo
 
 interface Props {
     name?: string,
-    compact?: boolean,
     onTap?: () => void,
     enabled?: boolean,
     enabledColor?: string,
@@ -26,7 +25,7 @@ export type ToolbarButtonProps = Props & Omit<TouchableOpacityProps & ToolbarBut
 // https://github.com/cliqz/user-agent-ios/blob/7a91b5ea3e2fbb8b95dadd4f0cfd71b334e73449/Client/Frontend/Browser/TabToolbar.swift#L146
 export class ToolbarButton extends React.Component<ToolbarButtonProps, State>{
     render(){
-        const { onTap, containerStyle, compact, solid, light, brand, enabled = true, name = "", enabledColor = "white", disabledColor = "lightgray", children, ...rest } = this.props;
+        const { onTap, containerStyle, solid, light, brand, enabled = true, name = "", enabledColor = "white", disabledColor = "lightgray", children, ...rest } = this.props;
 
         /** For what it's worth: iOS HIG for "Navigation Bar and Toolbar Icon Size" gives 24pt target size, 28pt max size.
           * @see: https://developer.apple.com/design/human-interface-guidelines/ios/icons-and-images/custom-icons/ */
@@ -44,8 +43,8 @@ export class ToolbarButton extends React.Component<ToolbarButtonProps, State>{
                 disabled={!enabled}
                 style={[
                     {
-                        width: compact ? 24 : 30,
-                        height: compact ? 24 : 30,
+                        width: 30,
+                        height: 30,
                         backgroundColor: "transparent",
                         alignItems: "center",
                         justifyContent: "center",
@@ -61,7 +60,7 @@ export class ToolbarButton extends React.Component<ToolbarButtonProps, State>{
                         // fontFamily: "Font Awesome 5 Free",
                     }}
                     color={enabled ? enabledColor : disabledColor}
-                    size={compact ? 12 : 20}
+                    size={20}
                     {...assertOnlyOneVariantInProps}
                     name={name}
                 >

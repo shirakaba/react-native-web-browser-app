@@ -24,7 +24,7 @@ class LockImageView extends React.Component<{ locked: boolean } & ToolbarButtonP
 
         return (
             // <$Image/>
-            <ToolbarButton name={locked ? "lock" : "lock-open"} compact={true} {...rest}/>
+            <ToolbarButton name={locked ? "lock" : "lock-open"} {...rest}/>
         );
     }
 }
@@ -280,7 +280,16 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 
                 {/* privacyIndicatorSeparator */}
                 <View style={{ width: 3 }}/>
-                <LockImageView locked={true}/>
+                <LockImageView
+                    locked={true}
+                    containerStyle={{
+                        /* Nothing to do with animation; just my lazy way of making it more compact. */
+                        transform: [
+                            { scaleX: 0.66 },
+                            { scaleY: 0.66 },
+                        ]
+                    }}
+                />
                 <UrlTextField
                     style={{
                         backgroundColor: textFieldBackgroundColor,
@@ -289,6 +298,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 />
                 <ClearUrlBarTextButtonConnected
                     containerStyle={{
+                        /* TODO: hide this button altogether in compact mode. */
                         display: urlBarText.length > 0 ? "flex": "none",
                         /* Nothing to do with animation; just my lazy way of making it more compact. */
                         transform: [
