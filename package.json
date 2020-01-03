@@ -22,7 +22,6 @@
     "react-native-webview": "git+https://github.com/shirakaba/react-native-webview.git#shirakaba/main",
     "react-redux": "^7.1.3",
     "redux": "^4.0.5",
-    "redux-saga": "^1.1.3",
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
