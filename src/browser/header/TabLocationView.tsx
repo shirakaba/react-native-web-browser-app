@@ -163,6 +163,11 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     height: HEADER_REVEALED_HEIGHT,
                 };
                 break;
+            case RetractionStyle.alwaysCompact:
+                heightStyle = {
+                    height: HEADER_RETRACTED_HEIGHT,
+                };
+                break;
             case RetractionStyle.retractToCompact:
             case RetractionStyle.retractToHidden:
                 heightStyle = {
@@ -173,6 +178,22 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 heightStyle = {
                     height: 0
                 };
+        }
+
+        // Where 1 is not compact and 0 is fully compact.
+        let compactionFactor;
+        switch(retractionStyle){
+            case RetractionStyle.alwaysRevealed:
+                compactionFactor = 1;
+                break;
+            case RetractionStyle.alwaysHidden:
+            case RetractionStyle.alwaysCompact:
+                compactionFactor = 0;
+                break;
+            case RetractionStyle.retractToCompact:
+            case RetractionStyle.retractToHidden:
+                compactionFactor = this.props.animatedTitleOpacity as any;
+                break;
         }
 
         return (
@@ -211,7 +232,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                         height: "100%",
                         borderRadius: 10,
                         backgroundColor: slotBackgroundColor,
-                        opacity: retractionStyle === RetractionStyle.alwaysRevealed ? 1 : this.props.animatedTitleOpacity,
+                        opacity: compactionFactor,
                     }}
                 />
 
@@ -222,8 +243,8 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 <PrivacyIndicator
                     containerStyle={{
                         transform: [
-                            { scaleX: retractionStyle === RetractionStyle.alwaysRevealed ? 1 : this.props.animatedTitleOpacity as any },
-                            { scaleY: retractionStyle === RetractionStyle.alwaysRevealed ? 1 : this.props.animatedTitleOpacity as any },
+                            { scaleX: compactionFactor },
+                            { scaleY: compactionFactor },
                         ],
                     }}
                 />
@@ -241,8 +262,8 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     containerStyle={{
                         backgroundColor: buttonBackgroundColor,
                         transform: [
-                            { scaleX: retractionStyle === RetractionStyle.alwaysRevealed ? 1 : this.props.animatedTitleOpacity as any },
-                            { scaleY: retractionStyle === RetractionStyle.alwaysRevealed ? 1 : this.props.animatedTitleOpacity as any },
+                            { scaleX: compactionFactor },
+                            { scaleY: compactionFactor },
                         ],
                     }}
                 />

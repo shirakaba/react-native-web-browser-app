@@ -185,6 +185,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                     switch(retractionStyle){
                         case RetractionStyle.alwaysRevealed:
                         case RetractionStyle.retractToCompact:
+                        case RetractionStyle.alwaysCompact:
                             heightStyle = {
                                 height: "auto"
                             };

@@ -1,5 +1,6 @@
 export enum RetractionStyle {
     alwaysRevealed = "alwaysRevealed",
+    alwaysCompact = "alwaysCompact",
     alwaysHidden = "alwaysHidden",
     /* Displays text and icons but not buttons, which would be too small to tap */
     retractToCompact = "retractToCompact",
@@ -54,8 +55,6 @@ export const defaultConfig: BrowserConfig = {
             landscape: [],
         },
         portraitRetraction: RetractionStyle.retractToHidden,
-
-        // May consider promoting this on tablets to alwaysRevealed (requires react-native-device-info to detect).
         landscapeRetraction: RetractionStyle.alwaysHidden,
     }
 };
