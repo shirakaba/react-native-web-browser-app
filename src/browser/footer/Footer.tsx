@@ -6,10 +6,13 @@ import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableW
 import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
 import Animated, { not } from "react-native-reanimated";
 import { HEADER_RETRACTION_DISTANCE } from "../header/TabLocationView";
+import { RetractionStyle, FooterConfig } from "~/browser/browserConfig";
 const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
 
 
 interface FooterOwnProps {
+    // retractionStyle: RetractionStyle.retractToHidden|RetractionStyle.alwaysRevealed,
+    config: FooterConfig,
     scrollY: Animated.Value<number>,
     orientation: "portrait"|"landscape",
     showToolbar: boolean,
@@ -23,7 +26,10 @@ export const FOOTER_REVEALED_HEIGHT: number = 44;
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L103
 export class Footer extends React.Component<FooterProps, {}> {
     render(){
-        const { showToolbar, orientation, children, ...rest } = this.props;
+        const { config, showToolbar, orientation, children, ...rest } = this.props;
+        const { buttons, landscapeRetraction, portraitRetraction } = config;
+
+        const retractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
 
         if(showToolbar){
             /* Warning: I've tried other layouts (StackLayout and FlexboxLayout) here, but they shift
@@ -46,13 +52,15 @@ export class Footer extends React.Component<FooterProps, {}> {
                                         paddingRight: edgeInsets.right,
                                         
                                         // height: FOOTER_REVEALED_HEIGHT + unsafeAreaCoverHeight,
-                                        height: interpolate(this.props.scrollY, {
-                                            // We'll keep the footer retraction in sync with that of the header retraction.
-                                            // -y means finger is moving upwards (so bar should retract)
-                                            inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
-                                            outputRange: [FOOTER_RETRACTED_HEIGHT, add(FOOTER_REVEALED_HEIGHT, unsafeAreaCoverHeight)],
-                                            extrapolate: Extrapolate.CLAMP,
-                                        }),
+                                        height: retractionStyle === RetractionStyle.alwaysRevealed ? 
+                                            FOOTER_REVEALED_HEIGHT + unsafeAreaCoverHeight : 
+                                            interpolate(this.props.scrollY, {
+                                                // We'll keep the footer retraction in sync with that of the header retraction.
+                                                // -y means finger is moving upwards (so bar should retract)
+                                                inputRange: [-(HEADER_RETRACTION_DISTANCE), (HEADER_RETRACTION_DISTANCE)],
+                                                outputRange: [FOOTER_RETRACTED_HEIGHT, add(FOOTER_REVEALED_HEIGHT, unsafeAreaCoverHeight)],
+                                                extrapolate: Extrapolate.CLAMP,
+                                            }),
                                     }
                                 }
                                 // height={{ value: animatedHeight, unit: "dip" }}

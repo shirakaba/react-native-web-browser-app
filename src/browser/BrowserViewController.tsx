@@ -9,6 +9,7 @@ import { WebViewContainerConnected, WebViewContainerBackdrop } from "./WebViewCo
 import { isPortrait, updateOrientation } from "~/store/uiState";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
+import { BrowserConfig, defaultConfig } from "~/browser/browserConfig";
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -55,6 +56,7 @@ const BrowserViewControllerUX = {
 // }
 
 interface Props {
+    config?: BrowserConfig,
     updateOrientation: typeof updateOrientation,
 }
 
@@ -79,7 +81,7 @@ export class BrowserViewController extends React.Component<Props, State> {
     }
 
     render(){
-        const { } = this.props;
+        const { config = defaultConfig, } = this.props;
         // Visibility of certain components changes when switching app (if in private browsing mode)
         // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L343
 
@@ -132,6 +134,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                     </View>
 
                     <FooterConnected
+                        config={config.footer}
                         scrollY={this.scrollY}
                         showToolbar={true}
                     />
