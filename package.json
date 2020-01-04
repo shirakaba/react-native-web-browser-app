@@ -1,5 +1,16 @@
 {
+  "name": "react-native-web-browser-app",
+  "version": "0.1.0",
+  "description": "Fully-featured cross-platform Web Browser, made in React Native",
+  "main": "dist/app.js",
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
+    "build": "tsc --project ./tsconfig.json",
+    "prepare": "npm run build",
     "postinstall": "jetify",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -7,6 +18,22 @@
     "start": "react-native start",
     "test": "jest"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shirakaba/react-native-web-browser-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shirakaba/react-native-web-browser-app/issues"
+  },
+  "homepage": "https://github.com/shirakaba/react-native-web-browser-app#readme",
+  "keywords": [
+    "retractible bars",
+    "LinguaBrowse",
+    "browser",
+    "web browser",
+    "React Native",
+    "React"
+  ],
   "dependencies": {
     "@reduxjs/toolkit": "^1.1.0",
     "@types/react-native-vector-icons": "^6.4.5",
