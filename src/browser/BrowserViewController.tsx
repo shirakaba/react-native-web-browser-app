@@ -7,7 +7,7 @@ import { WholeStoreState } from "~/store/store";
 import { isPortrait, updateOrientation } from "~/store/uiState";
 import { DRAG_END_INITIAL } from "./bothBars/barSpring";
 import { FooterConnected } from "./footer/Footer";
-import { RetractibleHeaderConnected } from "./header/Header";
+import { RetractibleHeaderConnected } from "./header/RetractibleHeader";
 import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
 import { DefaultBarAwareWebView } from "./webView/BarAwareWebView";
 import { WebViewBackdrop } from "./webView/WebViewBackdrop";
