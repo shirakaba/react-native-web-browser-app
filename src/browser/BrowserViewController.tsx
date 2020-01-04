@@ -1,16 +1,16 @@
 import * as React from "react";
-import { RetractibleHeaderConnected } from "./header/Header";
-import { View, ViewProps, StyleSheet, Dimensions } from "react-native";
+import { Dimensions, View } from "react-native";
 import Animated from "react-native-reanimated";
-import { FooterConnected } from "./footer/Footer";
-import { DRAG_END_INITIAL } from "./bothBars/barSpring";
-import { WebViewContainerBackdrop, WebViewContainer } from "./webView/WebViewContainer";
-import { isPortrait, updateOrientation } from "~/store/uiState";
 import { connect } from "react-redux";
-import { WholeStoreState } from "~/store/store";
 import { BrowserConfig, defaultConfig } from "~/browser/browserConfig";
+import { WholeStoreState } from "~/store/store";
+import { isPortrait, updateOrientation } from "~/store/uiState";
+import { DRAG_END_INITIAL } from "./bothBars/barSpring";
+import { FooterConnected } from "./footer/Footer";
+import { RetractibleHeaderConnected } from "./header/Header";
 import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
 import { DefaultBarAwareWebView } from "./webView/BarAwareWebView";
+import { WebViewBackdrop } from "./webView/WebViewBackdrop";
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -133,7 +133,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                             width: "100%",
                         }}
                     >
-                        <WebViewContainerBackdrop
+                        <WebViewBackdrop
                             style={{
                                 backgroundColor: "gold",
                                 position: "absolute",

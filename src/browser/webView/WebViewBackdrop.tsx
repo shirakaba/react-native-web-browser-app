@@ -2,7 +2,7 @@ import * as React from "react";
 import { StyleSheet, View, ViewProps } from "react-native";
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L110
-export class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {
+export class WebViewBackdrop extends React.Component<ViewProps, {}> {
     render(){
         const { style, children, ...rest } = this.props;
 
