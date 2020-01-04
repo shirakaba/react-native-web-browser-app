@@ -111,6 +111,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                         backgroundColor,
                         landscapeRetraction,
                         portraitRetraction,
+                        progressBarTrackColor,
                         HEADER_RETRACTED_HEIGHT = DEFAULT_HEADER_RETRACTED_HEIGHT,
                         HEADER_REVEALED_HEIGHT = DEFAULT_HEADER_REVEALED_HEIGHT,
                     } = config;
@@ -176,7 +177,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                                     paddingRight: edgeInsets.right,
                                 }
                             })}
-                            {progressBar({})}
+                            {progressBar({ trackColor: progressBarTrackColor })}
                         </Animated.View>
                     );
                 }}
