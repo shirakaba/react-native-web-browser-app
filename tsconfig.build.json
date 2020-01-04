@@ -1,0 +1,11 @@
+{
+    "extends": "./tsconfig",
+    "compilerOptions": {
+        "target": "esnext",
+        "noEmit": false,
+        "declaration": true,
+        "outDir": "dist",
+        "removeComments": false,
+        "sourceMap": true
+    }
+}

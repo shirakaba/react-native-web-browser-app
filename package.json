@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "description": "Fully-featured cross-platform Web Browser, made in React Native",
   "main": "dist/app.js",
+  "types": "dist/app.d.ts",
   "files": [
     "dist",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
-    "build": "tsc --project ./tsconfig.json",
+    "build": "tsc --project ./tsconfig.build.json",
     "prepare": "npm run build",
     "postinstall": "jetify",
     "android": "react-native run-android",
