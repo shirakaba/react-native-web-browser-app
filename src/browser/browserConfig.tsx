@@ -16,10 +16,6 @@ export enum RetractionStyle {
 }
 
 export interface BarConfig {
-    buttons: {
-        portrait: [],
-        landscape: [],
-    },
     portraitRetraction: RetractionStyle,
     landscapeRetraction: RetractionStyle,
     backgroundColor?: string,
@@ -29,10 +25,6 @@ export interface HeaderConfig extends BarConfig {
     HEADER_RETRACTED_HEIGHT?: number,
     HEADER_REVEALED_HEIGHT?: number,
     HEADER_HIDDEN_HEIGHT?: number,
-    buttons: {
-        portrait: [],
-        landscape: [],
-    },
     portraitRetraction: RetractionStyle,
     landscapeRetraction: RetractionStyle,
     slotBackgroundColor?: string,
@@ -49,10 +41,6 @@ export interface FooterConfig extends BarConfig {
     HEADER_RETRACTED_HEIGHT?: number,
     HEADER_REVEALED_HEIGHT?: number,
     FOOTER_REVEALED_HEIGHT: number,
-    buttons: {
-        portrait: [],
-        landscape: [],
-    },
     portraitRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden|RetractionStyle.alwaysHidden,
     landscapeRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden|RetractionStyle.alwaysHidden,
     contentView?: TabToolbarType;
@@ -70,10 +58,6 @@ export const defaultConfig: BrowserConfig = {
     header: {
         HEADER_RETRACTED_HEIGHT: DEFAULT_HEADER_RETRACTED_HEIGHT,
         HEADER_REVEALED_HEIGHT: DEFAULT_HEADER_REVEALED_HEIGHT,
-        buttons: {
-            portrait: [],
-            landscape: [],
-        },
         portraitRetraction: RetractionStyle.retractToCompact,
         landscapeRetraction: RetractionStyle.retractToHidden,
         backgroundColor: "gray",
@@ -88,10 +72,6 @@ export const defaultConfig: BrowserConfig = {
         HEADER_RETRACTED_HEIGHT: DEFAULT_HEADER_RETRACTED_HEIGHT,
         HEADER_REVEALED_HEIGHT: DEFAULT_HEADER_REVEALED_HEIGHT,
         FOOTER_REVEALED_HEIGHT: DEFAULT_FOOTER_REVEALED_HEIGHT,
-        buttons: {
-            portrait: [],
-            landscape: [],
-        },
         portraitRetraction: RetractionStyle.retractToHidden,
         landscapeRetraction: RetractionStyle.alwaysHidden,
         backgroundColor: "gray",
