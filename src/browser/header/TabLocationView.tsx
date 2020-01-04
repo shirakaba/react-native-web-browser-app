@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import { updateUrlBarText, submitUrlBarTextToWebView } from "../../store/navigationState";
 import { WholeStoreState } from "../../store/store";
 import Animated, { Transitioning } from "react-native-reanimated";
-import { HeaderConfig, RetractionStyle } from "../browserConfig";
+import { HeaderConfig } from "../browserConfig";
+import { RetractionStyle } from "../bothBars/BarConfig";
 
 const TabLocationViewUX = {
     Spacing: 8,
