@@ -1,6 +1,7 @@
 import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
 import { DEFAULT_FOOTER_REVEALED_HEIGHT } from "./footer/Footer";
 import { BarAwareWebViewType, DefaultBarAwareWebView } from "./webView/BarAwareWebView";
+import { TabToolbar } from "./footer/TabToolbar";
 
 export enum RetractionStyle {
     alwaysRevealed = "alwaysRevealed",
@@ -49,6 +50,7 @@ export interface FooterConfig extends BarConfig {
     },
     portraitRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden|RetractionStyle.alwaysHidden,
     landscapeRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden|RetractionStyle.alwaysHidden,
+    ContentView?: typeof TabToolbar;
 }
 
 
@@ -84,6 +86,7 @@ export const defaultConfig: BrowserConfig = {
         portraitRetraction: RetractionStyle.retractToHidden,
         landscapeRetraction: RetractionStyle.alwaysHidden,
         backgroundColor: "gray",
+        ContentView: TabToolbar,
     },
     barAwareWebView: DefaultBarAwareWebView,
 };

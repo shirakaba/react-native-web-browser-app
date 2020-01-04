@@ -30,6 +30,7 @@ export class Footer extends React.Component<FooterProps, {}> {
         const {
             buttons,
             backgroundColor,
+            ContentView = TabToolbar,
             landscapeRetraction,
             portraitRetraction,
             FOOTER_REVEALED_HEIGHT = DEFAULT_FOOTER_REVEALED_HEIGHT,
@@ -93,7 +94,7 @@ export class Footer extends React.Component<FooterProps, {}> {
                                 // height={{ value: animatedHeight, unit: "dip" }}
                                 {...rest}
                             >
-                                <TabToolbar config={config}/>
+                                {<ContentView config={config}/>}
                             </Animated.View>
                         );
                     }}    
