@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView, updateWebViewNavigationState } from "~/store/navigationState";
-import { ViewProps, Platform } from "react-native";
+import { ViewProps, Platform, ViewStyle } from "react-native";
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
 import Animated from "react-native-reanimated";
@@ -22,7 +22,7 @@ export interface BarAwareWebViewProps {
 }
 
 const IosWebView = WebView as React.ComponentClass<IOSWebViewProps>;
-const AnimatedIosWebView = Animated.createAnimatedComponent(IosWebView) as React.ComponentClass<IOSWebViewProps>;
+const AnimatedIosWebView = Animated.createAnimatedComponent(IosWebView) as React.ComponentClass<Animated.AnimateProps<ViewStyle, IOSWebViewProps>>;
 
 export class BarAwareWebView extends React.Component<BarAwareWebViewProps & ViewProps, { }> {
     private readonly onLoadStarted = (event: WebViewNavigationEvent) => {
