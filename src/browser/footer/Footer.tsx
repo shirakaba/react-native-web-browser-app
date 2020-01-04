@@ -28,7 +28,6 @@ export class Footer extends React.Component<FooterProps, {}> {
     render(){
         const { config, showToolbar, orientation, children, ...rest } = this.props;
         const {
-            buttons,
             backgroundColor,
             contentView = defaultTabToolbar,
             landscapeRetraction,

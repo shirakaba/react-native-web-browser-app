@@ -31,7 +31,6 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
 
         const { config } = props;
         const {
-            buttons,
             landscapeRetraction,
             portraitRetraction,
             HEADER_RETRACTED_HEIGHT = DEFAULT_HEADER_RETRACTED_HEIGHT,
@@ -106,7 +105,6 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                 {(edgeInsets: EdgeInsets) => {
                     const { config, orientation, scrollY, urlBarText, style, children, ...rest } = this.props;
                     const {
-                        buttons,
                         contentView = defaultHeader,
                         progressBar = defaultGradientProgressBar,
                         backgroundColor,
