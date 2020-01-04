@@ -6,7 +6,7 @@ import Animated from "react-native-reanimated";
 type ToolbarButtonContainerStyle = RegisteredStyle<Animated.AnimateStyle<ViewStyle>> | Animated.AnimateStyle<ViewStyle>;
 export type ToolbarButtonContainerStyleProp = { containerStyle?: ToolbarButtonContainerStyle };
 
-interface Props {
+export interface ToolbarButtonOwnProps {
     name?: string,
     onTap?: () => void,
     enabled?: boolean,
@@ -20,7 +20,7 @@ interface State {
 // AnimateProps<ViewStyle, TouchableOpacityProps>
 const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity) as React.ComponentClass<Animated.AnimateProps<ViewStyle, TouchableOpacityProps>>;
 
-export type ToolbarButtonProps = Props & Omit<TouchableOpacityProps & ToolbarButtonContainerStyleProp, "style"> & Partial<FontAwesome5IconProps>;
+export type ToolbarButtonProps = ToolbarButtonOwnProps & Omit<TouchableOpacityProps & ToolbarButtonContainerStyleProp, "style"> & Partial<FontAwesome5IconProps>;
 
 // https://github.com/cliqz/user-agent-ios/blob/7a91b5ea3e2fbb8b95dadd4f0cfd71b334e73449/Client/Frontend/Browser/TabToolbar.swift#L146
 export class ToolbarButton extends React.Component<ToolbarButtonProps, State>{
