@@ -1,12 +1,8 @@
 import * as React from "react";
 import { StyleSheet, View, ViewProps } from "react-native";
 import Animated from "react-native-reanimated";
-import { connect } from "react-redux";
-import { setProgressOnWebView, TabStateRecord, updateUrlBarText, updateWebViewNavigationState } from "~/store/navigationState";
-import { WholeStoreState } from "~/store/store";
 import { HeaderConfig } from "../browserConfig";
-import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "../header/TabLocationView";
-import { BarAwareWebViewConnected, BarAwareWebViewProps } from "./BarAwareWebView";
+import { BarAwareWebViewConnected } from "./BarAwareWebView";
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L110
 export class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {
