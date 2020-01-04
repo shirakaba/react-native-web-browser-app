@@ -34,7 +34,7 @@ const navigationSlice = createSlice({
          * Update the singleton URL bar's displayed text (does not launch a query).
          */
         updateUrlBarText(state, action: PayloadAction<{ text: string, fromNavigationEvent: boolean }>) {
-            console.log(`[navigationState.ts] updateUrlBarText action ${JSON.stringify(action)} and state`, state);
+            // console.log(`[navigationState.ts] updateUrlBarText action ${JSON.stringify(action)} and state`, state);
             const { text, fromNavigationEvent } = action.payload;
             state.urlBarText = text;
             if(fromNavigationEvent){
