@@ -6,8 +6,8 @@ import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableW
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';
 import Animated from "react-native-reanimated";
-import { HeaderConfig } from "./browserConfig";
-import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
+import { HeaderConfig } from "../browserConfig";
+import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "../header/TabLocationView";
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L110
 export class WebViewContainerBackdrop extends React.Component<ViewProps, {}> {
