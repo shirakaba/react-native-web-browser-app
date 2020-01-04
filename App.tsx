@@ -1,7 +1,7 @@
 import React from "react";
 import { Provider } from 'react-redux';
-import { store } from '~/store/store';
-import { BrowserViewControllerConnected } from "~/browser/BrowserViewController";
+import { store } from './src/store/store';
+import { BrowserViewControllerConnected } from "./src/browser/BrowserViewController";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 interface Props {
