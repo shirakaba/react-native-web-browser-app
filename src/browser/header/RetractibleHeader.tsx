@@ -176,11 +176,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                                     paddingRight: edgeInsets.right,
                                 }
                             })}
-                            {progressBar({
-                                style: {
-                                    width: "100%",
-                                }
-                            })}
+                            {progressBar({})}
                         </Animated.View>
                     );
                 }}

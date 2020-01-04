@@ -4,6 +4,7 @@ import { WholeStoreState } from "../../store/store";
 import { View, Animated, ViewProps } from "react-native";
 
 interface GradientProgressBarOwnProps {
+    trackColor?: string,
 }
 
 interface GradientProgressBarConnectedProps {
@@ -67,7 +68,7 @@ class GradientProgressBar extends React.Component<GradientProgressBarProps, Stat
     }
 
     render(){
-        const { progress, ...rest } = this.props;
+        const { progress, trackColor = "blue", ...rest } = this.props;
 
         // console.log(`[GradientProgressBar] rendering with progress ${progress}`);
 
@@ -89,7 +90,7 @@ class GradientProgressBar extends React.Component<GradientProgressBarProps, Stat
                 <Animated.View
                     style={{
                         height: GRADIENT_PROGRESS_BAR_HEIGHT,
-                        backgroundColor: "blue",
+                        backgroundColor: trackColor,
                         width: this.state.barWidth.interpolate({
                             inputRange: [0, 1],
                             outputRange: ['0%', '100%'],

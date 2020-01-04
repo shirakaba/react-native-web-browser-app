@@ -13,6 +13,9 @@ export interface HeaderConfig extends BarConfig {
     HEADER_HIDDEN_HEIGHT?: number,
     portraitRetraction: RetractionStyle,
     landscapeRetraction: RetractionStyle,
+    textFieldTextColor?: string,
+    buttonEnabledColor?: string,
+    buttonDisabledColor?: string,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
     contentView?: HeaderType;
@@ -24,6 +27,8 @@ export interface HeaderConfig extends BarConfig {
  * is designed to retract at exactly the same rate as the header does.
  */
 export interface FooterConfig extends BarConfig {
+    buttonEnabledColor?: string,
+    buttonDisabledColor?: string,
     HEADER_RETRACTED_HEIGHT?: number,
     HEADER_REVEALED_HEIGHT?: number,
     FOOTER_REVEALED_HEIGHT: number,
@@ -48,6 +53,7 @@ export const defaultConfig: BrowserConfig = {
         landscapeRetraction: RetractionStyle.retractToHidden,
         backgroundColor: "gray",
         slotBackgroundColor: "darkgray",
+        textFieldTextColor: "black",
         textFieldBackgroundColor: "transparent",
         // contentView: (props: HeaderProps) => null,
         contentView: defaultHeader,

@@ -21,6 +21,7 @@ export class TabToolbar extends React.Component<TabToolbarProps, State>{
 
     render(){
         const { config, containerStyle, ...rest } = this.props;
+        const { buttonEnabledColor, buttonDisabledColor } = config;
 
         return (
             <View
@@ -37,11 +38,11 @@ export class TabToolbar extends React.Component<TabToolbarProps, State>{
                 {...rest}
             >
                 {/* actionButtons */}
-                <BackButtonConnected/>
-                <ForwardButtonConnected/>
-                <MenuButtonConnected/>
-                <SearchButtonConnected/>
-                <TabsButtonConnected/>
+                <BackButtonConnected enabledColor={buttonEnabledColor} disabledColor={buttonDisabledColor}/>
+                <ForwardButtonConnected enabledColor={buttonEnabledColor} disabledColor={buttonDisabledColor}/>
+                <MenuButtonConnected enabledColor={buttonEnabledColor} disabledColor={buttonDisabledColor}/>
+                <SearchButtonConnected enabledColor={buttonEnabledColor} disabledColor={buttonDisabledColor}/>
+                <TabsButtonConnected enabledColor={buttonEnabledColor} disabledColor={buttonDisabledColor}/>
             </View>
         );
     }

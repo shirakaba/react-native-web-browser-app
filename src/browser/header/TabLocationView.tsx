@@ -183,7 +183,7 @@ interface State {
 export class TabLocationView extends React.Component<Props & Omit<ViewProps, "style">, State>{
     render(){
         const { activeTabIsSecure, urlBarText, config, orientation, ...rest } = this.props;
-        const { slotBackgroundColor = "darkgray", textFieldBackgroundColor = "transparent", landscapeRetraction, portraitRetraction, HEADER_RETRACTED_HEIGHT = DEFAULT_HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT = DEFAULT_HEADER_REVEALED_HEIGHT  } = config;
+        const { slotBackgroundColor = "darkgray", textFieldTextColor = "black", textFieldBackgroundColor = "transparent", landscapeRetraction, portraitRetraction, HEADER_RETRACTED_HEIGHT = DEFAULT_HEADER_RETRACTED_HEIGHT, HEADER_REVEALED_HEIGHT = DEFAULT_HEADER_REVEALED_HEIGHT, buttonEnabledColor, buttonDisabledColor } = config;
         const retractionStyle: RetractionStyle = orientation === "portrait" ? portraitRetraction : landscapeRetraction;
 
         const HEADER_HIDDEN_HEIGHT: number = 0;
@@ -275,6 +275,8 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
 
                 {/* privacyIndicator */}
                 <PrivacyIndicator
+                    enabledColor={buttonEnabledColor}
+                    disabledColor={buttonDisabledColor}
                     containerStyle={{
                         transform: [
                             { scaleX: scaleFactor },
@@ -286,6 +288,8 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 {/* privacyIndicatorSeparator */}
                 <View style={{ width: 3 }}/>
                 <LockImageView
+                    enabledColor={buttonEnabledColor}
+                    disabledColor={buttonDisabledColor}
                     locked={!!activeTabIsSecure}
                     containerStyle={{
                         /* I'm not sure how ftp:// and sftp:// links are usually represented, so we'll hide the lock altogether. */
@@ -299,6 +303,7 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                 />
                 <UrlTextField
                     style={{
+                        color: textFieldTextColor,
                         backgroundColor: textFieldBackgroundColor,
                         flexGrow: 1,
                     }}
@@ -315,6 +320,8 @@ export class TabLocationView extends React.Component<Props & Omit<ViewProps, "st
                     }}
                 />
                 <PageOptionsButton
+                    enabledColor={buttonEnabledColor}
+                    disabledColor={buttonDisabledColor}
                     containerStyle={{
                         transform: [
                             { scaleX: scaleFactor },

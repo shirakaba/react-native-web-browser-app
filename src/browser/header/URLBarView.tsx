@@ -67,7 +67,7 @@ export class URLBarView extends React.Component<Props, State>{
 
     render(){
         const { config, toolbarIsShowing, inOverlayMode } = this.props;
-        const { } = config;
+        const { buttonEnabledColor, buttonDisabledColor } = config;
         const { } = this.state;
 
         let stackContents: React.ReactNode;
@@ -85,9 +85,9 @@ export class URLBarView extends React.Component<Props, State>{
             // i.e. landscape (so show all the items that the footer would normally handle)
             stackContents = (
                 <>
-                    <BackButtonConnected/>
-                    <ForwardButtonConnected/>
-                    <StopReloadButtonConnected/>
+                    <BackButtonConnected enabledColor={buttonEnabledColor} disabledColor={buttonDisabledColor}/>
+                    <ForwardButtonConnected enabledColor={buttonEnabledColor} disabledColor={buttonDisabledColor}/>
+                    <StopReloadButtonConnected enabledColor={buttonEnabledColor} disabledColor={buttonDisabledColor}/>
                     {/* AKA locationView. */}
                     <TabLocationViewConnected
                         config={config}
@@ -96,8 +96,8 @@ export class URLBarView extends React.Component<Props, State>{
                         animatedNavBarTranslateYLandscape={this.props.animatedNavBarTranslateYLandscape}
                         animatedNavBarTranslateYPortrait={this.props.animatedNavBarTranslateYPortait}
                     />
-                    <TabsButtonConnected/>
-                    <MenuButtonConnected/>
+                    <TabsButtonConnected enabledColor={buttonEnabledColor} disabledColor={buttonDisabledColor}/>
+                    <MenuButtonConnected enabledColor={buttonEnabledColor} disabledColor={buttonDisabledColor}/>
                 </>
             );
         } else {

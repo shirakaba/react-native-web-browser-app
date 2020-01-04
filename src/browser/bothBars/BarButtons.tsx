@@ -145,7 +145,7 @@ class SearchButton extends React.Component<{} & ToolbarButtonProps, {}> {
     render(){
         const { ...rest } = this.props;
         return (
-            <ToolbarButton name={"search"}/>
+            <ToolbarButton {...rest} name={"search"}/>
         );
     }
 }
