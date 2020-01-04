@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import { WholeStoreState } from "~/store/store";
-import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView, updateWebViewNavigationState } from "~/store/navigationState";
+import { WholeStoreState } from "../../store/store";
+import { webViews, updateUrlBarText, TabStateRecord, setProgressOnWebView, updateWebViewNavigationState } from "../../store/navigationState";
 import { ViewProps, Platform, ViewStyle } from "react-native";
 import { WebView } from 'react-native-webview';
 import { IOSWebViewProps, WebViewNavigationEvent, WebViewProgressEvent } from 'react-native-webview/lib/WebViewTypes';

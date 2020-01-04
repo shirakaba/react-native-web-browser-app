@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from 'react-redux';
-import { WholeStoreState } from "~/store/store";
+import { WholeStoreState } from "../../store/store";
 import { View, Animated, ViewProps } from "react-native";
 
 interface GradientProgressBarOwnProps {

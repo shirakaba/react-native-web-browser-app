@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Text, ViewStyle, StyleSheet, TouchableOpacity, TouchableOpacityProps, StyleProp, RegisteredStyle } from "react-native";
-import Icon, { FontAwesome5IconVariants, FA5Style, FontAwesome5IconProps } from 'react-native-vector-icons/FontAwesome5';
+import { RegisteredStyle, TouchableOpacity, TouchableOpacityProps, ViewStyle } from "react-native";
 import Animated from "react-native-reanimated";
+import Icon, { FontAwesome5IconProps } from 'react-native-vector-icons/FontAwesome5';
 
 type ToolbarButtonContainerStyle = RegisteredStyle<Animated.AnimateStyle<ViewStyle>> | Animated.AnimateStyle<ViewStyle>;
 export type ToolbarButtonContainerStyleProp = { containerStyle?: ToolbarButtonContainerStyle };

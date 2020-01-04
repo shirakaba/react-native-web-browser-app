@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Text, TouchableOpacityProps, TouchableOpacity } from "react-native";
 import { ToolbarButton, ToolbarButtonProps } from "./ToolbarButton";
-import { goBackOnWebView, goForwardOnWebView, reloadWebView, stopWebView } from "~/store/navigationState";
+import { goBackOnWebView, goForwardOnWebView, reloadWebView, stopWebView } from "../../store/navigationState";
 import { connect } from "react-redux";
-import { WholeStoreState } from "~/store/store";
+import { WholeStoreState } from "../../store/store";
 
 // From URLBarView
 

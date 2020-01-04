@@ -1,10 +1,10 @@
 import * as React from "react";
 import { TextInput, TextInputProps, NativeSyntheticEvent, TextInputSubmitEditingEventData, View, ViewProps, StyleSheet, StyleProp, TextStyle } from "react-native";
 import { ToolbarButton, ToolbarButtonProps } from "../bothBars/ToolbarButton";
-import { PrivacyIndicatorView } from "~/browser/header/PrivacyIndicatorView";
+import { PrivacyIndicatorView } from "../../browser/header/PrivacyIndicatorView";
 import { connect } from 'react-redux';
-import { updateUrlBarText, submitUrlBarTextToWebView } from "~/store/navigationState";
-import { WholeStoreState } from "~/store/store";
+import { updateUrlBarText, submitUrlBarTextToWebView } from "../../store/navigationState";
+import { WholeStoreState } from "../../store/store";
 import Animated, { Transitioning } from "react-native-reanimated";
 import { HeaderConfig, RetractionStyle } from "../browserConfig";
 

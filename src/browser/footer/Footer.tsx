@@ -1,12 +1,12 @@
 import * as React from "react";
-import { TabToolbar, TabToolbarProps, defaultTabToolbar } from "./TabToolbar";
+import { View, ViewProps } from "react-native";
+import Animated from "react-native-reanimated";
+import { EdgeInsets, SafeAreaConsumer } from 'react-native-safe-area-context';
 import { connect } from "react-redux";
-import { WholeStoreState } from "~/store/store";
-import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform, findNodeHandle } from "react-native";
-import { SafeAreaProvider, SafeAreaConsumer, EdgeInsets } from 'react-native-safe-area-context';
-import Animated, { not } from "react-native-reanimated";
-import { RetractionStyle, FooterConfig } from "~/browser/browserConfig";
-import { DEFAULT_HEADER_REVEALED_HEIGHT, DEFAULT_HEADER_RETRACTED_HEIGHT } from "../header/TabLocationView";
+import { FooterConfig, RetractionStyle } from "../../browser/browserConfig";
+import { WholeStoreState } from "../../store/store";
+import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "../header/TabLocationView";
+import { defaultTabToolbar } from "./TabToolbar";
 const { diffClamp, interpolate, event: reanimatedEvent, multiply, add, cond, lessThan, neq, Clock, Extrapolate, clockRunning, set, startClock, spring, sub, stopClock, eq } = Animated;
 
 

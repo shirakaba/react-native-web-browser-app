@@ -1,9 +1,7 @@
-import * as React from "react";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ThunkAction } from "redux-thunk";
-import { Action } from 'redux';
-import { WholeStoreState, AppThunk } from "./store";
-import { isValidUrl, convertTextToSearchQuery, SearchProvider } from "~/utils/urlBarTextHandling";
+import * as React from "react";
+import { convertTextToSearchQuery, isValidUrl, SearchProvider } from "../utils/urlBarTextHandling";
+import { AppThunk } from "./store";
 
 type WebView = any;
 type WebViewId = string;
