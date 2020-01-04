@@ -4,6 +4,7 @@ import { DEFAULT_FOOTER_REVEALED_HEIGHT } from "./footer/Footer";
 import { BarAwareWebViewType, DefaultBarAwareWebView } from "./webView/BarAwareWebView";
 import { defaultTabToolbar, TabToolbarType } from "./footer/TabToolbar";
 import { defaultHeader, HeaderType } from "./header/Header";
+import { GradientProgressBarType, defaultGradientProgressBar } from "./header/GradientProgressBar";
 
 export enum RetractionStyle {
     alwaysRevealed = "alwaysRevealed",
@@ -37,6 +38,7 @@ export interface HeaderConfig extends BarConfig {
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
     contentView?: HeaderType;
+    progressBar?: GradientProgressBarType,
 }
 
 /**
@@ -77,8 +79,10 @@ export const defaultConfig: BrowserConfig = {
         backgroundColor: "gray",
         slotBackgroundColor: "darkgray",
         textFieldBackgroundColor: "transparent",
-        // ContentView: (props: HeaderProps) => null,
+        // contentView: (props: HeaderProps) => null,
         contentView: defaultHeader,
+        // progressBar: (props: GradientProgressBarOwnProps) => null,
+        progressBar: defaultGradientProgressBar,
     },
     footer: {
         HEADER_RETRACTED_HEIGHT: DEFAULT_HEADER_RETRACTED_HEIGHT,
@@ -91,7 +95,7 @@ export const defaultConfig: BrowserConfig = {
         portraitRetraction: RetractionStyle.retractToHidden,
         landscapeRetraction: RetractionStyle.alwaysHidden,
         backgroundColor: "gray",
-        // ContentView: (props: TabToolbarProps) => null,
+        // contentView: (props: TabToolbarProps) => null,
         contentView: defaultTabToolbar,
     },
     barAwareWebView: DefaultBarAwareWebView,

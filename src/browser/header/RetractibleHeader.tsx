@@ -3,10 +3,10 @@ import { ViewProps } from "react-native";
 import Animated from "react-native-reanimated";
 import { EdgeInsets, SafeAreaConsumer } from 'react-native-safe-area-context';
 import { connect } from "react-redux";
-import { GradientProgressBarConnected, GRADIENT_PROGRESS_BAR_HEIGHT } from "~/browser/header/GradientProgressBar";
+import { GRADIENT_PROGRESS_BAR_HEIGHT, defaultGradientProgressBar } from "~/browser/header/GradientProgressBar";
 import { WholeStoreState } from "~/store/store";
 import { HeaderConfig, RetractionStyle } from "../browserConfig";
-import { Header, defaultHeader } from "./Header";
+import { defaultHeader } from "./Header";
 import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./TabLocationView";
 import { URL_BAR_VIEW_PADDING_VERTICAL } from "./URLBarView";
 const { interpolate, Extrapolate } = Animated;
@@ -108,6 +108,7 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                     const {
                         buttons,
                         contentView = defaultHeader,
+                        progressBar = defaultGradientProgressBar,
                         backgroundColor,
                         landscapeRetraction,
                         portraitRetraction,
@@ -176,11 +177,11 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                                     paddingRight: edgeInsets.right,
                                 }
                             })}
-                            <GradientProgressBarConnected
-                                style={{
+                            {progressBar({
+                                style: {
                                     width: "100%",
-                                }}
-                            />
+                                }
+                            })}
                         </Animated.View>
                     );
                 }}

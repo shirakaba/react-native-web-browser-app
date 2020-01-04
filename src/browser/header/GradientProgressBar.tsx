@@ -3,11 +3,16 @@ import { connect } from 'react-redux';
 import { WholeStoreState } from "~/store/store";
 import { View, Animated, ViewProps } from "react-native";
 
-interface Props {
+interface GradientProgressBarOwnProps {
+}
+
+interface GradientProgressBarConnectedProps {
     progress: number,
 }
 
-type GradientProgressBarProps = Props & ViewProps;
+export type GradientProgressBarProps = GradientProgressBarOwnProps & GradientProgressBarConnectedProps & ViewProps;
+export type GradientProgressBarType = (props: GradientProgressBarOwnProps) => React.ReactNode;
+export const defaultGradientProgressBar = (props: GradientProgressBarOwnProps) => <GradientProgressBarConnected {...props}/>;
 
 interface State {
     // Both between 0 and 1
