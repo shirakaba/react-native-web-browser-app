@@ -142,6 +142,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                                 position: "absolute",
                                 flexGrow: 1,
                             }}
+                            
                             headerConfig={config.header}
                             scrollY={this.scrollY}
                             scrollEndDragVelocity={this.scrollEndDragVelocity}

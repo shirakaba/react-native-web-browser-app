@@ -9,17 +9,21 @@ import Animated from "react-native-reanimated";
 import { HeaderConfig } from "../browserConfig";
 import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "../header/TabLocationView";
 
-export interface BarAwareWebViewProps {
+export type BarAwareWebViewType = (props: BarAwareWebViewOwnProps) => React.ReactNode;
+
+export interface BarAwareWebViewOwnProps {
     headerConfig: HeaderConfig,
     scrollY: Animated.Value<number>,
     scrollEndDragVelocity: Animated.Value<number>,
-
-    activeTab: string,
-    tabs: TabStateRecord,
+}
+export interface BarAwareWebViewConnectedProps {
     updateUrlBarText: typeof updateUrlBarText,
     setProgressOnWebView: typeof setProgressOnWebView,
     updateWebViewNavigationState: typeof updateWebViewNavigationState,
+    activeTab: string,
+    tabs: TabStateRecord,
 }
+export type BarAwareWebViewProps = BarAwareWebViewOwnProps & BarAwareWebViewConnectedProps;
 
 const IosWebView = WebView as React.ComponentClass<IOSWebViewProps>;
 const AnimatedIosWebView = Animated.createAnimatedComponent(IosWebView) as React.ComponentClass<Animated.AnimateProps<ViewStyle, IOSWebViewProps>>;

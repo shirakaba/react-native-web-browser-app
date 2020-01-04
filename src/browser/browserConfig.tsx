@@ -1,5 +1,7 @@
 import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
 import { DEFAULT_FOOTER_REVEALED_HEIGHT } from "./footer/Footer";
+import { BarAwareWebViewType } from "./webView/BarAwareWebView";
+import { DefaultBarAwareWebView } from "./webView/WebViewContainer";
 
 export enum RetractionStyle {
     alwaysRevealed = "alwaysRevealed",
@@ -50,10 +52,12 @@ export interface FooterConfig extends BarConfig {
     landscapeRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden|RetractionStyle.alwaysHidden,
 }
 
+
+
 export interface BrowserConfig {
     header: HeaderConfig,
     footer: FooterConfig,
-    webViewComponent?: React.ReactNode,
+    barAwareWebView?: BarAwareWebViewType,
 }
 
 export const defaultConfig: BrowserConfig = {
@@ -81,5 +85,6 @@ export const defaultConfig: BrowserConfig = {
         portraitRetraction: RetractionStyle.retractToHidden,
         landscapeRetraction: RetractionStyle.alwaysHidden,
         backgroundColor: "gray",
-    }
+    },
+    barAwareWebView: DefaultBarAwareWebView,
 };
