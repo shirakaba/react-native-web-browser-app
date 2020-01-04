@@ -16,7 +16,7 @@ class TopTabsContainer extends React.Component<{}, {}>{
     }
 }
 
-interface Props {
+interface HeaderOwnProps {
     config: HeaderConfig,
     animatedNavBarTranslateYPortrait: Animated.Node<number>,
     animatedNavBarTranslateYLandscape: Animated.Node<number>,
@@ -27,13 +27,17 @@ interface Props {
     toolbarIsShowing: boolean,
 }
 
+export type HeaderProps = HeaderOwnProps & ViewProps;
+export type HeaderType = (props: HeaderProps) => React.ReactNode;
+export const defaultHeader = (props: HeaderProps) => <Header {...props}/>;
+
 interface State {
 
 }
 
 // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L105
 // Header used to have a subchild, "UrlBarTopTabsContainer", but that has now been flattened.
-export class Header extends React.Component<Props & ViewProps, State>{
+export class Header extends React.Component<HeaderProps, State>{
     render(){
         const {
             config,

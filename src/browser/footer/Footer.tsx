@@ -1,5 +1,5 @@
 import * as React from "react";
-import { TabToolbar } from "./TabToolbar";
+import { TabToolbar, TabToolbarProps, defaultTabToolbar } from "./TabToolbar";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { View, Text, ViewProps, StyleSheet, TouchableWithoutFeedback, TouchableWithoutFeedbackProps, ScrollView, SafeAreaView, Platform, findNodeHandle } from "react-native";
@@ -30,7 +30,7 @@ export class Footer extends React.Component<FooterProps, {}> {
         const {
             buttons,
             backgroundColor,
-            ContentView = TabToolbar,
+            contentView = defaultTabToolbar,
             landscapeRetraction,
             portraitRetraction,
             FOOTER_REVEALED_HEIGHT = DEFAULT_FOOTER_REVEALED_HEIGHT,
@@ -94,7 +94,8 @@ export class Footer extends React.Component<FooterProps, {}> {
                                 // height={{ value: animatedHeight, unit: "dip" }}
                                 {...rest}
                             >
-                                {<ContentView config={config}/>}
+                                {contentView({ config })}
+                                {/* <ContentView config={config}/> */}
                             </Animated.View>
                         );
                     }}    

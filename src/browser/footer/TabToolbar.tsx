@@ -9,6 +9,8 @@ export interface TabToolbarOwnProps {
 }
 
 export type TabToolbarProps = TabToolbarOwnProps & ViewProps;
+export type TabToolbarType = (props: TabToolbarProps) => React.ReactNode;
+export const defaultTabToolbar = (props: TabToolbarProps) => <TabToolbar {...props}/>;
 
 interface State {
 

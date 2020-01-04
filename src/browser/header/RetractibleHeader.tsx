@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { GradientProgressBarConnected, GRADIENT_PROGRESS_BAR_HEIGHT } from "~/browser/header/GradientProgressBar";
 import { WholeStoreState } from "~/store/store";
 import { HeaderConfig, RetractionStyle } from "../browserConfig";
-import { Header } from "./Header";
+import { Header, defaultHeader } from "./Header";
 import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./TabLocationView";
 import { URL_BAR_VIEW_PADDING_VERTICAL } from "./URLBarView";
 const { interpolate, Extrapolate } = Animated;
@@ -104,9 +104,10 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
         return (
             <SafeAreaConsumer>
                 {(edgeInsets: EdgeInsets) => {
-                    const { config, orientation, urlBarText, style, children, ...rest } = this.props;
+                    const { config, orientation, scrollY, urlBarText, style, children, ...rest } = this.props;
                     const {
                         buttons,
+                        contentView = defaultHeader,
                         backgroundColor,
                         landscapeRetraction,
                         portraitRetraction,
@@ -162,19 +163,19 @@ export class RetractibleHeader extends React.Component<RetractibleHeaderProps & 
                             ]}
                             {...rest}
                         >
-                            <Header
-                                config={config}
-                                scrollY={this.props.scrollY}
-                                animatedNavBarTranslateYLandscape={this.animatedNavBarTranslateYLandscape}
-                                animatedNavBarTranslateYPortrait={this.animatedNavBarTranslateYPortrait}
-                                animatedTitleOpacity={this.animatedTitleOpacity}
-                                toolbarIsShowing={orientation === "landscape"}
-                                inOverlayMode={false}
-                                style={{
+                            {contentView({
+                                config,
+                                scrollY,
+                                animatedNavBarTranslateYLandscape: this.animatedNavBarTranslateYLandscape,
+                                animatedNavBarTranslateYPortrait: this.animatedNavBarTranslateYPortrait,
+                                animatedTitleOpacity: this.animatedTitleOpacity,
+                                toolbarIsShowing: orientation === "landscape",
+                                inOverlayMode: false,
+                                style: {
                                     paddingLeft: edgeInsets.left,
                                     paddingRight: edgeInsets.right,
-                                }}
-                            />
+                                }
+                            })}
                             <GradientProgressBarConnected
                                 style={{
                                     width: "100%",

@@ -1,7 +1,9 @@
+import * as React from "react";
 import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
 import { DEFAULT_FOOTER_REVEALED_HEIGHT } from "./footer/Footer";
 import { BarAwareWebViewType, DefaultBarAwareWebView } from "./webView/BarAwareWebView";
-import { TabToolbar } from "./footer/TabToolbar";
+import { defaultTabToolbar, TabToolbarType } from "./footer/TabToolbar";
+import { defaultHeader, HeaderType } from "./header/Header";
 
 export enum RetractionStyle {
     alwaysRevealed = "alwaysRevealed",
@@ -34,6 +36,7 @@ export interface HeaderConfig extends BarConfig {
     landscapeRetraction: RetractionStyle,
     slotBackgroundColor?: string,
     textFieldBackgroundColor?: string,
+    contentView?: HeaderType;
 }
 
 /**
@@ -50,7 +53,7 @@ export interface FooterConfig extends BarConfig {
     },
     portraitRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden|RetractionStyle.alwaysHidden,
     landscapeRetraction: RetractionStyle.alwaysRevealed|RetractionStyle.retractToHidden|RetractionStyle.alwaysHidden,
-    ContentView?: typeof TabToolbar;
+    contentView?: TabToolbarType;
 }
 
 
@@ -74,6 +77,8 @@ export const defaultConfig: BrowserConfig = {
         backgroundColor: "gray",
         slotBackgroundColor: "darkgray",
         textFieldBackgroundColor: "transparent",
+        // ContentView: (props: HeaderProps) => null,
+        contentView: defaultHeader,
     },
     footer: {
         HEADER_RETRACTED_HEIGHT: DEFAULT_HEADER_RETRACTED_HEIGHT,
@@ -86,7 +91,8 @@ export const defaultConfig: BrowserConfig = {
         portraitRetraction: RetractionStyle.retractToHidden,
         landscapeRetraction: RetractionStyle.alwaysHidden,
         backgroundColor: "gray",
-        ContentView: TabToolbar,
+        // ContentView: (props: TabToolbarProps) => null,
+        contentView: defaultTabToolbar,
     },
     barAwareWebView: DefaultBarAwareWebView,
 };
