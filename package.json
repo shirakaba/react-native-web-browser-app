@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc --project ./tsconfig.build.json",
     "prepare": "npm run build",
-    "postinstall": "jetify",
+    "original_postinstall": "jetify",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "web": "expo start --web",
