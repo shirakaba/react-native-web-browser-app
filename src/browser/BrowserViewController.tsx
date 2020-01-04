@@ -4,7 +4,7 @@ import { View, ViewProps, StyleSheet, Dimensions } from "react-native";
 import Animated from "react-native-reanimated";
 import { FooterConnected } from "./footer/Footer";
 import { DRAG_END_INITIAL } from "./bothBars/barSpring";
-import { WebViewContainerConnected, WebViewContainerBackdrop } from "./webView/WebViewContainer";
+import { WebViewContainerBackdrop, WebViewContainer } from "./webView/WebViewContainer";
 import { isPortrait, updateOrientation } from "~/store/uiState";
 import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
@@ -137,7 +137,7 @@ export class BrowserViewController extends React.Component<Props, State> {
                                 position: "absolute",
                             }}
                         />
-                        <WebViewContainerConnected
+                        <WebViewContainer
                             style={{
                                 position: "absolute",
                                 flexGrow: 1,
