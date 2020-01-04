@@ -28,6 +28,8 @@ export type BarAwareWebViewProps = BarAwareWebViewOwnProps & BarAwareWebViewConn
 const IosWebView = WebView as React.ComponentClass<IOSWebViewProps>;
 const AnimatedIosWebView = Animated.createAnimatedComponent(IosWebView) as React.ComponentClass<Animated.AnimateProps<ViewStyle, IOSWebViewProps>>;
 
+export const DefaultBarAwareWebView: BarAwareWebViewType = (props: BarAwareWebViewOwnProps) => <BarAwareWebViewConnected {...props}/>;
+
 export class BarAwareWebView extends React.Component<BarAwareWebViewProps & ViewProps, { }> {
     private readonly onLoadStarted = (event: WebViewNavigationEvent) => {
         const { url, navigationType, canGoBack, canGoForward } = event.nativeEvent;

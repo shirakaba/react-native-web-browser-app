@@ -1,7 +1,6 @@
 import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
 import { DEFAULT_FOOTER_REVEALED_HEIGHT } from "./footer/Footer";
-import { BarAwareWebViewType } from "./webView/BarAwareWebView";
-import { DefaultBarAwareWebView } from "./webView/WebViewContainer";
+import { BarAwareWebViewType, DefaultBarAwareWebView } from "./webView/BarAwareWebView";
 
 export enum RetractionStyle {
     alwaysRevealed = "alwaysRevealed",

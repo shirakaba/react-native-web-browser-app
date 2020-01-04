@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import { WholeStoreState } from "~/store/store";
 import { BrowserConfig, defaultConfig } from "~/browser/browserConfig";
 import { DEFAULT_HEADER_RETRACTED_HEIGHT, DEFAULT_HEADER_REVEALED_HEIGHT } from "./header/TabLocationView";
+import { DefaultBarAwareWebView } from "./webView/BarAwareWebView";
 
 const BrowserViewControllerUX = {
     ShowHeaderTapAreaHeight: 0,
@@ -94,7 +95,8 @@ export class BrowserViewController extends React.Component<Props, State> {
     }
 
     render(){
-        const { config = defaultConfig, } = this.props;
+        const { config = defaultConfig } = this.props;
+        const { barAwareWebView = DefaultBarAwareWebView } = config;
         // Visibility of certain components changes when switching app (if in private browsing mode)
         // https://github.com/cliqz/user-agent-ios/blob/develop/Client/Frontend/Browser/BrowserViewController.swift#L343
 
@@ -137,16 +139,11 @@ export class BrowserViewController extends React.Component<Props, State> {
                                 position: "absolute",
                             }}
                         />
-                        <WebViewContainer
-                            style={{
-                                position: "absolute",
-                                flexGrow: 1,
-                            }}
-                            
-                            headerConfig={config.header}
-                            scrollY={this.scrollY}
-                            scrollEndDragVelocity={this.scrollEndDragVelocity}
-                        />
+                        {barAwareWebView({
+                            headerConfig: config.header,
+                            scrollY: this.scrollY,
+                            scrollEndDragVelocity: this.scrollEndDragVelocity,
+                        })}
                     </View>
 
                     <FooterConnected
