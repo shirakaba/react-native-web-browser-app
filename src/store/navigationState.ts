@@ -157,8 +157,8 @@ export function submitUrlBarTextToWebView(text: string, tab?: string): AppThunk 
         }
 
         if(webView.src === url){
-            console.log(`[setUrlOnWebView] Setting URL on webView for chosenTab "${chosenTab}" as same as before, so refreshing: ${url}`);
-            webView.refresh();
+            console.log(`[setUrlOnWebView] Setting URL on webView for chosenTab "${chosenTab}" as same as before, so reloading: ${url}`);
+            webView.reload();
         } else {
             console.log(`[setUrlOnWebView] Setting URL on webView for chosenTab "${chosenTab}" as: ${url}`);
             webView.src = url;
@@ -209,7 +209,7 @@ export function reloadWebView(tab?: string): AppThunk {
             return Promise.resolve();
         }
 
-        console.log(`[goBackOnWebView] Calling refresh() on webView for chosenTab "${chosenTab}".`);
+        console.log(`[goBackOnWebView] Calling reload() on webView for chosenTab "${chosenTab}".`);
         webView.reload();
 
         return dispatch(navigationSlice.actions.reloadWebView());
@@ -224,7 +224,7 @@ export function stopWebView(tab?: string): AppThunk {
             return Promise.resolve();
         }
 
-        console.log(`[stopWebView] Calling refresh() on webView for chosenTab "${chosenTab}".`);
+        console.log(`[stopWebView] Calling reload() on webView for chosenTab "${chosenTab}".`);
         webView.stopLoading();
 
         return dispatch(navigationSlice.actions.stopWebView());
