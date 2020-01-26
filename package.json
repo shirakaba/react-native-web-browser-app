@@ -1,6 +1,6 @@
 {
   "name": "react-native-web-browser-app",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Fully-featured cross-platform Web Browser, made in React Native",
   "main": "dist/app.js",
   "types": "dist/app.d.ts",

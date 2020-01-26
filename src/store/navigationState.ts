@@ -82,7 +82,7 @@ const navigationSlice = createSlice({
 export const { updateUrlBarText, setProgressOnWebView, updateWebViewNavigationState } = navigationSlice.actions;
 export const navigationSliceReducer = navigationSlice.reducer;
 
-function getWebView(tab: string){
+export function getWebView(tab: string){
     const webViewRef = webViews.get(tab);
     if(!webViewRef){
         console.error(`Unable to find webViewRef for tab "${tab}".`);
